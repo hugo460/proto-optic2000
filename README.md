@@ -2,11 +2,13 @@
 
 Lot S1 (accepté localement par le pilote le 21/10/2026 au commit `e3ee64e`, sans validation commerciale du client ni publication) : accueil interactif, 38 présentations de marques et gammes, catalogue de 83 produits dont 78 solaires, fiches de produits et de magasins.
 
-Lot S2 (en cours de validation par le pilote) : tous les univers utiles (lunettes de vue, lentilles et entretien, jumelles et télescopes, basse vision, prothèses oculaires, services et garanties, équipe), sélection précise des lentilles, formulaire de contact local, trois pages légales, 25 anciennes pages traitées (redirections, regroupements ou exclusions motivées). Toujours sans panier, compte, commande, envoi ni rendez-vous réel.
+Lot S2 (accepté localement par le pilote le 21/10/2026 au commit `49458ec`, sans validation commerciale du client) : tous les univers utiles (lunettes de vue, lentilles et entretien, jumelles et télescopes, basse vision, prothèses oculaires, services et garanties, équipe), sélection précise des lentilles, formulaire de contact local, trois pages légales, 25 anciennes pages traitées (redirections, regroupements ou exclusions motivées). Toujours sans panier, compte, commande, envoi ni rendez-vous réel.
+
+Version de présentation S3 : [ouvrir le prototype](https://proto-optic2000.vercel.app). Mentions adaptées à Vercel, matrice de recette complétée et [guide de démonstration](docs/demo.md). L’acceptation finale du chantier reste au pilote ; les informations commerciales restent à confirmer par l’enseigne.
 
 ## Lancer
 
-Node 24 recommandé (minimum Next : 20.9), pnpm 11.5.2. Un seul projet à la racine.
+Node 24 (`engines` : `24.x`, utilisé aussi par Vercel ; minimum Next : 20.9), pnpm 11.5.2. Un seul projet à la racine.
 
 ```sh
 pnpm install --frozen-lockfile
@@ -47,6 +49,6 @@ Lire [le scénario](docs/demo.md), [l’architecture](docs/architecture.md), [l�
 
 Les prix, stocks, horaires, garanties et mentions légales historiques sont publics et datés ; le client ne les a pas validés. Taravao garde une seule réponse : horaires à confirmer. Les cinq fiches de lentilles proposent une sélection signée (voir [l’architecture](docs/architecture.md)) ; les prix restent « à confirmer en magasin ». Le formulaire de contact est une simulation en mémoire locale : aucun envoi, rendez-vous, stockage ou donnée saisie dans l’URL. Les pages sont `noindex` ; les images et polices sont embarquées ; les tests échouent si le site historique est sollicité.
 
-Les pages légales décrivent l’hébergement local du prototype : elles devront être actualisées à l’hébergement réel avant toute publication (S3).
+Les pages légales désignent devlab (réalisation) et Vercel (hébergement) sans inventer d’éditeur officiel ; OVH et JK restent attribués à l’ancien site. La confidentialité distingue la saisie, qui ne quitte pas le navigateur, des requêtes techniques reçues par l’hébergeur. `noindex`, l’en-tête `X-Robots-Tag` et `Disallow: /` sont conservés.
 
-Dépôt : `https://github.com/hugo460/proto-optic2000.git`, branche `main`. S1 et S2 restent locales : aucun push, PR distante, liaison Vercel ni message au client. Publication et transmission réservées à S3, après acceptation de S2 par le pilote ; les réserves commerciales restent inchangées.
+Dépôt : `https://github.com/hugo460/proto-optic2000.git`, branche `main`. Publication : équipe Vercel `devlab-tahiti`, projet `proto-optic2000`, production, racine du dépôt ; procédure dans [la reprise](docs/reprise.md#publication-vercel). Aucun message au client final. Les réserves commerciales restent inchangées.

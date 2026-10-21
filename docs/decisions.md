@@ -1,4 +1,4 @@
-# Décisions de S1 et S2
+# Décisions de S1, S2 et S3
 
 | Décision | Conséquence |
 | --- | --- |
@@ -28,8 +28,19 @@
 | Offres de 2022 exclues | Forfaits et « 2e paire » non affichés comme actuels ; seule leur existence datée est signalée sur Services et garanties |
 | Garanties et services | Reprises mot pour mot de l’accueil source, avec leurs limites à confirmer. Le nettoyage est « proposé aux clients » : le texte source ne le dit pas gratuit, on ne l’invente pas ; plaquettes et réparations mineures sont offertes aux clients |
 | Anciens chemins | Redirections natives exactes en local (307, 308 pour la barre finale) ; compte, panier et commande en 404 ; vraies inconnues en 404 avant le streaming |
-| Pages légales | Distinguent le prototype (sans vente) de l’exploitant historique ; OVH et JK ne sont pas attribués au nouveau prototype. À actualiser avec l’hébergement réel avant S3 |
+| Pages légales | Distinguent le prototype (sans vente) de l’exploitant historique ; OVH et JK ne sont pas attribués au nouveau prototype. Actualisées en S3 (voir ci-dessous) |
 | Pas d’extension de DESIGN.md | Voir ci-dessous |
+
+## Décisions de S3 (préparation de la publication)
+
+| Décision | Conséquence |
+| --- | --- |
+| S2 acceptée localement par le pilote le 21/10/2026 au commit `49458ec` | Base de S3 ; ni validation commerciale du client ni publication |
+| Hébergement Vercel, équipe `devlab-tahiti`, projet `proto-optic2000` | Mentions : réalisation devlab, hébergement Vercel, adresse technique distincte du domaine de l’enseigne ; aucune identité ni adresse d’éditeur officiel inventée |
+| Confidentialité hébergée | La saisie reste en mémoire du navigateur, non transmise ni persistée ; l’hébergeur reçoit les requêtes techniques (adresse IP, URL publique, données du navigateur) pour le fonctionnement et la sécurité. Ni promesse d’absence de trace ni durée de conservation inventée ; aucun cookie ou outil de mesure ajouté |
+| Déploiement par la CLI depuis le commit poussé | Production à la racine du dépôt ; aucune liaison Git automatique nécessaire, donc pas de publication implicite d’un état non vérifié. `.vercel/` reste hors Git |
+| Node `24.x` déclaré dans `engines` | Même version majeure en local et à la construction Vercel ; aucune dépendance modifiée |
+| Aucune refonte | Monde, système et composants inchangés ; seules les copies d’hébergement et la matrice de captures évoluent |
 
 ### Extension de DESIGN.md : non, à ce stade
 

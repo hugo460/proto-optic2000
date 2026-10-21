@@ -34,8 +34,11 @@ const forbidden: string[] = [];
 const errors: string[] = [];
 const hosts = new Set<string>();
 let requests: { method: string; url: string; body: boolean }[] = [];
+// Every URL requested during the run, kept to prove that nothing typed in a form ever reaches the network.
+const allUrls: string[] = [];
+const typed = ['Marie Fictive', 'demo@example.com', 'Message fictif de démonstration'];
 await context.route(/optic2000tahiti\.com/, route => { forbidden.push(route.request().url()); return route.abort(); });
-context.on('request', request => { hosts.add(new URL(request.url()).host); requests.push({ method: request.method(), url: request.url(), body: request.postData() !== null }); });
+context.on('request', request => { allUrls.push(request.url()); hosts.add(new URL(request.url()).host); requests.push({ method: request.method(), url: request.url(), body: request.postData() !== null }); });
 context.on('console', message => { if (message.type() === 'error') errors.push(`console: ${message.text()}`); });
 const page = await context.newPage();
 page.on('pageerror', error => errors.push(`pageerror: ${error.message}`));
@@ -200,10 +203,42 @@ await snap('contact-direct-desktop', true);
 await go('/magasins/taravao?produit=freshlook-colorblends&variante=1949&couleur=grey&sphere=2-00-2', 390, 844);
 await snap('taravao-lens-context-mobile', true);
 
+// ---- Publication matrix: proof limits closed before hosting ------------------------------------------------------------
+// Desktop navigation inside 801–1100 px (1024 px), closed then open, on the lavender home and on a light reading page.
+for (const [name, route] of [['home', '/'], ['services', '/services-et-garanties']] as const) {
+  await go(route, 1024, 768);
+  const universes = page.getByRole('button', { name: 'Nos univers' });
+  assert(await universes.isVisible(), `${name}: the desktop navigation is shown at 1024 px`);
+  assert(!(await page.getByRole('button', { name: 'Menu', exact: true }).isVisible()), `${name}: no mobile menu at 1024 px`);
+  assert.equal(await universes.getAttribute('aria-expanded'), 'false');
+  await snap(`nav-1024-closed-${name}`, false);
+  await universes.click();
+  await page.locator('#universe-panel').waitFor({ state: 'visible' });
+  assert.equal(await universes.getAttribute('aria-expanded'), 'true');
+  await snap(`nav-1024-open-${name}`, false);
+  await page.keyboard.press('Escape');
+  await page.locator('#universe-panel').waitFor({ state: 'hidden' });
+  assert(await universes.evaluate(el => el === document.activeElement), `${name}: Escape returns the focus to Nos univers`);
+}
+// Low vision at tablet and desktop sizes (mobile above).
+for (const [key, width, height] of [['tablet', 768, 1024], ['desktop', 1440, 1000]] as const) {
+  await go('/basse-vision', width, height);
+  await snap(`basse-vision-${key}`, true);
+}
+// Direct contact on mobile (desktop above) and the three legal pages on desktop (mobile above).
+await go('/contact', 390, 844);
+await hydrated();
+await snap('contact-direct-mobile', true);
+for (const [name, route] of [['mentions-desktop', '/mentions-legales'], ['confidentialite-desktop', '/politique-de-confidentialite'], ['cgv-desktop', '/cgv']] as const) {
+  await go(route, 1440, 1000);
+  await snap(name, true);
+}
+
+const leaks = typed.flatMap(value => allUrls.filter(url => { try { return decodeURIComponent(url.replace(/\+/g, ' ')).includes(value); } catch { return url.includes(value); } }).map(url => `${value} in ${url}`));
 const problems = records.filter(r => r.broken.length || r.fallbackCount || r.pageWidth > r.width || r.scrollY !== 0 || r.skipLinkOnScreen || r.fonts.status !== 'loaded' || r.network.nonGet.length || r.network.withBody.length || r.network.offOrigin.length || (r.firstRowBottom !== null && r.firstRowBottom > r.height) || (r.firstLensTop !== null && r.firstLensTop > r.height - 200)).map(r => r.name);
-await writeFile(join(root, 'capture-manifest.json'), JSON.stringify({ timestamp: new Date().toISOString(), base, code, captureCount: records.length, records, forbidden, errors, hosts: [...hosts], problems }, null, 2));
+await writeFile(join(root, 'capture-manifest.json'), JSON.stringify({ timestamp: new Date().toISOString(), base, code, captureCount: records.length, records, forbidden, errors, hosts: [...hosts], typedLeaks: leaks, problems }, null, 2));
 await browser.close();
-console.log(`${records.length} captures; problems: ${problems.length ? problems.join(', ') : 'none'}; errors: ${errors.length}; former-domain requests: ${forbidden.length}`);
-if (forbidden.length || errors.length || problems.length) process.exitCode = 1;
+console.log(`${records.length} captures; problems: ${problems.length ? problems.join(', ') : 'none'}; errors: ${errors.length}; former-domain requests: ${forbidden.length}; typed values in URLs: ${leaks.length}`);
+if (forbidden.length || errors.length || problems.length || leaks.length) process.exitCode = 1;
 }
 main().catch(error => { console.error(error); process.exitCode = 1; });

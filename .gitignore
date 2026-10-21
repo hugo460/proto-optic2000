@@ -12,3 +12,4 @@ playwright-report/
 .impeccable/review/
 .impeccable/build/
 .impeccable/cache/
+.vercel

@@ -179,7 +179,7 @@ test('Footer reaches every universe, the house pages and the three legal pages',
     '/mentions-legales', '/politique-de-confidentialite', '/cgv',
   ]);
   for (const [name, title, phrase] of [
-    ['Mentions légales', 'Mentions légales.', /prototype de présentation réalisé par Devlab/], ['Confidentialité', 'Confidentialité.', /aucun cookie/], ['CGV', 'Conditions générales de vente.', /Ce prototype ne vend rien en ligne/],
+    ['Mentions légales', 'Mentions légales.', /prototype de présentation réalisé par devlab/], ['Confidentialité', 'Confidentialité.', /aucun cookie/], ['CGV', 'Conditions générales de vente.', /Ce prototype ne vend rien en ligne/],
   ] as const) {
     await page.goto('/');
     await footer.getByRole('link', { name, exact: true }).click();
@@ -447,11 +447,20 @@ test('Legal pages present the prototype factually and keep the old operator hist
   await expect(main).toContainText('SARL S2M');
   await expect(main).toContainText('976464');
   await expect(main).toContainText('ne sont ni l’hébergeur ni le créateur de ce prototype');
+  // Hosting copy: the real host of the published prototype, no local-only status left, no invented publisher.
+  await expect(main).toContainText('Réalisation : devlab. Hébergement : Vercel');
+  await expect(main).toContainText('Les informations d’éditeur d’un futur site officiel restent à compléter');
+  await expect(main).not.toContainText(/fonctionne localement|n’a pas été mise en ligne/);
   await expect(main).not.toContainText(/RCS/);
   await page.goto('/politique-de-confidentialite');
   await expect(page.locator('main')).toContainText('rien n’est enregistré');
   await expect(page.locator('main')).toContainText('aucun cookie');
   await expect(page.locator('main')).toContainText('Seuls des identifiants publics');
+  // The typed data never leaves the browser; the host's technical requests are stated without a zero-trace promise.
+  await expect(page.locator('main')).toContainText('Rien n’est envoyé au magasin, à l’hébergeur ni à un service extérieur');
+  await expect(page.locator('main')).toContainText('l’adresse IP, l’adresse publique de la page demandée et des données techniques du navigateur');
+  await expect(page.locator('main')).toContainText('ne promet pas l’absence de toute trace technique');
+  await expect(page.locator('main')).toContainText('Elle n’est pas reprise et ne s’applique pas à ce prototype');
   await page.goto('/cgv');
   await expect(page.locator('main')).toContainText('ne s’appliquent pas à ce prototype');
   await expect(page.locator('main')).toContainText('29/11/2022');

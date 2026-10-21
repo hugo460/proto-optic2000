@@ -53,7 +53,7 @@ Le formulaire garde ses champs dans l’état React local. Rien n’est envoyé,
 
 `src/data/stores.ts` centralise tous les récapitulatifs, coordonnées et réserves. Les CID Google Maps sont les entiers exacts des identifiants de lieux inclus dans les cartes de la source. L’action « Plan et itinéraire » mène à la fiche Google du lieu exact, où l’utilisateur peut choisir son itinéraire. Pas de géolocalisation ni de carte embarquée.
 
-Next optimise les images locales via son propre endpoint. Les fontes variables Sora et Manrope, obtenues du [répertoire officiel Google Fonts](https://github.com/google/fonts), sont servies localement par `next/font/local`, avec les licences OFL incluses. Pas d’analytics, cookies métier, API, paiement ou collecte de document médical.
+Next optimise les images locales via son propre endpoint. Les fontes variables Sora et Manrope, obtenues du [répertoire officiel Google Fonts](https://github.com/google/fonts), sont servies localement par `next/font/local`, avec les licences OFL incluses. Pas d’analytics, cookies métier, API, paiement ou collecte de document médical. Hébergement : Vercel, production, racine du dépôt, Node `24.x`, sans secret ni service métier distant ; les en-têtes `X-Robots-Tag` et les redirections viennent de `next.config.ts`. La configuration de construction `ENABLE_EXPERIMENTAL_COREPACK=1` fait utiliser le `packageManager` du dépôt (`pnpm@11.5.2`).
 
 ## Pages S2 et système visuel
 

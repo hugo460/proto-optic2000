@@ -11,11 +11,11 @@ Mode: Read. Routes: `/mentions-legales`, `/politique-de-confidentialite`, `/cgv`
 
 ## Direction contract
 
-THESIS: Des pages honnêtes sur un prototype local sans vente ni envoi ; refuse le faux éditeur, le faux RCS, l’hébergeur ancien présenté comme actuel et les CGV de 2022 publiées comme actuelles.
+THESIS: Des pages honnêtes sur un prototype de présentation hébergé par Vercel, sans vente ni envoi ; refuse le faux éditeur, le faux RCS, l’hébergeur ancien présenté comme actuel et les CGV de 2022 publiées comme actuelles.
 
 OWN-WORLD: Nuancier solaire ; sections à filets, mentions historiques en liste de définitions, sources datées.
 
-STORY: Statut du prototype, mentions de l’ancien site à valider ; fonctionnement réel du formulaire, de l’URL, absence de mesure ; disposition CGV et sortie magasin.
+STORY: Statut du prototype, mentions de l’ancien site à valider ; fonctionnement réel du formulaire et de l’URL, requêtes techniques reçues par l’hébergeur, absence de mesure d’audience ; disposition CGV et sortie magasin.
 
 FIRST VIEWPORT: Titre et une phrase de statut, puis la première section.
 
