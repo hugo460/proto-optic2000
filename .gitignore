@@ -1,0 +1,14 @@
+node_modules/
+.next/
+out/
+coverage/
+test-results/
+playwright-report/
+*.tsbuildinfo
+.env*
+.DS_Store
+.impeccable/questions/
+.impeccable/mocks/
+.impeccable/review/
+.impeccable/build/
+.impeccable/cache/

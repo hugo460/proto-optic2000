@@ -1,0 +1,1017 @@
+[
+  {
+    "id": "marius-morel-1880",
+    "name": "Marius Morel 1880",
+    "universes": [
+      "Vue"
+    ],
+    "logo": {
+      "src": "/media/d3572ef699-marius-morel-logo-square.webp",
+      "width": 300,
+      "height": 300,
+      "origin": "https://optic2000tahiti.com/wp-content/uploads/2022/09/marius-morel-logo-square.png",
+      "sourceSha256": "b2c45ef5fed0d56927ab38f3fcaddb416560c87f3a8bc00d9d4f01d12724a364"
+    },
+    "darkLogo": false,
+    "productIds": [],
+    "relationship": null,
+    "source": [
+      {
+        "url": "https://optic2000tahiti.com/wp-content/uploads/2022/09/marius-morel-logo-square.png",
+        "page": "https://optic2000tahiti.com/lunettes-de-vue/",
+        "method": "visual inspection of downloaded logo, 2026-10-21"
+      }
+    ]
+  },
+  {
+    "id": "invu",
+    "name": "INVU",
+    "universes": [
+      "Vue",
+      "Soleil"
+    ],
+    "logo": {
+      "src": "/media/58d28d2569-invu-logo-square.webp",
+      "width": 800,
+      "height": 800,
+      "origin": "https://optic2000tahiti.com/wp-content/uploads/2022/09/invu-logo-square.png",
+      "sourceSha256": "9ce65c6151525d384ff3a07df2e28c76fd554905983ab14ce448c0b28fce8525"
+    },
+    "darkLogo": false,
+    "productIds": [],
+    "relationship": null,
+    "source": [
+      {
+        "url": "https://optic2000tahiti.com/wp-content/uploads/2022/09/invu-logo-square.png",
+        "page": "https://optic2000tahiti.com/lunettes-de-vue/",
+        "method": "visual inspection of downloaded logo, 2026-10-21"
+      },
+      {
+        "url": "https://optic2000tahiti.com/wp-content/uploads/2022/09/617_logo.png",
+        "page": "https://optic2000tahiti.com/lunettes-de-soleil/",
+        "method": "visual inspection of downloaded logo, 2026-10-21"
+      }
+    ]
+  },
+  {
+    "id": "morel",
+    "name": "Morel",
+    "universes": [
+      "Vue"
+    ],
+    "logo": {
+      "src": "/media/fd9fb34985-logo-morel-red.webp",
+      "width": 474,
+      "height": 150,
+      "origin": "https://optic2000tahiti.com/wp-content/uploads/2022/09/logo-morel-red.png",
+      "sourceSha256": "c9e71c57e8cb657a9f9d068c98ccddc3e9f85a3a5bd223c4c27fbfe14a77a7b6"
+    },
+    "darkLogo": false,
+    "productIds": [],
+    "relationship": null,
+    "source": [
+      {
+        "url": "https://optic2000tahiti.com/wp-content/uploads/2022/09/logo-morel-red.png",
+        "page": "https://optic2000tahiti.com/lunettes-de-vue/",
+        "method": "visual inspection of downloaded logo, 2026-10-21"
+      }
+    ]
+  },
+  {
+    "id": "dilem",
+    "name": "Dilem",
+    "universes": [
+      "Vue"
+    ],
+    "logo": {
+      "src": "/media/3575b31ff0-5f86eb3d97fac_GUIDELINE_LOGO_DILEM.webp",
+      "width": 575,
+      "height": 130,
+      "origin": "https://optic2000tahiti.com/wp-content/uploads/2022/09/5f86eb3d97fac_GUIDELINE_LOGO_DILEM.webp",
+      "sourceSha256": "c5eb38438a8b5d4b47ab569e296be1861a6f8b807b7961e57aa99f05d617a88c"
+    },
+    "darkLogo": false,
+    "productIds": [],
+    "relationship": null,
+    "source": [
+      {
+        "url": "https://optic2000tahiti.com/wp-content/uploads/2022/09/5f86eb3d97fac_GUIDELINE_LOGO_DILEM.webp",
+        "page": "https://optic2000tahiti.com/lunettes-de-vue/",
+        "method": "visual inspection of downloaded logo, 2026-10-21"
+      }
+    ]
+  },
+  {
+    "id": "oxibis",
+    "name": "Oxibis",
+    "universes": [
+      "Vue"
+    ],
+    "logo": {
+      "src": "/media/9e256e3da1-5f86f6d19250e_GUIDELINE_LOGO_OXIBIS_BASELINE_FR_HR.webp",
+      "width": 347,
+      "height": 157,
+      "origin": "https://optic2000tahiti.com/wp-content/uploads/2022/09/5f86f6d19250e_GUIDELINE_LOGO_OXIBIS_BASELINE_FR_HR.webp",
+      "sourceSha256": "76b3a6f4fe3bc2bf6cc269487d8c43d6eab4bf3515af077b5da4c2f050d069e9"
+    },
+    "darkLogo": false,
+    "productIds": [],
+    "relationship": null,
+    "source": [
+      {
+        "url": "https://optic2000tahiti.com/wp-content/uploads/2022/09/5f86f6d19250e_GUIDELINE_LOGO_OXIBIS_BASELINE_FR_HR.webp",
+        "page": "https://optic2000tahiti.com/lunettes-de-vue/",
+        "method": "visual inspection of downloaded logo, 2026-10-21"
+      }
+    ]
+  },
+  {
+    "id": "minima",
+    "name": "Minima",
+    "universes": [
+      "Vue"
+    ],
+    "logo": {
+      "src": "/media/39f8b99021-5f85c54453701_Logo_Minima_FondTransparent.webp",
+      "width": 2480,
+      "height": 940,
+      "origin": "https://optic2000tahiti.com/wp-content/uploads/2022/09/5f85c54453701_Logo_Minima_FondTransparent.webp",
+      "sourceSha256": "5cde2ec6eb566c4e3d6aae26673ed473ac4784800b3ae575bd85a06bf4928f37"
+    },
+    "darkLogo": false,
+    "productIds": [],
+    "relationship": null,
+    "source": [
+      {
+        "url": "https://optic2000tahiti.com/wp-content/uploads/2022/09/5f85c54453701_Logo_Minima_FondTransparent.webp",
+        "page": "https://optic2000tahiti.com/lunettes-de-vue/",
+        "method": "visual inspection of downloaded logo, 2026-10-21"
+      }
+    ]
+  },
+  {
+    "id": "schott-n-y-c",
+    "name": "Schott N.Y.C.",
+    "universes": [
+      "Vue"
+    ],
+    "logo": {
+      "src": "/media/f87d2ee81f-Logo-schott-kids-mnl-20019-300x212-1.webp",
+      "width": 300,
+      "height": 212,
+      "origin": "https://optic2000tahiti.com/wp-content/uploads/2022/09/Logo-schott-kids-mnl-20019-300x212-1.png",
+      "sourceSha256": "a8156c47a7858c88fded2f051a6bb5405ced67db77103fdd51a6dd56ac6d14cd"
+    },
+    "darkLogo": false,
+    "productIds": [],
+    "relationship": null,
+    "source": [
+      {
+        "url": "https://optic2000tahiti.com/wp-content/uploads/2022/09/Logo-schott-kids-mnl-20019-300x212-1.png",
+        "page": "https://optic2000tahiti.com/lunettes-de-vue/",
+        "method": "visual inspection of downloaded logo, 2026-10-21"
+      }
+    ]
+  },
+  {
+    "id": "demetz",
+    "name": "Demetz",
+    "universes": [
+      "Vue",
+      "Soleil"
+    ],
+    "logo": {
+      "src": "/media/97ffb8d38a-New-LOGO-DEMETZ-BASELINE-300px-1024x251-1.webp",
+      "width": 1024,
+      "height": 251,
+      "origin": "https://optic2000tahiti.com/wp-content/uploads/2022/09/New-LOGO-DEMETZ-BASELINE-300px-1024x251-1.png",
+      "sourceSha256": "6a7ccdfcf6f0f712af39c7b3ab7e22c158e4ea8ecf9ed05364a60849e59b47ac"
+    },
+    "darkLogo": false,
+    "productIds": [],
+    "relationship": null,
+    "source": [
+      {
+        "url": "https://optic2000tahiti.com/wp-content/uploads/2022/09/New-LOGO-DEMETZ-BASELINE-300px-1024x251-1.png",
+        "page": "https://optic2000tahiti.com/lunettes-de-vue/",
+        "method": "visual inspection of downloaded logo, 2026-10-21"
+      },
+      {
+        "url": "https://optic2000tahiti.com/wp-content/uploads/2022/09/nouveau-logo-demetz-400x200-1.png",
+        "page": "https://optic2000tahiti.com/lunettes-de-soleil/",
+        "method": "visual inspection of downloaded logo, 2026-10-21"
+      }
+    ]
+  },
+  {
+    "id": "oakley",
+    "name": "Oakley",
+    "universes": [
+      "Vue",
+      "Soleil"
+    ],
+    "logo": {
+      "src": "/media/086c65a8ad-5854642b28fc2508128fec56.webp",
+      "width": 1600,
+      "height": 612,
+      "origin": "https://optic2000tahiti.com/wp-content/uploads/2022/09/5854642b28fc2508128fec56.png",
+      "sourceSha256": "57971976eccd5424691eaa149290331e7145594dabf4b7fb2ed0cd5e81aae4f6"
+    },
+    "darkLogo": false,
+    "productIds": [],
+    "relationship": null,
+    "source": [
+      {
+        "url": "https://optic2000tahiti.com/wp-content/uploads/2022/09/5854642b28fc2508128fec56.png",
+        "page": "https://optic2000tahiti.com/lunettes-de-vue/",
+        "method": "visual inspection of downloaded logo, 2026-10-21"
+      },
+      {
+        "url": "https://optic2000tahiti.com/wp-content/uploads/2022/09/oakley-men-png-logo-16.png",
+        "page": "https://optic2000tahiti.com/lunettes-de-soleil/",
+        "method": "visual inspection of downloaded logo, 2026-10-21"
+      }
+    ]
+  },
+  {
+    "id": "versace",
+    "name": "Versace",
+    "universes": [
+      "Vue"
+    ],
+    "logo": {
+      "src": "/media/c2f4177600-Versace-logo-650x366-1.webp",
+      "width": 650,
+      "height": 366,
+      "origin": "https://optic2000tahiti.com/wp-content/uploads/2022/09/Versace-logo-650x366-1.png",
+      "sourceSha256": "dac023627133f9fcb87b5fcdbc0fb8cfcaa9f71e581c3adb3d7c4d7916099810"
+    },
+    "darkLogo": false,
+    "productIds": [],
+    "relationship": null,
+    "source": [
+      {
+        "url": "https://optic2000tahiti.com/wp-content/uploads/2022/09/Versace-logo-650x366-1.png",
+        "page": "https://optic2000tahiti.com/lunettes-de-vue/",
+        "method": "visual inspection of downloaded logo, 2026-10-21"
+      }
+    ]
+  },
+  {
+    "id": "ad-lib",
+    "name": "ad-lib",
+    "universes": [
+      "Vue"
+    ],
+    "logo": {
+      "src": "/media/996671d375-logo-ad-lib-400x200-1.webp",
+      "width": 400,
+      "height": 200,
+      "origin": "https://optic2000tahiti.com/wp-content/uploads/2022/09/logo-ad-lib-400x200-1.png",
+      "sourceSha256": "ddc8da4f6fd7691af4383079cf4466ada1f35d8388e75ad4645a6d1af8c935bb"
+    },
+    "darkLogo": false,
+    "productIds": [],
+    "relationship": null,
+    "source": [
+      {
+        "url": "https://optic2000tahiti.com/wp-content/uploads/2022/09/logo-ad-lib-400x200-1.png",
+        "page": "https://optic2000tahiti.com/lunettes-de-vue/",
+        "method": "visual inspection of downloaded logo, 2026-10-21"
+      }
+    ]
+  },
+  {
+    "id": "azzaro",
+    "name": "Azzaro",
+    "universes": [
+      "Vue"
+    ],
+    "logo": {
+      "src": "/media/c010230ee2-Logo-Azzaro.webp",
+      "width": 440,
+      "height": 162,
+      "origin": "https://optic2000tahiti.com/wp-content/uploads/2022/09/Logo-Azzaro.webp",
+      "sourceSha256": "ddaac83d27290cc05732f073ef7edbe62b4deb231f294aed782f97fca4089903"
+    },
+    "darkLogo": false,
+    "productIds": [],
+    "relationship": null,
+    "source": [
+      {
+        "url": "https://optic2000tahiti.com/wp-content/uploads/2022/09/Logo-Azzaro.webp",
+        "page": "https://optic2000tahiti.com/lunettes-de-vue/",
+        "method": "visual inspection of downloaded logo, 2026-10-21"
+      }
+    ]
+  },
+  {
+    "id": "gucci",
+    "name": "Gucci",
+    "universes": [
+      "Vue",
+      "Soleil"
+    ],
+    "logo": {
+      "src": "/media/47aa7b9e88-Gucci-Logo-No-Background.webp",
+      "width": 511,
+      "height": 309,
+      "origin": "https://optic2000tahiti.com/wp-content/uploads/2022/09/Gucci-Logo-No-Background.png",
+      "sourceSha256": "5a3a58fb67b33d121db3371a6f4ea5b278623fdbbe035f541dc1fafd7dcd292e"
+    },
+    "darkLogo": false,
+    "productIds": [],
+    "relationship": null,
+    "source": [
+      {
+        "url": "https://optic2000tahiti.com/wp-content/uploads/2022/09/Gucci-Logo-No-Background.png",
+        "page": "https://optic2000tahiti.com/lunettes-de-vue/",
+        "method": "visual inspection of downloaded logo, 2026-10-21"
+      },
+      {
+        "url": "https://optic2000tahiti.com/wp-content/uploads/2022/09/Black-Gucci-Logo-PNG-Image.png",
+        "page": "https://optic2000tahiti.com/lunettes-de-soleil/",
+        "method": "visual inspection of downloaded logo, 2026-10-21"
+      }
+    ]
+  },
+  {
+    "id": "charmant",
+    "name": "Charmant",
+    "universes": [
+      "Vue"
+    ],
+    "logo": {
+      "src": "/media/c77803a491-logo_charmant.webp",
+      "width": 230,
+      "height": 127,
+      "origin": "https://optic2000tahiti.com/wp-content/uploads/2022/09/logo_charmant.png",
+      "sourceSha256": "b5fdaa52cfd3b2f50fbd0d8945cac4c143327d74be86c4dc2e46d50770912052"
+    },
+    "darkLogo": false,
+    "productIds": [],
+    "relationship": null,
+    "source": [
+      {
+        "url": "https://optic2000tahiti.com/wp-content/uploads/2022/09/logo_charmant.png",
+        "page": "https://optic2000tahiti.com/lunettes-de-vue/",
+        "method": "visual inspection of downloaded logo, 2026-10-21"
+      }
+    ]
+  },
+  {
+    "id": "mauboussin",
+    "name": "Mauboussin",
+    "universes": [
+      "Vue",
+      "Soleil"
+    ],
+    "logo": {
+      "src": "/media/ca5b9baa91-LOGO-Mauboussin_1.webp",
+      "width": 342,
+      "height": 192,
+      "origin": "https://optic2000tahiti.com/wp-content/uploads/2022/09/LOGO-Mauboussin_1.png",
+      "sourceSha256": "019f2e95a2bdba8354d47ed2eb9eab3b64deeac4f64afc6042e3ed524b13a7f9"
+    },
+    "darkLogo": false,
+    "productIds": [],
+    "relationship": null,
+    "source": [
+      {
+        "url": "https://optic2000tahiti.com/wp-content/uploads/2022/09/LOGO-Mauboussin_1.png",
+        "page": "https://optic2000tahiti.com/lunettes-de-vue/",
+        "method": "visual inspection of downloaded logo, 2026-10-21"
+      },
+      {
+        "url": "https://optic2000tahiti.com/wp-content/uploads/2022/09/LOGO-Mauboussin_1-1.png",
+        "page": "https://optic2000tahiti.com/lunettes-de-soleil/",
+        "method": "visual inspection of downloaded logo, 2026-10-21"
+      }
+    ]
+  },
+  {
+    "id": "vogue-eyewear",
+    "name": "Vogue Eyewear",
+    "universes": [
+      "Vue"
+    ],
+    "logo": {
+      "src": "/media/6cb7c5d001-VOGUE-logo-B-scaled.webp",
+      "width": 2560,
+      "height": 1081,
+      "origin": "https://optic2000tahiti.com/wp-content/uploads/2022/09/VOGUE-logo-B-scaled.webp",
+      "sourceSha256": "7f2635f7d71a39621291ed2c2935f346860914a6f9cc10a9f50a04b492a4ba07"
+    },
+    "darkLogo": false,
+    "productIds": [],
+    "relationship": null,
+    "source": [
+      {
+        "url": "https://optic2000tahiti.com/wp-content/uploads/2022/09/VOGUE-logo-B-scaled.webp",
+        "page": "https://optic2000tahiti.com/lunettes-de-vue/",
+        "method": "visual inspection of downloaded logo, 2026-10-21"
+      }
+    ]
+  },
+  {
+    "id": "maui-jim",
+    "name": "Maui Jim",
+    "universes": [
+      "Soleil"
+    ],
+    "logo": {
+      "src": "/media/842db02733-maui_jim-01.webp",
+      "width": 636,
+      "height": 328,
+      "origin": "https://optic2000tahiti.com/wp-content/uploads/2022/09/maui_jim-01.png",
+      "sourceSha256": "9308626ac2dee13bc12912bdf371c19bd526cf479e4933159da2bc9c37ba97c5"
+    },
+    "darkLogo": false,
+    "productIds": [
+      2417,
+      2398,
+      2384,
+      2366,
+      2346,
+      2077,
+      2064,
+      1845,
+      1831,
+      1726,
+      1711,
+      1699,
+      1687,
+      1677,
+      1662,
+      1657,
+      1534,
+      1521,
+      1512,
+      1497,
+      1488,
+      1477,
+      1464,
+      1455,
+      1444,
+      1406,
+      1381,
+      1333,
+      1314,
+      1300,
+      1275,
+      1262,
+      1250,
+      1227,
+      1214,
+      1203,
+      1189,
+      1166,
+      1152,
+      1139,
+      1115,
+      1098,
+      1092,
+      1074,
+      1057,
+      1037,
+      1026,
+      1013,
+      989,
+      976,
+      960,
+      939,
+      927,
+      905,
+      892,
+      887,
+      878,
+      863,
+      851,
+      846,
+      837,
+      826,
+      817,
+      810,
+      797,
+      777,
+      767,
+      752,
+      740,
+      722,
+      713,
+      695,
+      681,
+      673,
+      668,
+      664,
+      606,
+      602
+    ],
+    "relationship": null,
+    "source": [
+      {
+        "url": "https://optic2000tahiti.com/wp-content/uploads/2022/09/maui_jim-01.png",
+        "page": "https://optic2000tahiti.com/lunettes-de-soleil/",
+        "method": "visual inspection of downloaded logo, 2026-10-21"
+      }
+    ]
+  },
+  {
+    "id": "longchamp",
+    "name": "Longchamp",
+    "universes": [
+      "Soleil"
+    ],
+    "logo": {
+      "src": "/media/2fb701c707-Logo_Longchamp.webp",
+      "width": 1600,
+      "height": 1600,
+      "origin": "https://optic2000tahiti.com/wp-content/uploads/2022/09/Logo_Longchamp.png",
+      "sourceSha256": "7e86abbfc691fdfe297ac74036dfd17df7288a6d32c366c7d90714d1e3da6d47"
+    },
+    "darkLogo": false,
+    "productIds": [],
+    "relationship": null,
+    "source": [
+      {
+        "url": "https://optic2000tahiti.com/wp-content/uploads/2022/09/Logo_Longchamp.png",
+        "page": "https://optic2000tahiti.com/lunettes-de-soleil/",
+        "method": "visual inspection of downloaded logo, 2026-10-21"
+      }
+    ]
+  },
+  {
+    "id": "rip-curl",
+    "name": "Rip Curl",
+    "universes": [
+      "Soleil"
+    ],
+    "logo": {
+      "src": "/media/146eb99c15-rip-curl-logo-square.webp",
+      "width": 800,
+      "height": 800,
+      "origin": "https://optic2000tahiti.com/wp-content/uploads/2022/09/rip-curl-logo-square.png",
+      "sourceSha256": "2dc5964557e002b4474fcb58a5d99c226e7296b477eeafe0e3a428927345e794"
+    },
+    "darkLogo": false,
+    "productIds": [],
+    "relationship": null,
+    "source": [
+      {
+        "url": "https://optic2000tahiti.com/wp-content/uploads/2022/09/rip-curl-logo-square.png",
+        "page": "https://optic2000tahiti.com/lunettes-de-soleil/",
+        "method": "visual inspection of downloaded logo, 2026-10-21"
+      }
+    ]
+  },
+  {
+    "id": "nike",
+    "name": "Nike",
+    "universes": [
+      "Soleil"
+    ],
+    "logo": {
+      "src": "/media/794e61281e-nike-logo-officiel.webp",
+      "width": 400,
+      "height": 400,
+      "origin": "https://optic2000tahiti.com/wp-content/uploads/2022/09/nike-logo-officiel.png",
+      "sourceSha256": "0403a6d57c257d74ee437e4e840c6976bf39a4647217454a7add99da7a131bf9"
+    },
+    "darkLogo": false,
+    "productIds": [],
+    "relationship": null,
+    "source": [
+      {
+        "url": "https://optic2000tahiti.com/wp-content/uploads/2022/09/nike-logo-officiel.png",
+        "page": "https://optic2000tahiti.com/lunettes-de-soleil/",
+        "method": "visual inspection of downloaded logo, 2026-10-21"
+      }
+    ]
+  },
+  {
+    "id": "ray-ban",
+    "name": "Ray-Ban",
+    "universes": [
+      "Soleil"
+    ],
+    "logo": {
+      "src": "/media/f0d355e0be-1280px-Ray-Ban_logo.svg_.webp",
+      "width": 1280,
+      "height": 690,
+      "origin": "https://optic2000tahiti.com/wp-content/uploads/2022/09/1280px-Ray-Ban_logo.svg_.png",
+      "sourceSha256": "9b6d32465914de419b4d117fac4ea21e74bfed6410081f1f6aa974b94b12d847"
+    },
+    "darkLogo": false,
+    "productIds": [],
+    "relationship": null,
+    "source": [
+      {
+        "url": "https://optic2000tahiti.com/wp-content/uploads/2022/09/1280px-Ray-Ban_logo.svg_.png",
+        "page": "https://optic2000tahiti.com/lunettes-de-soleil/",
+        "method": "visual inspection of downloaded logo, 2026-10-21"
+      }
+    ]
+  },
+  {
+    "id": "michael-kors",
+    "name": "Michael Kors",
+    "universes": [
+      "Soleil"
+    ],
+    "logo": {
+      "src": "/media/b7173156a7-Michael-Kors-Symbol.webp",
+      "width": 1600,
+      "height": 900,
+      "origin": "https://optic2000tahiti.com/wp-content/uploads/2022/09/Michael-Kors-Symbol.png",
+      "sourceSha256": "312fdc0935b0c2bee8e6d5fff138c335a987d656318e25fa4761feaec949d136"
+    },
+    "darkLogo": false,
+    "productIds": [],
+    "relationship": null,
+    "source": [
+      {
+        "url": "https://optic2000tahiti.com/wp-content/uploads/2022/09/Michael-Kors-Symbol.png",
+        "page": "https://optic2000tahiti.com/lunettes-de-soleil/",
+        "method": "visual inspection of downloaded logo, 2026-10-21"
+      }
+    ]
+  },
+  {
+    "id": "elite-eyewear",
+    "name": "Elite Eyewear",
+    "universes": [
+      "Soleil"
+    ],
+    "logo": {
+      "src": "/media/b314b53ab3-telechargement.webp",
+      "width": 288,
+      "height": 175,
+      "origin": "https://optic2000tahiti.com/wp-content/uploads/2022/09/telechargement.png",
+      "sourceSha256": "39ab1a8d4409dd5dccff0ad5916d30c50b81e4417b08c86875a9536f1e94d8c2"
+    },
+    "darkLogo": false,
+    "productIds": [],
+    "relationship": null,
+    "source": [
+      {
+        "url": "https://optic2000tahiti.com/wp-content/uploads/2022/09/telechargement.png",
+        "page": "https://optic2000tahiti.com/lunettes-de-soleil/",
+        "method": "visual inspection of downloaded logo, 2026-10-21"
+      }
+    ]
+  },
+  {
+    "id": "persol",
+    "name": "Persol",
+    "universes": [
+      "Soleil"
+    ],
+    "logo": {
+      "src": "/media/991938c45c-Persol-logo.webp",
+      "width": 1280,
+      "height": 720,
+      "origin": "https://optic2000tahiti.com/wp-content/uploads/2022/09/Persol-logo.png",
+      "sourceSha256": "8d5cb81e5befb748456e7dbdcb332180e761cf194ad527aa2fff5b17a8835a18"
+    },
+    "darkLogo": false,
+    "productIds": [],
+    "relationship": null,
+    "source": [
+      {
+        "url": "https://optic2000tahiti.com/wp-content/uploads/2022/09/Persol-logo.png",
+        "page": "https://optic2000tahiti.com/lunettes-de-soleil/",
+        "method": "visual inspection of downloaded logo, 2026-10-21"
+      }
+    ]
+  },
+  {
+    "id": "julbo",
+    "name": "Julbo",
+    "universes": [
+      "Soleil"
+    ],
+    "logo": {
+      "src": "/media/2ef335c394-optique-JULBO.webp",
+      "width": 800,
+      "height": 800,
+      "origin": "https://optic2000tahiti.com/wp-content/uploads/2022/09/optique-JULBO.png",
+      "sourceSha256": "c55c1e797f44aad122af3e2742b1752c28be1e50a6881321afa13b9c9c077751"
+    },
+    "darkLogo": false,
+    "productIds": [],
+    "relationship": null,
+    "source": [
+      {
+        "url": "https://optic2000tahiti.com/wp-content/uploads/2022/09/optique-JULBO.png",
+        "page": "https://optic2000tahiti.com/lunettes-de-soleil/",
+        "method": "visual inspection of downloaded logo, 2026-10-21"
+      }
+    ]
+  },
+  {
+    "id": "vuarnet",
+    "name": "Vuarnet",
+    "universes": [
+      "Soleil"
+    ],
+    "logo": {
+      "src": "/media/7d07c36667-Logo_Vuarnet.webp",
+      "width": 1600,
+      "height": 1600,
+      "origin": "https://optic2000tahiti.com/wp-content/uploads/2022/09/Logo_Vuarnet.png",
+      "sourceSha256": "5b775fab5d58193e156158d286e7b8d9ba5a639ebc006d4b8b778728801bf97d"
+    },
+    "darkLogo": false,
+    "productIds": [],
+    "relationship": null,
+    "source": [
+      {
+        "url": "https://optic2000tahiti.com/wp-content/uploads/2022/09/Logo_Vuarnet.png",
+        "page": "https://optic2000tahiti.com/lunettes-de-soleil/",
+        "method": "visual inspection of downloaded logo, 2026-10-21"
+      }
+    ]
+  },
+  {
+    "id": "freshlook",
+    "name": "FreshLook",
+    "universes": [
+      "Lentilles"
+    ],
+    "logo": {
+      "src": "/media/bf840f463f-186535.webp",
+      "width": 893,
+      "height": 318,
+      "origin": "https://optic2000tahiti.com/wp-content/uploads/2022/06/186535.png",
+      "sourceSha256": "e895767d2dc137d86784e87b70735337366359a263e47f5ccd8398dcd7d0a089"
+    },
+    "darkLogo": false,
+    "productIds": [
+      1956,
+      1942
+    ],
+    "relationship": "Gamme de lentilles Alcon.",
+    "source": [
+      {
+        "url": "https://optic2000tahiti.com/wp-content/uploads/2022/06/186535.png",
+        "page": "https://optic2000tahiti.com/lentilles/",
+        "method": "visual inspection of downloaded logo, 2026-10-21"
+      }
+    ]
+  },
+  {
+    "id": "alcon",
+    "name": "Alcon",
+    "universes": [
+      "Lentilles"
+    ],
+    "logo": {
+      "src": "/media/91b2288281-Alcon_Laboratories_Ltd_Logo.webp",
+      "width": 1600,
+      "height": 557,
+      "origin": "https://optic2000tahiti.com/wp-content/uploads/2022/06/Alcon_Laboratories_Ltd_Logo.png",
+      "sourceSha256": "98368ab89897332a47696d21d4ce3d63dafa9bf2e8242216db6a1407f6662cc1"
+    },
+    "darkLogo": false,
+    "productIds": [],
+    "relationship": "Laboratoire présenté dans l’univers lentilles.",
+    "source": [
+      {
+        "url": "https://optic2000tahiti.com/wp-content/uploads/2022/06/Alcon_Laboratories_Ltd_Logo.png",
+        "page": "https://optic2000tahiti.com/lentilles/",
+        "method": "visual inspection of downloaded logo, 2026-10-21"
+      }
+    ]
+  },
+  {
+    "id": "lcs",
+    "name": "LCS",
+    "universes": [
+      "Lentilles"
+    ],
+    "logo": {
+      "src": "/media/599f4aebbf-logo-lcs-site.webp",
+      "width": 1127,
+      "height": 366,
+      "origin": "https://optic2000tahiti.com/wp-content/uploads/2022/06/logo-lcs-site.png",
+      "sourceSha256": "a28c3f399e288d5421ddfdb44cb34ff8e21a30ac27cebc4646903e5ec629344f"
+    },
+    "darkLogo": false,
+    "productIds": [],
+    "relationship": "Laboratoire présenté dans l’univers lentilles.",
+    "source": [
+      {
+        "url": "https://optic2000tahiti.com/wp-content/uploads/2022/06/logo-lcs-site.png",
+        "page": "https://optic2000tahiti.com/lentilles/",
+        "method": "visual inspection of downloaded logo, 2026-10-21"
+      }
+    ]
+  },
+  {
+    "id": "bausch-lomb",
+    "name": "Bausch + Lomb",
+    "universes": [
+      "Lentilles"
+    ],
+    "logo": {
+      "src": "/media/5ed7291907-Bausch__Lomb_Logo.webp",
+      "width": 1600,
+      "height": 832,
+      "origin": "https://optic2000tahiti.com/wp-content/uploads/2022/06/Bausch__Lomb_Logo.png",
+      "sourceSha256": "02d54a8d19e03e4a8c29fbef033dba099fc3d3666230d5f343cdf58806ed7acd"
+    },
+    "darkLogo": false,
+    "productIds": [],
+    "relationship": "Laboratoire présenté dans l’univers lentilles.",
+    "source": [
+      {
+        "url": "https://optic2000tahiti.com/wp-content/uploads/2022/06/Bausch__Lomb_Logo.png",
+        "page": "https://optic2000tahiti.com/lentilles/",
+        "method": "visual inspection of downloaded logo, 2026-10-21"
+      }
+    ]
+  },
+  {
+    "id": "coopervision",
+    "name": "CooperVision",
+    "universes": [
+      "Lentilles"
+    ],
+    "logo": {
+      "src": "/media/240bdb9b3f-coopervision-logo-orange.webp",
+      "width": 1170,
+      "height": 273,
+      "origin": "https://optic2000tahiti.com/wp-content/uploads/2022/06/coopervision-logo-orange.png",
+      "sourceSha256": "66181228d19c847fa788cd7703179f97f0c48cc64da7dccac298d259c55cf606"
+    },
+    "darkLogo": false,
+    "productIds": [],
+    "relationship": "Laboratoire présenté dans l’univers lentilles.",
+    "source": [
+      {
+        "url": "https://optic2000tahiti.com/wp-content/uploads/2022/06/coopervision-logo-orange.png",
+        "page": "https://optic2000tahiti.com/lentilles/",
+        "method": "visual inspection of downloaded logo, 2026-10-21"
+      }
+    ]
+  },
+  {
+    "id": "acuvue",
+    "name": "ACUVUE",
+    "universes": [
+      "Lentilles"
+    ],
+    "logo": {
+      "src": "/media/e810890189-logo_0.webp",
+      "width": 612,
+      "height": 175,
+      "origin": "https://optic2000tahiti.com/wp-content/uploads/2022/06/logo_0.png",
+      "sourceSha256": "fcc6d587535e1c90d4fc4cac64a9589d88e4e8742ca219354f10124233f6bfcd"
+    },
+    "darkLogo": false,
+    "productIds": [],
+    "relationship": "Marque ou gamme de lentilles présentée sur le site. Le laboratoire associé reste à confirmer.",
+    "source": [
+      {
+        "url": "https://optic2000tahiti.com/wp-content/uploads/2022/06/logo_0.png",
+        "page": "https://optic2000tahiti.com/lentilles/",
+        "method": "visual inspection of downloaded logo, 2026-10-21"
+      }
+    ]
+  },
+  {
+    "id": "miru",
+    "name": "Miru",
+    "universes": [
+      "Lentilles"
+    ],
+    "logo": {
+      "src": "/media/582a7ad279-logo_Miru.webp",
+      "width": 300,
+      "height": 90,
+      "origin": "https://optic2000tahiti.com/wp-content/uploads/2022/06/logo_Miru.png",
+      "sourceSha256": "77d83b6068d2199250f675c4e2dbd74d42de599ae63131aceb47833adc61bb06"
+    },
+    "darkLogo": false,
+    "productIds": [],
+    "relationship": "Marque ou gamme de lentilles présentée sur le site. Le laboratoire associé reste à confirmer.",
+    "source": [
+      {
+        "url": "https://optic2000tahiti.com/wp-content/uploads/2022/06/logo_Miru.png",
+        "page": "https://optic2000tahiti.com/lentilles/",
+        "method": "visual inspection of downloaded logo, 2026-10-21"
+      }
+    ]
+  },
+  {
+    "id": "bosma",
+    "name": "Bosma",
+    "universes": [
+      "Observation"
+    ],
+    "logo": {
+      "src": "/media/fb0fe3968d-1301336.webp",
+      "width": 1493,
+      "height": 409,
+      "origin": "https://optic2000tahiti.com/wp-content/uploads/2022/09/1301336.png",
+      "sourceSha256": "324608a1b6ccaea3bc46d6875c9a104b593903e42075305e69ed34fccc7d9e6f"
+    },
+    "darkLogo": true,
+    "productIds": [],
+    "relationship": null,
+    "source": [
+      {
+        "url": "https://optic2000tahiti.com/wp-content/uploads/2022/09/1301336.png",
+        "page": "https://optic2000tahiti.com/jumelles-et-telescopes/",
+        "method": "visual inspection of downloaded logo, 2026-10-21"
+      }
+    ]
+  },
+  {
+    "id": "celestron",
+    "name": "Celestron",
+    "universes": [
+      "Observation"
+    ],
+    "logo": {
+      "src": "/media/8a8c58108b-images-1.webp",
+      "width": 569,
+      "height": 88,
+      "origin": "https://optic2000tahiti.com/wp-content/uploads/2022/09/images-1.png",
+      "sourceSha256": "be40521115a4948c4c00cb7375adc51b084672107141954cf0814cd195499df3"
+    },
+    "darkLogo": false,
+    "productIds": [],
+    "relationship": null,
+    "source": [
+      {
+        "url": "https://optic2000tahiti.com/wp-content/uploads/2022/09/images-1.png",
+        "page": "https://optic2000tahiti.com/jumelles-et-telescopes/",
+        "method": "visual inspection of downloaded logo, 2026-10-21"
+      }
+    ]
+  },
+  {
+    "id": "perl",
+    "name": "Perl",
+    "universes": [
+      "Observation"
+    ],
+    "logo": {
+      "src": "/media/42ae07be81-TransparentBlancR.webp",
+      "width": 1600,
+      "height": 424,
+      "origin": "https://optic2000tahiti.com/wp-content/uploads/2022/09/TransparentBlancR.png",
+      "sourceSha256": "ab67d92f01e0ef9e9226e45759f4ae4c3296215f183a6a8cd9ab7395b4be94bb"
+    },
+    "darkLogo": true,
+    "productIds": [],
+    "relationship": null,
+    "source": [
+      {
+        "url": "https://optic2000tahiti.com/wp-content/uploads/2022/09/TransparentBlancR.png",
+        "page": "https://optic2000tahiti.com/jumelles-et-telescopes/",
+        "method": "visual inspection of downloaded logo, 2026-10-21"
+      }
+    ]
+  },
+  {
+    "id": "trublends",
+    "name": "TruBlends",
+    "universes": [
+      "Lentilles"
+    ],
+    "logo": null,
+    "darkLogo": false,
+    "productIds": [
+      1884,
+      1881
+    ],
+    "relationship": "Marque ou gamme de lentilles présentée sur le site. Le laboratoire associé reste à confirmer.",
+    "source": [
+      {
+        "page": "https://optic2000tahiti.com/lentilles/",
+        "method": "product titles in public WooCommerce data"
+      }
+    ]
+  },
+  {
+    "id": "colourvue",
+    "name": "Colourvue",
+    "universes": [
+      "Lentilles"
+    ],
+    "logo": null,
+    "darkLogo": false,
+    "productIds": [
+      1866
+    ],
+    "relationship": "Marque ou gamme de lentilles présentée sur le site. Le laboratoire associé reste à confirmer.",
+    "source": [
+      {
+        "page": "https://optic2000tahiti.com/lentilles/",
+        "method": "product titles in public WooCommerce data"
+      }
+    ]
+  }
+]
