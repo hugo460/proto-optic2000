@@ -4,6 +4,7 @@ Never reads mail, cookies, or executable scripts. See docs/content-inventory.md.
 import argparse
 import hashlib
 import json
+import re
 from html import unescape
 from html.parser import HTMLParser
 from pathlib import Path
@@ -63,8 +64,9 @@ for b in read('brands-inventory.json'):
     evidence = [{k: e[k] for k in ('url', 'page', 'method') if k in e} for e in b['evidence']]
     brands.append({'name': b['name'], 'evidence': evidence, 'onlineProductsSource': b['onlineProducts']})
     urls.update(e['url'] for e in evidence if '/wp-content/' in e.get('url', ''))
-# Only editorial images actually used by S1. Source originals stay outside Git.
-editorial_files = ['655699e241-logo-optic-2000-quadri.jpg', '3ccedc7d0d-Readers-Landing-Page-Fashion-Favorite-Big-Card-Kini-Kini-GS849-02K.webp', '1973260a9f-IMG_0997-Copie.jpg', '8331dd1f09-IMG_1002.jpg', '9aa0950419-IMG-5315-scaled.jpg', '27a1e1e1bd-IMG-5318-scaled.jpg', '4a3600313f-image_50397185-scaled.jpg', '33895c9dce-image_6487327-scaled.jpg']
+# Only editorial images actually displayed (S1 + S2 pages). Source originals stay outside Git.
+editorial_files = ['655699e241-logo-optic-2000-quadri.jpg', '3ccedc7d0d-Readers-Landing-Page-Fashion-Favorite-Big-Card-Kini-Kini-GS849-02K.webp', '1973260a9f-IMG_0997-Copie.jpg', '8331dd1f09-IMG_1002.jpg', '9aa0950419-IMG-5315-scaled.jpg', '27a1e1e1bd-IMG-5318-scaled.jpg', '4a3600313f-image_50397185-scaled.jpg', '33895c9dce-image_6487327-scaled.jpg',
+    '4fc6abc0d6-2022-05-02-OPTIC2000-POST27.jpg', '62e14c3acf-2022-05-02-OPTIC2000-POST21.jpg', '6b3c1455b1-opticiens-tahiti-scaled.jpg', 'b413c0bdf9-perl-alhena-70-700-eq1.jpg', '16bd866170-celestron-oceana-7-x-50-noire.jpg']
 manifest = read('assets-manifest.json')
 urls.update(m['url'] for m in manifest if m['file'] in editorial_files)
 assets = [{k: m[k] for k in ('url', 'file', 'sha256', 'dimensions', 'references')} for m in manifest if m['url'] in urls and m['ok']]
@@ -74,5 +76,15 @@ write('catalogue.public.json', {'collectedAt': '2026-10-21', 'endpoint': 'https:
 write('brands.public.json', brands)
 write('assets.public.json', assets)
 pages = read('site/wp-json_wp_v2_pages_per_page-100.json')
-write('pages.public.json', [{ 'id': p['id'], 'slug': p['slug'], 'url': p['link'], 'title': plain(p['title']['rendered'])} for p in pages if p['slug'] != 'page-d-exemple'])
+# Pages whose wording is reused (reorganised) by the prototype keep an inert plain-text copy for
+# traceability; Divi shortcodes are removed. Commerce, CGV and privacy pages keep only their identity.
+reused_text = {'accueil', 'lunettes-de-vue', 'lentilles', 'jumelles-et-telescopes', 'basse-vision', 'protheses-occulaires', 'qui-sommes-nous', 'mentions-legales'}
+def page_text(rendered):
+    text = re.sub(r'\[/?et_pb_[^\]]*\]', '\n', plain(rendered))
+    return '\n'.join(line.strip() for line in text.splitlines() if line.strip())
+def page_row(p):
+    row = {'id': p['id'], 'slug': p['slug'], 'url': p['link'], 'title': plain(p['title']['rendered']), 'date': p['date'], 'modified': p['modified'], 'contentSha256': hashlib.sha256(p['content']['rendered'].encode()).hexdigest()}
+    if p['slug'] in reused_text: row['text'] = page_text(p['content']['rendered'])
+    return row
+write('pages.public.json', [page_row(p) for p in pages if p['slug'] != 'page-d-exemple'])
 print(f'Public snapshot: {len(rows)} products, {sum(len(p["variants"]) for p in rows)} variants, {len(brands)} identities, {len(assets)} referenced media.')

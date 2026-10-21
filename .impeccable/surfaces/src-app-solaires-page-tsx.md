@@ -2,7 +2,7 @@
 version: 1
 slug: "src-app-solaires-page-tsx"
 primary_target: "src/app/solaires/page.tsx"
-related_targets: ["src/app/catalogue/page.tsx","src/app/produits/[slug]/page.tsx","src/components/catalog/product-experience.tsx"]
+related_targets: ["src/app/catalogue/page.tsx","src/app/produits/[slug]/page.tsx","src/components/catalog/product-experience.tsx","src/components/catalog/lens-picker.tsx"]
 ---
 
 # Parcours catalogue et produit
@@ -23,4 +23,8 @@ FORM: Grille fonctionnelle et galerie à variantes, héritées du nuancier confi
 
 FINISH: unreviewed and undocumented is unfinished; this build ends with the finish review, the verdict, DESIGN.md, and every shipping raster carrying its provenance
 
-États: URL partagée, cumul, tri, aucun résultat, reset, filtre invalide, route inconnue, variante absente/invalide, photo indisponible, réduction du mouvement, clavier et retour. Lentilles: données complètes ; choix détaillé en S2.
+États: URL partagée, cumul, tri, aucun résultat, reset, filtre invalide, route inconnue, variante absente/invalide, photo indisponible, réduction du mouvement, clavier et retour.
+
+Lentilles (S2): couleur puis correction choisies séparément, comme deux questions. Couleurs en boutons nommés (aria-pressed, coche, sans pastille inventée), sphère en `select` natif trié par valeur avec libellés exacts signés. Un statut poli dit ce qui manque, ce qui est choisi ou pourquoi le lien a été corrigé ; jamais de couleur déduite d’un défaut de sphère. Produit simple : une seule version, pas de sélecteur. Prix et photo de la référence réelle ; prix commun nommé comme tel. Sélection dans l’URL (`variante`, `couleur`, `sphere`) et transmise au magasin et à la demande simulée.
+
+Caractéristiques lentilles (S2 paquet 2) : conditionnement et renouvellement affichés comme faits (Colorblends boîte de 2 et renouvellement mensuel ; 1-Day et TruBlends boîte de 10 ; TruBlends 5 couleurs sans correction) ; stock, délais et règle « hors période de fêtes » de 2022 seulement en réserve datée (`src/data/lens-facts.ts`). Le lien de famille sous les lentilles associées mène à `/lentilles` (« Toutes les lentilles ») ; `retour=/lentilles` est accepté.

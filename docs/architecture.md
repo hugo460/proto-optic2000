@@ -13,25 +13,53 @@ TypeScript 6.0.3 respecte la plage prise en charge par typescript-eslint. ESLint
 - `layout/` : navigation et pied de page. Le menu mobile utilise `dialog`, son focus natif et Escape.
 - `catalog/` : cartes serveur, filtres GET, sélecteur d’accueil et expérience produit.
 - `stores/` : cartes, lecture du contexte produit et récapitulatif de sélection.
-- `src/data/` : types, produits, variantes, marques, médias et magasins. Les JSON générés proviennent du snapshot public réduit.
-- `src/lib/` : XPF sans décimales, filtres/tri, URL de retour autorisées, sélection des variantes et regroupement des vues.
+- `src/data/` : types, produits, variantes, marques, médias et magasins ; `content.ts` (pages éditoriales), `navigation.ts` (univers, pages de la maison, légaux, sans import du catalogue pour ne pas l’embarquer dans l’en-tête client) et `lens-facts.ts` (caractéristiques des lentilles). Les JSON générés proviennent du snapshot public réduit.
+- `src/lib/` : XPF sans décimales, filtres/tri, URL de retour autorisées, sélection des variantes et regroupement des vues ; `lens-selection.ts` (options signées), `contact-context.ts` (contexte public et validation) et `legacy-redirects.ts` (anciens chemins).
+- `contact/` : formulaire en îlot client. `content/` : gabarits éditoriaux partagés. `catalog/lens-picker.tsx` : sélecteur couleur/sphère.
 - `scripts/` : transformation, contrôles et captures reproductibles ; `tests/` : comportements métier et parcours Chromium.
 
 ## Flux
 
-Le serveur lit les données locales → rend la liste correspondant à l’URL → un lien transmet cette URL comme contexte de retour → la fiche choisit une variante réelle → son prix, sa photo et ses caractéristiques changent → la sélection accompagne le visiteur vers la liste puis la fiche du magasin. Les liens téléphone, e-mail et Google Maps ouvrent les outils de l’utilisateur ; ils ne déclenchent aucun envoi ou appel automatique.
+Le serveur lit les données locales → rend la liste correspondant à l’URL → un lien transmet cette URL comme contexte de retour → la fiche choisit une variante réelle → son prix, sa photo et ses caractéristiques changent → la sélection accompagne le visiteur vers la liste puis la fiche du magasin. Les coordonnées ne sont définies que dans `stores.ts` et les tests vérifient les `href` sans les activer. Les liens téléphone, e-mail et Google Maps ouvrent les outils de l’utilisateur ; ils ne déclenchent aucun envoi ou appel automatique.
 
-Les filtres utilisent des formulaires GET. Le volet repliable, sur tablette et téléphone jusqu’à 800 px, est un petit îlot client ; l’envoi du formulaire est natif. Recherche, genre d’origine, coloris exact, budget et tri sont dans l’URL ; les valeurs inconnues sont ignorées avec explication. Le retour n’accepte que `/solaires` et `/catalogue` sur le même site. Aucun localStorage ni état persistant à effacer avant la démonstration.
+Les filtres utilisent des formulaires GET. Le volet repliable, sur tablette et téléphone jusqu’à 800 px, est un petit îlot client ; l’envoi du formulaire est natif. Recherche, genre d’origine, coloris exact, budget et tri sont dans l’URL ; les valeurs inconnues sont ignorées avec explication. Le retour n’accepte que `/solaires`, `/lentilles` et `/catalogue` sur le même site. Aucun localStorage ni état persistant à effacer avant la démonstration, y compris pour le formulaire.
 
 Les variantes solaires sont des boutons nommés et pressés, utilisables au clavier. La sélection met à jour `variante` dans l’URL avec l’API d’historique prise en charge par Next. L’absence de sélection conserve la fourchette et la galerie complète. Les vues d’un coloris suivent le groupement de la galerie source jusqu’au premier visuel de la variante suivante ; le premier visuel sélectionné vient toujours de la variante elle-même.
 
 Les slugs connus sont déclarés par `generateStaticParams`, avec `dynamicParams=false`. Les slugs inconnus renvoient une 404 avant le streaming. Le chargement est limité aux listes catalogue/solaires : un fallback global commencerait le streaming avant de connaître la validité d’un slug.
+
+## Lentilles : sélection signée
+
+`lens-selection.ts` lit l’URL (`couleur`, `sphere`, `variante`) et la valide contre le produit ; l’URL est donc l’unique état et un lien direct, un rechargement ou l’historique redonnent la même sélection.
+
+- Les libellés viennent des termes source signés (`+2.00`, `-2.00`, `0.00`). Les slugs ne portent pas le signe et `+2`/`-2` ont des slugs différents : on ne reconstruit jamais un signe depuis un slug. L’ordre numérique est calculé sur les noms signés.
+- `0.00`, l’absence de valeur et une valeur vide sont trois choses distinctes. Une sphère vide dans une variante est un joker (compatible avec toute sphère), jamais une correction choisie ni un `0.00`.
+- Pour Colorblends, l’identifiant réel de variante (Grey, 1949) reste séparé de la sphère choisie : la couleur détermine la référence et le prix, la sphère accompagne la demande au magasin. Un ID inconnu, étranger au produit ou contradictoire avec les autres paramètres est ignoré avec une notice ; un défaut de sphère partiel (`0-00`, sans couleur) ne choisit aucune couleur.
+- États : `fixed` (produit simple, par exemple TruBlends 5 couleurs : aucun sélecteur), `empty`, `incomplete`, `complete`, `incompatible`. Une variante n’est résolue que si le visiteur a lui-même choisi tout attribut spécifique.
+- `changeSelection` retourne les paramètres canoniques. Au changement d’option, le composant relit l’URL courante avant de modifier ses clés, pour ne pas perdre le choix précédent si deux choix précèdent le rendu différé du routeur. Écriture par `history.replaceState`.
+- Limites assumées : plusieurs couleurs partagent une photo ; la légende le dit. Plusieurs lentilles ont un prix public unique pour toutes les couleurs ; la note précise qu’il est à confirmer en magasin.
+
+## Contexte public et contact
+
+`contact-context.ts` transmet seulement des identifiants publics : `produit`, `variante`, `couleur`, `sphere`, `sujet`, `magasin`. Le sujet est celui de l’URL, sinon déduit de la famille du produit (`lentilles` ou `soleil`). Les valeurs inconnues sont ignorées et listées pour une notice. Le sujet `protheses` impose Mamao : un autre magasin est remplacé, et la validation refuse la combinaison. Les liens vers le magasin et la fiche produit conservent sélection et sujet courants ; les retours explicitement filtrés restent prioritaires, et une carte de lentille revient par défaut vers `/lentilles`.
+
+Le formulaire garde ses champs dans l’état React local. Rien n’est envoyé, enregistré (ni `localStorage` ni cookie) ni écrit dans l’URL ou un journal : seuls `magasin` et `sujet` sont synchronisés par `replaceState`. Validation à la soumission, focus sur le premier champ en erreur, erreurs corrigées au fil de la saisie, puis récapitulatif de succès qui annonce qu’aucun message ni rendez-vous n’existe. « Préparer une autre demande » ne vide que nom, e-mail, téléphone, message et erreurs ; magasin, objet et la sélection jointe restent. Il n’agit sur aucun stockage.
+
+## Anciens chemins
+
+`legacy-redirects.ts` est la source unique de `redirects()` dans `next.config.ts` : chemins exacts, redirections temporaires 307, aucun catch-all, aucune chaîne. Next retire d’abord la barre finale (308) ; un ancien chemin peut donc passer par 308 puis 307. Les 83 slugs `/produit/<slug>` sont énumérés ; un slug inconnu reste une vraie 404. Compte, panier et commande n’existent pas et renvoient 404. `check:data` contrôle l’absence de chaîne ou de boucle. Aucune bascule du domaine client.
 
 ## Magasins et réseau
 
 `src/data/stores.ts` centralise tous les récapitulatifs, coordonnées et réserves. Les CID Google Maps sont les entiers exacts des identifiants de lieux inclus dans les cartes de la source. L’action « Plan et itinéraire » mène à la fiche Google du lieu exact, où l’utilisateur peut choisir son itinéraire. Pas de géolocalisation ni de carte embarquée.
 
 Next optimise les images locales via son propre endpoint. Les fontes variables Sora et Manrope, obtenues du [répertoire officiel Google Fonts](https://github.com/google/fonts), sont servies localement par `next/font/local`, avec les licences OFL incluses. Pas d’analytics, cookies métier, API, paiement ou collecte de document médical.
+
+## Pages S2 et système visuel
+
+Les pages éditoriales partagent les gabarits de `content/editorial.tsx` : titre, sommaire « Sur cette page » (ancres simples, sans pictogramme d’accordéon), sections, grilles de logos, panneau de demande en lavande douce. Le menu « Nos univers » (en-tête, filet bas), le formulaire et ses états réutilisent la palette, les polices, les boutons, champs et cartes de `DESIGN.md` ; aucune couleur, police ou composant de base n’est ajouté. Les logos blancs de Bosma et Perl sont posés sur une tuile sombre ; une identité sans logo confirmé (TruBlends, Colourvue) s’affiche en texte, sans faux logo.
+
+Cinq tailles de titre locales apparaissent dans `globals.css` : 1.15rem (sous-titres de lecture), 1.4–1.9rem (index des univers), 1.5–2rem (produits de lentilles), 1.6–2.25rem (sections de lecture et panneau de demande), 2.3–3.5rem (titre du contact). Elles prolongent l’échelle existante sans nouvelle famille ni nouveau rôle. `DESIGN.md` et son sidecar n’ont pas été modifiés pour S2 (voir [les décisions](decisions.md)).
 
 ## Évolution CMS
 

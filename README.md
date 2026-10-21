@@ -1,6 +1,8 @@
 # Optic 2000 Tahiti — prototype
 
-Premier lot S1 : accueil interactif, 38 présentations de marques et gammes, catalogue de 83 produits dont 78 solaires, fiches de produits et de magasins. Catalogue et contact magasin, sans panier.
+Lot S1 (accepté localement par le pilote le 21/10/2026 au commit `e3ee64e`, sans validation commerciale du client ni publication) : accueil interactif, 38 présentations de marques et gammes, catalogue de 83 produits dont 78 solaires, fiches de produits et de magasins.
+
+Lot S2 (en cours de validation par le pilote) : tous les univers utiles (lunettes de vue, lentilles et entretien, jumelles et télescopes, basse vision, prothèses oculaires, services et garanties, équipe), sélection précise des lentilles, formulaire de contact local, trois pages légales, 25 anciennes pages traitées (redirections, regroupements ou exclusions motivées). Toujours sans panier, compte, commande, envoi ni rendez-vous réel.
 
 ## Lancer
 
@@ -15,10 +17,10 @@ Pour la version de présentation locale :
 
 ```sh
 pnpm build
-pnpm start --hostname 127.0.0.1 --port 3012
+pnpm start --hostname 127.0.0.1 --port 3018
 ```
 
-Ouvrir `http://127.0.0.1:3012`. Pas de variable secrète, compte, CMS ou service distant requis. Les images et polices sont embarquées. Aucun appel au WordPress historique à l’exécution.
+Ouvrir `http://127.0.0.1:3018` (le port 3012 reste valable pour S1 ; les recettes S2 utilisent 3018). Pas de variable secrète, compte, CMS ou service distant requis. Les images et polices sont embarquées. Aucun appel au WordPress historique à l’exécution.
 
 ## Vérifier
 
@@ -29,13 +31,13 @@ pnpm check:data
 pnpm check:media
 pnpm check:contrast
 pnpm test
-OPTIC_BASE_URL=http://127.0.0.1:3012 pnpm check:routes
-OPTIC_BASE_URL=http://127.0.0.1:3012 pnpm test:browser
-OPTIC_BASE_URL=http://127.0.0.1:3012 OPTIC_PROOF_DIR=/chemin/hors-du-depot pnpm capture:ui
-OPTIC_BASE_URL=http://127.0.0.1:3012 OPTIC_PROOF_DIR=/chemin/hors-du-depot pnpm check:browser-quality
+OPTIC_BASE_URL=http://127.0.0.1:3018 pnpm check:routes
+OPTIC_BASE_URL=http://127.0.0.1:3018 pnpm test:browser
+OPTIC_BASE_URL=http://127.0.0.1:3018 OPTIC_PROOF_DIR=/chemin/hors-du-depot pnpm capture:ui
+OPTIC_BASE_URL=http://127.0.0.1:3018 OPTIC_PROOF_DIR=/chemin/hors-du-depot pnpm check:browser-quality
 ```
 
-Les tests navigateur utilisent Chromium via Playwright. Sur une machine sans navigateur de test : `pnpm exec playwright install chromium`. Le serveur doit tourner avant les quatre dernières commandes. Les captures et logs volumineux restent hors Git ; `.impeccable/review/` est ignoré.
+`check:routes` contrôle toutes les pages canoniques, `robots.txt`, des états de requête, les liens internes, les redirections de l’ancien site et les vraies 404. `check:browser-quality` rejoue les routes à 360 px, 720×500 en 2×, au clavier et aux seuils 801/1101/1280 px. `check:data` vérifie les décomptes, la couverture des 25 pages sources et les citations de garanties. Les tests navigateur couvrent aussi les href de téléphone, e-mail et plan sans les activer, et échouent sur tout trafic hors origine locale (dont l’ancien domaine). Les tests navigateur utilisent Chromium via Playwright. Sur une machine sans navigateur de test : `pnpm exec playwright install chromium`. Le serveur doit tourner avant les quatre dernières commandes. Les captures et logs volumineux restent hors Git ; `.impeccable/review/` est ignoré.
 
 ## Données et reprise
 
@@ -43,6 +45,8 @@ Le snapshot public réduit est inclus dans `src/data/source/`. `pnpm import:data
 
 Lire [le scénario](docs/demo.md), [l’architecture](docs/architecture.md), [l’inventaire](docs/content-inventory.md), [les décisions](docs/decisions.md) et [la reprise](docs/reprise.md). `PRODUCT.md` et `.impeccable/config.json` préexistaient au code ; ils sont conservés. `DESIGN.md` et son sidecar décrivent les tokens réellement livrés.
 
-Les prix, stocks et horaires publics ne sont pas validés par le client. Taravao reste explicitement à confirmer. Les cinq fiches de lentilles sont conservées et consultables ; le choix détaillé des corrections appartient à S2. Aucun effet métier réel ni formulaire d’envoi dans S1.
+Les prix, stocks, horaires, garanties et mentions légales historiques sont publics et datés ; le client ne les a pas validés. Taravao garde une seule réponse : horaires à confirmer. Les cinq fiches de lentilles proposent une sélection signée (voir [l’architecture](docs/architecture.md)) ; les prix restent « à confirmer en magasin ». Le formulaire de contact est une simulation en mémoire locale : aucun envoi, rendez-vous, stockage ou donnée saisie dans l’URL. Les pages sont `noindex` ; les images et polices sont embarquées ; les tests échouent si le site historique est sollicité.
 
-Dépôt : `https://github.com/hugo460/proto-optic2000.git`, branche `main`. S1 reste locale. Publication et transmission réservées à S3 après validation des lots précédents.
+Les pages légales décrivent l’hébergement local du prototype : elles devront être actualisées à l’hébergement réel avant toute publication (S3).
+
+Dépôt : `https://github.com/hugo460/proto-optic2000.git`, branche `main`. S1 et S2 restent locales : aucun push, PR distante, liaison Vercel ni message au client. Publication et transmission réservées à S3, après acceptation de S2 par le pilote ; les réserves commerciales restent inchangées.

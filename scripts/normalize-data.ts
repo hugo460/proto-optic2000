@@ -67,7 +67,7 @@ const brands: Brand[] = read<RawBrand[]>('brands.public.json').map(b => {
   const relationship = b.name === 'FreshLook' ? 'Gamme de lentilles Alcon.' : ['Alcon', 'LCS', 'Bausch + Lomb', 'CooperVision'].includes(b.name) ? 'Laboratoire présenté dans l’univers lentilles.' : ['Miru', 'ACUVUE', 'TruBlends', 'Colourvue'].includes(b.name) ? 'Marque ou gamme de lentilles présentée sur le site. Le laboratoire associé reste à confirmer.' : null;
   return { id, name: b.name, universes, logo: logoUrl ? media(logoUrl) : null, darkLogo: ['Bosma', 'Perl'].includes(b.name), productIds: products.filter(p => p.brandId === id).map(p => p.id), relationship, source: b.evidence };
 });
-const shippingUrls = new Set([...products.flatMap(p => [...p.images.map(i => i.origin), ...p.variants.map(v => v.image.origin)]), ...brands.flatMap(b => b.logo ? [b.logo.origin] : []), ...assets.filter(a => ['655699e241', '1973260a9f', '9aa0950419', '4a3600313f'].some(prefix => a.file.startsWith(prefix))).map(a => a.url)]);
+const shippingUrls = new Set([...products.flatMap(p => [...p.images.map(i => i.origin), ...p.variants.map(v => v.image.origin)]), ...brands.flatMap(b => b.logo ? [b.logo.origin] : []), ...assets.filter(a => ['655699e241', '1973260a9f', '9aa0950419', '4a3600313f', '4fc6abc0d6', '62e14c3acf', '6b3c1455b1', 'b413c0bdf9', '16bd866170'].some(prefix => a.file.startsWith(prefix))).map(a => a.url)]);
 const shippingMedia = [...mediaByUrl.values()].filter(m => shippingUrls.has(m.origin));
 for (const [name, data] of [['catalogue.json', products], ['brands.json', brands], ['media.json', shippingMedia]] as const) {
   writeFileSync(`src/data/${name}`, JSON.stringify(data, null, 2) + '\n');

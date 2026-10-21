@@ -1,18 +1,26 @@
 import Link from 'next/link';
-import { getProduct } from '@/data';
-import { resolveVariant, variantName } from '@/lib/variants';
+import { products } from '@/data';
+import { getStore, stores, type Store } from '@/data/stores';
+import { productHref, prosthesisStore, readVisitContext, visitParams, withQuery } from '@/lib/contact-context';
+import { selectionLines, type Query } from '@/lib/lens-selection';
 import { formatXpf } from '@/lib/money';
 import { MediaImage } from '@/components/ui/media-image';
-export function readProductContext(query: Record<string, string | string[] | undefined>) {
-  const product = typeof query.produit === 'string' ? getProduct(query.produit) : undefined;
-  const variant = product ? resolveVariant(product, typeof query.variante === 'string' ? query.variante : null) : undefined;
-  const params = new URLSearchParams();
-  if (product) params.set('produit', product.slug);
-  if (variant) params.set('variante', String(variant.id));
-  return { product, variant, query: params.toString() };
+export function readProductContext(query: Query) {
+  const context = readVisitContext(query, { products, stores });
+  // Store pages relay the product and an explicit subject; a subject deduced from the product stays implicit.
+  const relayed = { selection: context.selection, subject: context.subjectFromProduct ? undefined : context.subject };
+  return { ...context, relayed, query: visitParams(relayed, { store: false }).toString() };
 }
-export function ProductContext({ context }: { context: ReturnType<typeof readProductContext> }) {
-  const { product, variant } = context;
-  if (!product) return null;
-  return <aside className="product-context" aria-label="Le modèle qui vous intéresse"><MediaImage media={variant?.image ?? product.images[0]} alt={product.name} sizes="140px" /><div><p>Votre sélection</p><Link href={`/produits/${product.slug}${variant ? `?variante=${variant.id}` : ''}`}><strong>{product.name}</strong></Link><p>{variant ? variantName(variant) : 'Coloris à préciser avec le magasin'}</p><p>{formatXpf(variant?.price ?? product.minPrice)} · Prix à confirmer</p></div><span>Pour vous renseigner, contactez le magasin de votre choix.</span></aside>;
+export type ProductContextData = ReturnType<typeof readProductContext>;
+export function contactHref(context: ProductContextData, store?: Store) {
+  return withQuery('/contact', visitParams({ ...context.relayed, store }));
+}
+export function ProductContext({ context }: { context: ProductContextData }) {
+  const { selection } = context;
+  const mamao = getStore(prosthesisStore)!;
+  return <>
+    {context.rejected.length > 0 && <p className="notice">Une partie du lien n’a pas été reconnue : elle a été ignorée.</p>}
+    {context.relayed.subject === 'protheses' && <p className="notice">Les prothèses oculaires sont suivies uniquement au magasin de Mamao, sur rendez-vous à demander par téléphone au <a className="underlined" href={`tel:${mamao.phone}`}>{mamao.phoneLabel}</a>.</p>}
+    {selection && <aside className="product-context" aria-label="Le modèle qui vous intéresse"><MediaImage media={selection.variant?.image ?? selection.product.images[0]} alt={selection.product.name} sizes="140px" /><div><h2>Votre sélection</h2><Link href={productHref(selection)}><strong>{selection.product.name}</strong></Link><p>{selectionLines(selection).map(line => `${line.label} : ${line.value}`).join(' · ')}</p><p>{selection.variant || selection.product.minPrice === selection.product.maxPrice ? formatXpf(selection.variant?.price ?? selection.product.minPrice) : `À partir de ${formatXpf(selection.product.minPrice)}`} · Prix à confirmer</p></div><span>Pour vous renseigner, contactez le magasin de votre choix.</span></aside>}
+  </>;
 }

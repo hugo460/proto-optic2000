@@ -5005,6 +5005,13 @@
     "sourceSha256": "9d6c623698593a438225b3596e9a138cf79700d9af5168a70d3e5545aac97fa2"
   },
   {
+    "src": "/media/6b3c1455b1-opticiens-tahiti-scaled.webp",
+    "width": 1600,
+    "height": 2133,
+    "origin": "https://optic2000tahiti.com/wp-content/uploads/2022/09/opticiens-tahiti-scaled.jpg",
+    "sourceSha256": "787d019630c1b50f192ab017bdff7139a3dc03e8f75e0b9e772d5476fae73cc1"
+  },
+  {
     "src": "/media/fb0fe3968d-1301336.webp",
     "width": 1493,
     "height": 409,
@@ -5026,6 +5033,20 @@
     "sourceSha256": "ab67d92f01e0ef9e9226e45759f4ae4c3296215f183a6a8cd9ab7395b4be94bb"
   },
   {
+    "src": "/media/b413c0bdf9-perl-alhena-70-700-eq1.webp",
+    "width": 800,
+    "height": 800,
+    "origin": "https://optic2000tahiti.com/wp-content/uploads/2022/06/perl-alhena-70-700-eq1.jpg",
+    "sourceSha256": "6df6f12c4046e7b3587c9ae021b68ede7a9a5a001433cc9b67eac30778bbf976"
+  },
+  {
+    "src": "/media/16bd866170-celestron-oceana-7-x-50-noire.webp",
+    "width": 800,
+    "height": 800,
+    "origin": "https://optic2000tahiti.com/wp-content/uploads/2022/06/celestron-oceana-7-x-50-noire.jpg",
+    "sourceSha256": "29a91da1cf91efc4dd029bb80ae6832aa1658841de74b0d6d22dd2df22bec741"
+  },
+  {
     "src": "/media/4a3600313f-image_50397185-scaled.webp",
     "width": 1600,
     "height": 1200,
@@ -5038,6 +5059,13 @@
     "height": 1200,
     "origin": "https://optic2000tahiti.com/wp-content/uploads/2022/05/IMG-5315-scaled.jpg",
     "sourceSha256": "23795fe21fc4aede54fa57d205a1d540fb0ababcab91d8d35cf61eb6a3edcbe2"
+  },
+  {
+    "src": "/media/62e14c3acf-2022-05-02-OPTIC2000-POST21.webp",
+    "width": 1200,
+    "height": 1200,
+    "origin": "https://optic2000tahiti.com/wp-content/uploads/2022/05/2022-05-02-OPTIC2000-POST21.jpg",
+    "sourceSha256": "292b9903326848f9c36bd75574d0d299a86efaa30f94c1abf29efcf93149bb6b"
   },
   {
     "src": "/media/1973260a9f-IMG_0997-Copie.webp",
@@ -5164,6 +5192,13 @@
     "height": 1600,
     "origin": "https://optic2000tahiti.com/wp-content/uploads/2022/09/Logo_Vuarnet.png",
     "sourceSha256": "5b775fab5d58193e156158d286e7b8d9ba5a639ebc006d4b8b778728801bf97d"
+  },
+  {
+    "src": "/media/4fc6abc0d6-2022-05-02-OPTIC2000-POST27.webp",
+    "width": 1200,
+    "height": 1200,
+    "origin": "https://optic2000tahiti.com/wp-content/uploads/2022/05/2022-05-02-OPTIC2000-POST27.jpg",
+    "sourceSha256": "9226d5cc131b05eb573fc34e5c45c16f156cd4d345332748fdf7d4957289853d"
   },
   {
     "src": "/media/d3572ef699-marius-morel-logo-square.webp",

@@ -4,10 +4,11 @@ import concurrent.futures
 import json
 import subprocess
 from pathlib import Path
-p = argparse.ArgumentParser();p.add_argument('--assets-dir',type=Path,required=True);p.add_argument('--impeccable',type=Path);a=p.parse_args()
+p = argparse.ArgumentParser();p.add_argument('--assets-dir',type=Path,required=True);p.add_argument('--impeccable',type=Path);p.add_argument('--missing-only',action='store_true',help='convert only media absent from public/media');a=p.parse_args()
 assets=json.loads(Path('src/data/source/assets.public.json').read_text())
 shipping={m['src'] for m in json.loads(Path('src/data/media.json').read_text())}
 assets=[m for m in assets if '/media/'+Path(m['file']).stem+'.webp' in shipping]
+if a.missing_only: assets=[m for m in assets if not (Path('public/media')/(Path(m['file']).stem+'.webp')).exists()]
 Path('public/media').mkdir(parents=True,exist_ok=True)
 def convert(m):
     destination=Path('public/media')/(Path(m['file']).stem+'.webp')

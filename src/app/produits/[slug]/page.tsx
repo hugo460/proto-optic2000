@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
-import { getProduct, products, solarProducts } from '@/data';
+import { getProduct, products } from '@/data';
 import { safeReturnPath } from '@/lib/catalogue';
 import { ProductExperience } from '@/components/catalog/product-experience';
 import { ProductCard } from '@/components/catalog/product-card';
@@ -18,8 +18,10 @@ export default async function ProductPage({ params, searchParams }: Props) {
   if (!product) notFound();
   const query = await searchParams;
   const returnPath = safeReturnPath(typeof query.retour === 'string' ? query.retour : product.kind === 'lens' ? '/catalogue' : null);
-  const related = solarProducts.filter(p => p.id !== product.id).slice(0, 4);
-  return <div className="container product-page"><Link className="back-link" href={returnPath}><Icon name="back" />Retour aux résultats</Link><ProductExperience key={product.slug} product={product} initialVariant={typeof query.variante === 'string' ? query.variante : undefined} />
-    <section className="section related-products"><div className="section-heading"><h2>Un autre regard.</h2><Link className="underlined" href="/solaires">Toutes les solaires</Link></div><div className="product-grid">{related.map(p => <ProductCard key={p.id} product={p} />)}</div></section>
+  // Related products stay in the same family: frames with frames, lenses with lenses.
+  const related = products.filter(p => p.kind === product.kind && p.id !== product.id).slice(0, 4);
+  const familyLink = product.kind === 'lens' ? { href: '/lentilles', label: 'Toutes les lentilles' } : { href: '/solaires', label: 'Toutes les solaires' };
+  return <div className="container product-page"><Link className="back-link" href={returnPath}><Icon name="back" />Retour aux résultats</Link><ProductExperience key={product.slug} product={product} />
+    <section className="section related-products"><div className="section-heading"><h2>{product.kind === 'lens' ? 'D’autres lentilles.' : 'Un autre regard.'}</h2><Link className="underlined" href={familyLink.href}>{familyLink.label}</Link></div><div className="product-grid">{related.map(p => <ProductCard key={p.id} product={p} />)}</div></section>
   </div>;
 }

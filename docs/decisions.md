@@ -1,4 +1,4 @@
-# Décisions de S1
+# Décisions de S1 et S2
 
 | Décision | Conséquence |
 | --- | --- |
@@ -11,9 +11,31 @@
 | Taravao non arbitré | Aucune heure chiffrée ni code postal contradictoire affiché ; appel pour confirmation |
 | Marques sans produits en ligne | Présentation, univers et magasins ; aucun assortiment ou prix inventé |
 | Laboratoires et gammes distingués | FreshLook reste une gamme Alcon ; aucune assimilation des 38 identités à 38 fournisseurs indépendants |
-| S1 locale | Aucun push, déploiement ou envoi ; étapes de S3 laissées ouvertes |
+| S1 locale | Aucun push, déploiement ou envoi ; étapes de S3 laissées ouvertes. Acceptée localement par le pilote le 21/10/2026 au commit `e3ee64e` ; ce n’est ni une validation commerciale du client ni une publication |
 
-Le lien FreshLook/Alcon est corroboré par la [présentation officielle Alcon](https://www.myalcon.com/car/contact-lenses/colors/). Les autres rattachements non établis sont indiqués à confirmer. DENCOTT est un partenaire de service pour la reprise des prothèses en S2, pas une marque du catalogue.
+## Décisions de S2
+
+| Décision | Conséquence |
+| --- | --- |
+| Code direct dans le nuancier choisi | Aucune nouvelle identité, comp ou interview ; S1 n’avait validé que F1/F2 |
+| Libellés signés des lentilles | `+2.00` et `-2.00` ont des slugs distincts ; jamais de signe reconstruit depuis un slug ; `0.00`, absence et sphère vide (joker) sont distincts |
+| ID réel et sphère séparés | Colorblends garde l’ID de variante réel (Grey, 1949) ; la sphère choisie accompagne la demande, elle ne crée pas de variante |
+| URL canonique | Options invalides ignorées avec notice ; un défaut partiel ne choisit pas de couleur ; produit simple sans sélecteur |
+| Formulaire de simulation | Mémoire locale, aucun backend, envoi, rendez-vous, stockage ou saisie dans l’URL. Réinitialisation limitée aux champs personnels et aux erreurs |
+| Contexte public seulement | Produit, option, sujet et magasin voyagent jusqu’au contact et aux liens retour |
+| Taravao | Une seule réponse affichée : horaires à confirmer, sans code postal chiffré |
+| Prothèses | Uniquement à Mamao, sur rendez-vous à demander par téléphone. DENCOTT est un laboratoire partenaire de service, pas une 39e identité |
+| Offres de 2022 exclues | Forfaits et « 2e paire » non affichés comme actuels ; seule leur existence datée est signalée sur Services et garanties |
+| Garanties et services | Reprises mot pour mot de l’accueil source, avec leurs limites à confirmer. Le nettoyage est « proposé aux clients » : le texte source ne le dit pas gratuit, on ne l’invente pas ; plaquettes et réparations mineures sont offertes aux clients |
+| Anciens chemins | Redirections natives exactes en local (307, 308 pour la barre finale) ; compte, panier et commande en 404 ; vraies inconnues en 404 avant le streaming |
+| Pages légales | Distinguent le prototype (sans vente) de l’exploitant historique ; OVH et JK ne sont pas attribués au nouveau prototype. À actualiser avec l’hébergement réel avant S3 |
+| Pas d’extension de DESIGN.md | Voir ci-dessous |
+
+### Extension de DESIGN.md : non, à ce stade
+
+Le rôle documenteur demande de ne pas écrire pour prouver qu’on est passé. S2 ne change ni le monde, ni la palette, ni les polices ; le nuancier et ses boutons, champs, cartes, focus et états sont réutilisés, et la revue visuelle finale constate une échelle cohérente. Les composants S2 (menu « Nos univers », formulaire et états, sommaire, grilles de logos) sont décrits dans [l’architecture](architecture.md) et testés. Les cinq tailles locales sont des valeurs de page, utilisées une ou deux fois chacune : les inscrire au système les rendrait réutilisables par défaut. Elles seront à promouvoir en tokens seulement si une autre surface les réutilise ou si la direction visuelle change. Le décalage de date préexistant entre `DESIGN.md` et son sidecar n’est pas réparé ici.
+
+Le lien FreshLook/Alcon est corroboré par la [présentation officielle Alcon](https://www.myalcon.com/car/contact-lenses/colors/). Les autres rattachements non établis sont indiqués à confirmer. DENCOTT est un laboratoire partenaire de service pour la reprise des prothèses (page livrée en S2), pas une marque du catalogue.
 
 ## Références et adaptations
 
@@ -26,4 +48,11 @@ Benchmark Mobbin préparé et inspecté lors du cadrage le 21/10/2026, puis relu
 | Comprendre une variante | [lululemon, produit](https://mobbin.com/screens/013f6a05-d050-4f9d-a225-2cebc8560981) : galerie et couleur nommée | Miniatures des vrais coloris ; prix/photo liés à la variante ; action magasin | Cinq Glory Glory, Baby Beach et rechargement du lien |
 | Préparer une visite | [H&M, magasin](https://mobbin.com/screens/7d6dd63b-5792-402a-8f90-11093fcdad2d) : informations pratiques avant la carte | Trois magasins en liste ; liens de lieux précis ; pas de géolocalisation imposée | Trois fiches, téléphone, e-mail et CID |
 
-Les comportements mobile/clavier et le nuancier d’accueil sont notre adaptation, pas une propriété démontrée par les captures Mobbin. Couleurs et polices d’interface ne constituent pas une charte officielle du client.
+Recherche officielle standard du 21/10/2026 pour S2, aperçus inspectés :
+
+| Besoin | Observation | Adaptation / compromis | Vérification |
+| --- | --- | --- | --- |
+| Demande avec récapitulatif | [GetYourGuide](https://mobbin.com/screens/ce62c79e-a6a8-4673-a3ad-3fb8b5a1d8c5) : formulaire à gauche, récapitulatif à droite | Même disposition au-dessus de 800 px ; sur téléphone, formulaire puis récapitulatif. Ni modal, paiement, téléversement ni promesse | Tests de contact et captures |
+| Catégorie puis précision | [Mintlify](https://mobbin.com/screens/806c8140-cf45-4b34-ae8c-9c58a8337009) : catégorie, sujet, description | Magasin, objet, coordonnées, message, avec notre vocabulaire | Idem |
+
+Les comportements mobile/clavier, les états d’erreur et de succès et le nuancier d’accueil sont notre adaptation, vérifiés séparément ; ils ne sont pas une propriété démontrée par les captures Mobbin. Couleurs et polices d’interface ne constituent pas une charte officielle du client.

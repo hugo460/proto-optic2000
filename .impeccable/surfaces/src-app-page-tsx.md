@@ -2,7 +2,7 @@
 version: 1
 slug: "src-app-page-tsx"
 primary_target: "src/app/page.tsx"
-related_targets: ["src/components/catalog/home-showcase.tsx"]
+related_targets: ["src/components/catalog/home-showcase.tsx","src/components/layout/header.tsx","src/components/layout/footer.tsx"]
 ---
 
 # Accueil — S1
@@ -26,3 +26,5 @@ FORM: Nuancier de collection, candidat 4 ; seed:ec9ae70fdd93869f. Les challenger
 FINISH: unreviewed and undocumented is unfinished; this build ends with the finish review, the verdict, DESIGN.md, and every shipping raster carrying its provenance
 
 États: choix initial/changé, focus, survol, clavier, réduction du mouvement, mobile et desktop. Sortie: fiche réelle ou catalogue partageable, puis fiche magasin. Incertitude client: actualité des prix et horaires.
+
+Extension S2 (paquet 2) : nuancier, première grille de quatre produits et raccourci magasin inchangés. Après la première grille, un index typographique « Bien plus que le soleil. » liste les six univers (nom Sora, phrase factuelle, flèche ; deux colonnes puis une à 800px) et renvoie vers Services et Qui sommes-nous ; aucune carte icône+texte, aucun long texte avant les produits. En-tête : bouton « Nos univers » (disclosure lavande, Échap/clic extérieur/sortie au clavier/navigation ferment, focus rendu au bouton) puis Les solaires, Nos marques, Nos magasins, Contact ; le bouton jaune magasin se masque entre 801 et 1100px où « Nos magasins » reste présent. Menu mobile groupé et défilable. Pied de page : toutes les destinations et les trois pages légales.

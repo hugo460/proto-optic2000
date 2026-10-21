@@ -10744,6 +10744,21 @@
     ]
   },
   {
+    "url": "https://optic2000tahiti.com/wp-content/uploads/2022/09/opticiens-tahiti-scaled.jpg",
+    "file": "6b3c1455b1-opticiens-tahiti-scaled.jpg",
+    "sha256": "787d019630c1b50f192ab017bdff7139a3dc03e8f75e0b9e772d5476fae73cc1",
+    "dimensions": [
+      1600,
+      2133
+    ],
+    "references": [
+      [
+        "page",
+        "qui-sommes-nous"
+      ]
+    ]
+  },
+  {
     "url": "https://optic2000tahiti.com/wp-content/uploads/2022/09/1301336.png",
     "file": "fb0fe3968d-1301336.png",
     "sha256": "324608a1b6ccaea3bc46d6875c9a104b593903e42075305e69ed34fccc7d9e6f",
@@ -10780,6 +10795,36 @@
     "dimensions": [
       1600,
       424
+    ],
+    "references": [
+      [
+        "page",
+        "jumelles-et-telescopes"
+      ]
+    ]
+  },
+  {
+    "url": "https://optic2000tahiti.com/wp-content/uploads/2022/06/perl-alhena-70-700-eq1.jpg",
+    "file": "b413c0bdf9-perl-alhena-70-700-eq1.jpg",
+    "sha256": "6df6f12c4046e7b3587c9ae021b68ede7a9a5a001433cc9b67eac30778bbf976",
+    "dimensions": [
+      800,
+      800
+    ],
+    "references": [
+      [
+        "page",
+        "jumelles-et-telescopes"
+      ]
+    ]
+  },
+  {
+    "url": "https://optic2000tahiti.com/wp-content/uploads/2022/06/celestron-oceana-7-x-50-noire.jpg",
+    "file": "16bd866170-celestron-oceana-7-x-50-noire.jpg",
+    "sha256": "29a91da1cf91efc4dd029bb80ae6832aa1658841de74b0d6d22dd2df22bec741",
+    "dimensions": [
+      800,
+      800
     ],
     "references": [
       [
@@ -10845,6 +10890,25 @@
       [
         "page",
         "mamao"
+      ]
+    ]
+  },
+  {
+    "url": "https://optic2000tahiti.com/wp-content/uploads/2022/05/2022-05-02-OPTIC2000-POST21.jpg",
+    "file": "62e14c3acf-2022-05-02-OPTIC2000-POST21.jpg",
+    "sha256": "292b9903326848f9c36bd75574d0d299a86efaa30f94c1abf29efcf93149bb6b",
+    "dimensions": [
+      1200,
+      1200
+    ],
+    "references": [
+      [
+        "page",
+        "mamao"
+      ],
+      [
+        "page",
+        "lunettes-de-vue"
       ]
     ]
   },
@@ -11205,6 +11269,21 @@
       [
         "page",
         "lunettes-de-soleil"
+      ]
+    ]
+  },
+  {
+    "url": "https://optic2000tahiti.com/wp-content/uploads/2022/05/2022-05-02-OPTIC2000-POST27.jpg",
+    "file": "4fc6abc0d6-2022-05-02-OPTIC2000-POST27.jpg",
+    "sha256": "9226d5cc131b05eb573fc34e5c45c16f156cd4d345332748fdf7d4957289853d",
+    "dimensions": [
+      1200,
+      1200
+    ],
+    "references": [
+      [
+        "page",
+        "lunettes-de-vue"
       ]
     ]
   },

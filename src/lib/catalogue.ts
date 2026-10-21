@@ -44,7 +44,7 @@ export function safeReturnPath(path: string | null | undefined): string {
   if (!path) return '/solaires';
   try {
     const url = new URL(path, 'https://prototype.local');
-    if (url.origin !== 'https://prototype.local' || !['/solaires', '/catalogue'].includes(url.pathname)) return '/solaires';
+    if (url.origin !== 'https://prototype.local' || !['/solaires', '/catalogue', '/lentilles'].includes(url.pathname)) return '/solaires';
     return url.pathname + url.search;
   } catch { return '/solaires'; }
 }

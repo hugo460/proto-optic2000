@@ -24,3 +24,5 @@ FORM: Annuaire local de trois adresses dans le système confirmé ; seed:ec9ae70
 FINISH: unreviewed and undocumented is unfinished; this build ends with the finish review, the verdict, DESIGN.md, and every shipping raster carrying its provenance
 
 États: sélection produit présente/absente, horaires à confirmer, liens exacts inspectés sans appel ni envoi, retour à la liste. Aucun rendez-vous réservé, aucun badge de stock ou d’ouverture calculée.
+
+S2: le bandeau lavande reprend aussi couleur et correction de lentille (ou « à préciser »), avec retour vers la sélection. La fiche ajoute, dans « Nous contacter », une action texte vers la demande simulée qui garde magasin et sélection ; le téléphone reste la voie réelle.
