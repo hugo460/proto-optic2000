@@ -415,7 +415,7 @@
       "Do — Associer chaque choix à un libellé, aria-pressed ou aria-current selon le cas, et une réponse visible.",
       "Do — Laisser la grille, les noms longs, les prix XPF et les contrôles se réorganiser aux seuils documentés.",
       "Do — Conserver les états vide, invalide, chargement, erreur et photo indisponible, avec une sortie utile.",
-      "Do — Garder légendes, prix, cartes et réserves à (12px) au minimum, et les aides et erreurs de rendez-vous à (14px).",
+      "Do — Garder légendes, prix, cartes et réserves à (12px) au minimum ; dans le rendez-vous, distinguer les aides de champ, indications de champs obligatoires et notes de soumission de la colonne principale à (14px), les erreurs de champ à (13px) et les tailles locales des réserves.",
       "Do — Réserver l’entrée de la photographie d’accueil à ce composant ; garder les formulaires sans entrée spatiale."
     ],
     "donts": [

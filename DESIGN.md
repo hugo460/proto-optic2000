@@ -217,7 +217,7 @@ Le code n’emploie pas de rampe tonale complète. Les huit étapes OKLCH par co
 
 Les titres principaux de catalogue utilisent une taille locale (`clamp(2rem, 3.2vw, 3rem)`, puis 30px jusqu’à 600px). Les fiches produit utilisent `clamp(2.5rem, 4vw, 3.5rem)`, puis 38px jusqu’à 800px. L’accueil possède son titre propre ; sa grande taille et ses retours à la ligne restent dans le contrat d’accueil.
 
-Le texte suit un interligne aéré. Les introductions de sections sont contenues autour de (65–66ch), les notes de catalogue à (74ch) et les textes de marque à (58ch). Les prix et horaires utilisent des chiffres tabulaires ; les montants sont en XPF sans décimales. Les légendes, prix, cartes et réserves touchés par S4 ne descendent plus sous (12px), y compris sur téléphone ; les aides et erreurs du rendez-vous sont à (14px). Le CSS livré ne contient plus de texte à (10–11px) : ne pas rouvrir cette limite.
+Le texte suit un interligne aéré. Les introductions de sections sont contenues autour de (65–66ch), les notes de catalogue à (74ch) et les textes de marque à (58ch). Les prix et horaires utilisent des chiffres tabulaires ; les montants sont en XPF sans décimales. Les légendes, prix, cartes et réserves touchés par S4 ne descendent plus sous (12px), y compris sur téléphone. Dans la colonne principale du rendez-vous, les aides de champ, l’indication des champs obligatoires et les notes de soumission sont à (14px) ; les erreurs de champ restent à (13px) et les réserves conservent leurs tailles locales. Le CSS livré ne contient plus de texte à (10–11px) : ne pas rouvrir cette limite.
 
 **The Deux voix Rule.** Réserver Sora aux titres et Manrope à la lecture, aux prix et aux commandes ; conserver les noms longs sans troncature.
 
@@ -278,7 +278,7 @@ Les recherches sont sur papier, avec bordure filet, icône et rayon de contrôle
 
 Les `select` restent natifs : hauteur minimale (46px), puis (44px), libellés visibles au-dessus pour les filtres. Recherche, filtres et tri sont soumis explicitement. Un accordéon intitulé « Filtres et tri » remplace l’affichage permanent des filtres jusqu’à 800px ; son état est exposé par `aria-expanded` et `aria-controls`. Aucun résultat ne disparaît pendant la simple ouverture des filtres.
 
-Les choix radio du contact et du rendez-vous (magasin, motif, jour, heure) réemploient les cartes de choix existantes : filet, bordure d’encre de (2px) à la sélection avec padding compensé, plateau gris au survol, lavande douce sous le jour ou l’heure choisis, focus violet sur le contrôle natif masqué visuellement. Les aides et réserves du rendez-vous sont à (14px) ; les erreurs restent reliées au champ, avec icône et texte. La palette n’ajoute aucune couleur d’état. Le déroulé en quatre temps et sa colonne de contexte relèvent du contrat de surface du rendez-vous, pas d’un gabarit global.
+Les choix radio du contact et du rendez-vous (magasin, motif, jour, heure) réemploient les cartes de choix existantes : filet, bordure d’encre de (2px) à la sélection avec padding compensé, plateau gris au survol, lavande douce sous le jour ou l’heure choisis, focus violet sur le contrôle natif masqué visuellement. Dans la colonne principale du rendez-vous, `.field-hint`, `.contact-required` et les paragraphes de `.contact-submit` sont à (14px), comme les descriptions de motif. Les erreurs `.field-error` restent à (13px), reliées au champ avec icône et texte. Les réserves gardent leurs tailles locales : `.rdv-callout` passe de (14px) à (13px) jusqu’à 600px, tandis que `.rdv-restart-note` reste à (13px). La palette n’ajoute aucune couleur d’état. Le déroulé en quatre temps et sa colonne de contexte relèvent du contrat de surface du rendez-vous, pas d’un gabarit global.
 
 ### Chips
 
@@ -324,7 +324,7 @@ Une image indisponible est remplacée dans son plateau par un libellé explicite
 - Do — Associer chaque choix à un libellé, aria-pressed ou aria-current selon le cas, et une réponse visible.
 - Do — Laisser la grille, les noms longs, les prix XPF et les contrôles se réorganiser aux seuils documentés.
 - Do — Conserver les états vide, invalide, chargement, erreur et photo indisponible, avec une sortie utile.
-- Do — Garder légendes, prix, cartes et réserves à (12px) au minimum, et les aides et erreurs de rendez-vous à (14px).
+- Do — Garder légendes, prix, cartes et réserves à (12px) au minimum ; dans le rendez-vous, distinguer les aides de champ, indications de champs obligatoires et notes de soumission de la colonne principale à (14px), les erreurs de champ à (13px) et les tailles locales des réserves.
 - Do — Réserver l’entrée de la photographie d’accueil à ce composant ; garder les formulaires sans entrée spatiale.
 
 ### Don't:
