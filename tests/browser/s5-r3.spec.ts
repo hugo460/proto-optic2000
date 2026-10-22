@@ -208,6 +208,9 @@ for (const viewport of sizes) {
       await expectSound(page, `${route} ${viewport.width}px`);
     }
     await page.goto('/solaires');
+    // Streamed markup can be attached before it has a layout: measure the visible, settled collection.
+    await expect(page.locator('.catalogue-page .product-grid')).toBeVisible();
+    await settle(page);
     if (viewport.width <= 600) expect((await firstRow(page)).columns, 'two columns on a phone').toBe(2);
   });
 }
