@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-10-22T08:15:00Z",
+  "generatedAt": "2026-10-22T10:13:31-10:00",
   "title": "Design System: Optic 2000 Tahiti",
   "extensions": {
     "colorMeta": {
@@ -8,469 +8,520 @@
         "role": "primary",
         "displayName": "Jaune d’action",
         "tonalRamp": [
-          "oklch(15.00% 0.18388 96.61)",
-          "oklch(26.43% 0.18388 96.61)",
-          "oklch(37.86% 0.18388 96.61)",
-          "oklch(49.29% 0.18388 96.61)",
-          "oklch(60.71% 0.18388 96.61)",
-          "oklch(72.14% 0.18388 96.61)",
-          "oklch(83.57% 0.18388 96.61)",
-          "oklch(95.00% 0.18388 96.61)"
+          "oklch(15.0% 0.1839 96.6)",
+          "oklch(26.4% 0.1839 96.6)",
+          "oklch(37.9% 0.1839 96.6)",
+          "oklch(49.3% 0.1839 96.6)",
+          "oklch(60.7% 0.1839 96.6)",
+          "oklch(72.1% 0.1839 96.6)",
+          "oklch(83.6% 0.1839 96.6)",
+          "oklch(95.0% 0.1839 96.6)"
         ]
       },
       "yellow-hover": {
         "role": "primary",
-        "displayName": "Jaune au survol",
+        "displayName": "Jaune de survol",
         "tonalRamp": [
-          "oklch(15.00% 0.17343 94.37)",
-          "oklch(26.43% 0.17343 94.37)",
-          "oklch(37.86% 0.17343 94.37)",
-          "oklch(49.29% 0.17343 94.37)",
-          "oklch(60.71% 0.17343 94.37)",
-          "oklch(72.14% 0.17343 94.37)",
-          "oklch(83.57% 0.17343 94.37)",
-          "oklch(95.00% 0.17343 94.37)"
+          "oklch(15.0% 0.1734 94.4)",
+          "oklch(26.4% 0.1734 94.4)",
+          "oklch(37.9% 0.1734 94.4)",
+          "oklch(49.3% 0.1734 94.4)",
+          "oklch(60.7% 0.1734 94.4)",
+          "oklch(72.1% 0.1734 94.4)",
+          "oklch(83.6% 0.1734 94.4)",
+          "oklch(95.0% 0.1734 94.4)"
         ]
       },
       "lavender": {
         "role": "secondary",
-        "displayName": "Lavande franche",
+        "displayName": "Lavande de ponctuation",
         "tonalRamp": [
-          "oklch(15.00% 0.06456 290.85)",
-          "oklch(26.43% 0.06456 290.85)",
-          "oklch(37.86% 0.06456 290.85)",
-          "oklch(49.29% 0.06456 290.85)",
-          "oklch(60.71% 0.06456 290.85)",
-          "oklch(72.14% 0.06456 290.85)",
-          "oklch(83.57% 0.06456 290.85)",
-          "oklch(95.00% 0.06456 290.85)"
+          "oklch(15.0% 0.0646 290.8)",
+          "oklch(26.4% 0.0646 290.8)",
+          "oklch(37.9% 0.0646 290.8)",
+          "oklch(49.3% 0.0646 290.8)",
+          "oklch(60.7% 0.0646 290.8)",
+          "oklch(72.1% 0.0646 290.8)",
+          "oklch(83.6% 0.0646 290.8)",
+          "oklch(95.0% 0.0646 290.8)"
         ]
       },
       "lavender-soft": {
         "role": "secondary",
         "displayName": "Lavande douce",
         "tonalRamp": [
-          "oklch(15.00% 0.01350 295.32)",
-          "oklch(26.43% 0.01350 295.32)",
-          "oklch(37.86% 0.01350 295.32)",
-          "oklch(49.29% 0.01350 295.32)",
-          "oklch(60.71% 0.01350 295.32)",
-          "oklch(72.14% 0.01350 295.32)",
-          "oklch(83.57% 0.01350 295.32)",
-          "oklch(95.00% 0.01350 295.32)"
+          "oklch(15.0% 0.0135 295.3)",
+          "oklch(26.4% 0.0135 295.3)",
+          "oklch(37.9% 0.0135 295.3)",
+          "oklch(49.3% 0.0135 295.3)",
+          "oklch(60.7% 0.0135 295.3)",
+          "oklch(72.1% 0.0135 295.3)",
+          "oklch(83.6% 0.0135 295.3)",
+          "oklch(95.0% 0.0135 295.3)"
         ]
       },
       "lavender-ink": {
         "role": "secondary",
         "displayName": "Encre lavande",
         "tonalRamp": [
-          "oklch(15.00% 0.05256 294.09)",
-          "oklch(26.43% 0.05256 294.09)",
-          "oklch(37.86% 0.05256 294.09)",
-          "oklch(49.29% 0.05256 294.09)",
-          "oklch(60.71% 0.05256 294.09)",
-          "oklch(72.14% 0.05256 294.09)",
-          "oklch(83.57% 0.05256 294.09)",
-          "oklch(95.00% 0.05256 294.09)"
+          "oklch(15.0% 0.0526 294.1)",
+          "oklch(26.4% 0.0526 294.1)",
+          "oklch(37.9% 0.0526 294.1)",
+          "oklch(49.3% 0.0526 294.1)",
+          "oklch(60.7% 0.0526 294.1)",
+          "oklch(72.1% 0.0526 294.1)",
+          "oklch(83.6% 0.0526 294.1)",
+          "oklch(95.0% 0.0526 294.1)"
         ]
       },
       "focus": {
         "role": "secondary",
         "displayName": "Violet de focus",
         "tonalRamp": [
-          "oklch(15.00% 0.14117 286.67)",
-          "oklch(26.43% 0.14117 286.67)",
-          "oklch(37.86% 0.14117 286.67)",
-          "oklch(49.29% 0.14117 286.67)",
-          "oklch(60.71% 0.14117 286.67)",
-          "oklch(72.14% 0.14117 286.67)",
-          "oklch(83.57% 0.14117 286.67)",
-          "oklch(95.00% 0.14117 286.67)"
+          "oklch(15.0% 0.1412 286.7)",
+          "oklch(26.4% 0.1412 286.7)",
+          "oklch(37.9% 0.1412 286.7)",
+          "oklch(49.3% 0.1412 286.7)",
+          "oklch(60.7% 0.1412 286.7)",
+          "oklch(72.1% 0.1412 286.7)",
+          "oklch(83.6% 0.1412 286.7)",
+          "oklch(95.0% 0.1412 286.7)"
         ]
       },
       "ink": {
         "role": "neutral",
-        "displayName": "Encre",
+        "displayName": "Encre de lecture",
         "tonalRamp": [
-          "oklch(15.00% 0.00000 0.00)",
-          "oklch(26.43% 0.00000 0.00)",
-          "oklch(37.86% 0.00000 0.00)",
-          "oklch(49.29% 0.00000 0.00)",
-          "oklch(60.71% 0.00000 0.00)",
-          "oklch(72.14% 0.00000 0.00)",
-          "oklch(83.57% 0.00000 0.00)",
-          "oklch(95.00% 0.00000 0.00)"
+          "oklch(15.0% 0.0000 0.0)",
+          "oklch(26.4% 0.0000 0.0)",
+          "oklch(37.9% 0.0000 0.0)",
+          "oklch(49.3% 0.0000 0.0)",
+          "oklch(60.7% 0.0000 0.0)",
+          "oklch(72.1% 0.0000 0.0)",
+          "oklch(83.6% 0.0000 0.0)",
+          "oklch(95.0% 0.0000 0.0)"
         ]
       },
       "paper": {
         "role": "neutral",
-        "displayName": "Papier",
+        "displayName": "Blanc de studio",
         "tonalRamp": [
-          "oklch(15.00% 0.00000 0.00)",
-          "oklch(26.43% 0.00000 0.00)",
-          "oklch(37.86% 0.00000 0.00)",
-          "oklch(49.29% 0.00000 0.00)",
-          "oklch(60.71% 0.00000 0.00)",
-          "oklch(72.14% 0.00000 0.00)",
-          "oklch(83.57% 0.00000 0.00)",
-          "oklch(95.00% 0.00000 0.00)"
+          "oklch(15.0% 0.0000 0.0)",
+          "oklch(26.4% 0.0000 0.0)",
+          "oklch(37.9% 0.0000 0.0)",
+          "oklch(49.3% 0.0000 0.0)",
+          "oklch(60.7% 0.0000 0.0)",
+          "oklch(72.1% 0.0000 0.0)",
+          "oklch(83.6% 0.0000 0.0)",
+          "oklch(95.0% 0.0000 0.0)"
         ]
       },
       "surface": {
         "role": "neutral",
-        "displayName": "Plateau gris",
+        "displayName": "Gris de soutien",
         "tonalRamp": [
-          "oklch(15.00% 0.00265 286.35)",
-          "oklch(26.43% 0.00265 286.35)",
-          "oklch(37.86% 0.00265 286.35)",
-          "oklch(49.29% 0.00265 286.35)",
-          "oklch(60.71% 0.00265 286.35)",
-          "oklch(72.14% 0.00265 286.35)",
-          "oklch(83.57% 0.00265 286.35)",
-          "oklch(95.00% 0.00265 286.35)"
+          "oklch(15.0% 0.0027 286.3)",
+          "oklch(26.4% 0.0027 286.3)",
+          "oklch(37.9% 0.0027 286.3)",
+          "oklch(49.3% 0.0027 286.3)",
+          "oklch(60.7% 0.0027 286.3)",
+          "oklch(72.1% 0.0027 286.3)",
+          "oklch(83.6% 0.0027 286.3)",
+          "oklch(95.0% 0.0027 286.3)"
         ]
       },
       "muted": {
         "role": "neutral",
         "displayName": "Texte secondaire",
         "tonalRamp": [
-          "oklch(15.00% 0.01288 285.88)",
-          "oklch(26.43% 0.01288 285.88)",
-          "oklch(37.86% 0.01288 285.88)",
-          "oklch(49.29% 0.01288 285.88)",
-          "oklch(60.71% 0.01288 285.88)",
-          "oklch(72.14% 0.01288 285.88)",
-          "oklch(83.57% 0.01288 285.88)",
-          "oklch(95.00% 0.01288 285.88)"
+          "oklch(15.0% 0.0129 285.9)",
+          "oklch(26.4% 0.0129 285.9)",
+          "oklch(37.9% 0.0129 285.9)",
+          "oklch(49.3% 0.0129 285.9)",
+          "oklch(60.7% 0.0129 285.9)",
+          "oklch(72.1% 0.0129 285.9)",
+          "oklch(83.6% 0.0129 285.9)",
+          "oklch(95.0% 0.0129 285.9)"
         ]
       },
       "line": {
         "role": "neutral",
-        "displayName": "Filet",
+        "displayName": "Filet clair",
         "tonalRamp": [
-          "oklch(15.00% 0.00966 286.19)",
-          "oklch(26.43% 0.00966 286.19)",
-          "oklch(37.86% 0.00966 286.19)",
-          "oklch(49.29% 0.00966 286.19)",
-          "oklch(60.71% 0.00966 286.19)",
-          "oklch(72.14% 0.00966 286.19)",
-          "oklch(83.57% 0.00966 286.19)",
-          "oklch(95.00% 0.00966 286.19)"
+          "oklch(15.0% 0.0097 286.2)",
+          "oklch(26.4% 0.0097 286.2)",
+          "oklch(37.9% 0.0097 286.2)",
+          "oklch(49.3% 0.0097 286.2)",
+          "oklch(60.7% 0.0097 286.2)",
+          "oklch(72.1% 0.0097 286.2)",
+          "oklch(83.6% 0.0097 286.2)",
+          "oklch(95.0% 0.0097 286.2)"
         ]
       },
       "inverse-muted": {
         "role": "neutral",
         "displayName": "Texte inversé secondaire",
         "tonalRamp": [
-          "oklch(15.00% 0.00966 286.19)",
-          "oklch(26.43% 0.00966 286.19)",
-          "oklch(37.86% 0.00966 286.19)",
-          "oklch(49.29% 0.00966 286.19)",
-          "oklch(60.71% 0.00966 286.19)",
-          "oklch(72.14% 0.00966 286.19)",
-          "oklch(83.57% 0.00966 286.19)",
-          "oklch(95.00% 0.00966 286.19)"
+          "oklch(15.0% 0.0097 286.2)",
+          "oklch(26.4% 0.0097 286.2)",
+          "oklch(37.9% 0.0097 286.2)",
+          "oklch(49.3% 0.0097 286.2)",
+          "oklch(60.7% 0.0097 286.2)",
+          "oklch(72.1% 0.0097 286.2)",
+          "oklch(83.6% 0.0097 286.2)",
+          "oklch(95.0% 0.0097 286.2)"
         ]
       },
-      "header-black": {
+      "brand-black": {
         "role": "neutral",
-        "displayName": "Noir d’en-tête",
+        "displayName": "Noir du logo",
         "tonalRamp": [
-          "oklch(15.00% 0.00000 0.00)",
-          "oklch(26.43% 0.00000 0.00)",
-          "oklch(37.86% 0.00000 0.00)",
-          "oklch(49.29% 0.00000 0.00)",
-          "oklch(60.71% 0.00000 0.00)",
-          "oklch(72.14% 0.00000 0.00)",
-          "oklch(83.57% 0.00000 0.00)",
-          "oklch(95.00% 0.00000 0.00)"
+          "oklch(15.0% 0.0000 0.0)",
+          "oklch(26.4% 0.0000 0.0)",
+          "oklch(37.9% 0.0000 0.0)",
+          "oklch(49.3% 0.0000 0.0)",
+          "oklch(60.7% 0.0000 0.0)",
+          "oklch(72.1% 0.0000 0.0)",
+          "oklch(83.6% 0.0000 0.0)",
+          "oklch(95.0% 0.0000 0.0)"
+        ]
+      },
+      "inverse-line": {
+        "role": "neutral",
+        "displayName": "Filet inversé",
+        "tonalRamp": [
+          "oklch(15.0% 0.0103 285.9)",
+          "oklch(26.4% 0.0103 285.9)",
+          "oklch(37.9% 0.0103 285.9)",
+          "oklch(49.3% 0.0103 285.9)",
+          "oklch(60.7% 0.0103 285.9)",
+          "oklch(72.1% 0.0103 285.9)",
+          "oklch(83.6% 0.0103 285.9)",
+          "oklch(95.0% 0.0103 285.9)"
+        ]
+      },
+      "brand-separator": {
+        "role": "neutral",
+        "displayName": "Séparation de signature",
+        "tonalRamp": [
+          "oklch(15.0% 0.0107 286.0)",
+          "oklch(26.4% 0.0107 286.0)",
+          "oklch(37.9% 0.0107 286.0)",
+          "oklch(49.3% 0.0107 286.0)",
+          "oklch(60.7% 0.0107 286.0)",
+          "oklch(72.1% 0.0107 286.0)",
+          "oklch(83.6% 0.0107 286.0)",
+          "oklch(95.0% 0.0107 286.0)"
         ]
       }
     },
     "typographyMeta": {
       "display": {
-        "displayName": "Titre principal",
-        "purpose": "Base des titres principaux ; adaptations locales selon la surface."
+        "displayName": "Display",
+        "purpose": "Titre partagé ; les échelles d’accueil, de catalogue et de fiche sont des exceptions locales."
       },
       "headline": {
-        "displayName": "Titre de section",
-        "purpose": "Hiérarchie des sections."
+        "displayName": "Headline",
+        "purpose": "Titre de section partagé."
       },
       "title": {
-        "displayName": "Titre de troisième niveau",
-        "purpose": "Base des sous-titres."
+        "displayName": "Title",
+        "purpose": "Sous-titre partagé."
       },
       "card-title": {
         "displayName": "Nom de produit",
-        "purpose": "Nom complet dans la carte produit."
+        "purpose": "Nom complet de carte ; taille mobile locale."
       },
       "body": {
         "displayName": "Lecture",
-        "purpose": "Paragraphes, informations et coordonnées."
+        "purpose": "Texte courant."
       },
       "label": {
-        "displayName": "Libellé fort",
-        "purpose": "Libellés de filtre et choix courts."
+        "displayName": "Libellé compact",
+        "purpose": "Libellé des filtres ; les formulaires ont leurs adaptations locales."
       },
       "action": {
         "displayName": "Action",
-        "purpose": "Liens d’action et boutons."
+        "purpose": "Libellé de la primitive d’action ; la recherche sombre masque visuellement son texte."
       },
       "navigation": {
         "displayName": "Navigation",
-        "purpose": "Navigation de bureau."
+        "purpose": "Liens de la barre de bureau ; panneau et mobile ont des tailles locales."
       },
       "option": {
         "displayName": "Option",
-        "purpose": "Coloris et filtres actifs."
+        "purpose": "Base du choix de variante et du filtre actif."
+      },
+      "field": {
+        "displayName": "Champ",
+        "purpose": "Saisie de contact et de rendez-vous."
       }
     },
     "shadows": [
       {
-        "name": "anchored-panel",
+        "name": "universes-panel",
         "value": "0 24px 48px -28px rgb(23 23 23 / 45%)",
-        "purpose": "Ombre diffuse à étalement négatif du seul panneau des univers du bureau, ancré sous la barre ; exception bornée, pas un vocabulaire d’élévation pour les cartes."
+        "purpose": "Ombre diffuse du seul panneau des univers."
       }
     ],
     "motion": [
       {
         "name": "duration-fast",
         "value": "160ms",
-        "purpose": "Transition de fond et couleur des actions."
+        "purpose": "Couleurs des commandes, filet de sélection, chevron de navigation et flèche d’index."
       },
       {
-        "name": "ease-state",
+        "name": "ease-controls",
         "value": "ease",
-        "purpose": "Courbe des transitions de survol des actions."
+        "purpose": "Transitions locales de couleur et de transform des commandes."
       },
       {
         "name": "duration-arrival",
         "value": "650ms",
-        "purpose": "Déclarée dans la feuille de style sans être consommée ; la durée livrée de l’arrivée de la monture est 520ms (`frame-arrive`)."
+        "purpose": "Une arrivée de la photo après un choix manuel ; aucune animation du premier modèle."
       },
       {
         "name": "ease-arrival",
         "value": "cubic-bezier(.33, 1, .68, 1)",
-        "purpose": "Courbe de `frame-arrive`, bornée à la photographie d’accueil."
+        "purpose": "Easing d’arrivée du modèle choisi."
+      },
+      {
+        "name": "arrival-displacement",
+        "value": "-32px → 0; -16px → 0 à max-width: 600px; opacity .5 → 1",
+        "purpose": "Photographie d’accueil uniquement ; aucun mouvement de la légende."
       },
       {
         "name": "ease-out",
         "value": "cubic-bezier(.16, 1, .3, 1)",
-        "purpose": "Courbe de la translation d’ouverture du panneau des univers (220ms, -6px vers 0, avec une opacité de 160ms)."
+        "purpose": "Translate du panneau de navigation."
       },
       {
-        "name": "marquee-loop",
-        "value": "52s linear",
-        "purpose": "Boucle du bandeau de marques pour 13 logos (4s par logo) ; durée propre au composant, pas un token global."
+        "name": "universes-panel-entry",
+        "value": "opacity 160ms ease, translate 220ms cubic-bezier(.16, 1, .3, 1); 0 -6px → 0 0",
+        "purpose": "Panneau des univers uniquement."
       },
       {
-        "name": "hero-film",
-        "value": "24,32s linear loop",
-        "purpose": "Film d’ambiance muet de l’accueil : trois plans Pexels distincts à vitesse native, fondus de .48s et raccord circulaire ; couleurs natives, sans voile ni filtre ; aucune commande ; condition de lecture seule (champ, onglet visible, préférences) ; fondu d’apparition de .6s sur le poster. Propre au hero, pas un token global."
+        "name": "ambient-film-reveal",
+        "value": ".6s ease",
+        "purpose": "Opacité du film quand une lecture effective a commencé ; poster de repli."
+      },
+      {
+        "name": "brand-marquee-loop",
+        "value": "calc(var(--marquee-count) * 4s) linear infinite",
+        "purpose": "Boucle locale des marques, arrêtée au survol, au focus, hors champ ou onglet masqué ; liste fixe au focus clavier."
+      },
+      {
+        "name": "index-arrow-hover",
+        "value": "translate: 4px 0",
+        "purpose": "Réponse de la flèche dans l’index des univers."
       },
       {
         "name": "reduced-motion",
-        "value": ".01ms",
-        "purpose": "Animations et transitions réduites, une itération ; défilement automatique, photographie d’accueil sans arrivée, film non chargé (poster seul), bandeau de marques en rangée manuelle."
-      },
-      {
-        "name": "frame-arrive",
-        "value": "520ms var(--ease-arrival)",
-        "purpose": "Arrivée de la photographie de monture sur son petit plateau d’accueil, au chargement et à chaque sélection : opacité .75 → 1, translation (-10px, 4px) ((-8px, 3px) sur téléphone), rotation (-1.5deg) vers la pose stable, puis repos ; aucun autoplay de modèle."
+        "value": "animation: none sur arrivée et marques; scroll-behavior: auto; durées résiduelles .01ms; une itération",
+        "purpose": "Préférence système ; film sans source et poster seul, copie du bandeau supprimée."
       }
     ],
     "breakpoints": [
       {
-        "name": "narrow",
-        "value": "370px"
+        "name": "shared-wide-max",
+        "value": "1100px",
+        "purpose": "max-width ; gouttières 32px, grilles produit à trois colonnes, pied de page réorganisé."
       },
       {
-        "name": "mobile",
-        "value": "600px"
+        "name": "shared-stacked-max",
+        "value": "800px",
+        "purpose": "max-width ; menu mobile, empilements et comportements collants propres aux composants."
       },
       {
-        "name": "tablet",
-        "value": "800px"
+        "name": "shared-phone-max",
+        "value": "600px",
+        "purpose": "max-width ; gouttières 20px, grille produit à deux colonnes, typographie et commandes locales."
       },
       {
-        "name": "narrow-bar",
-        "value": "960px"
+        "name": "shared-narrow-max",
+        "value": "370px",
+        "purpose": "max-width ; gouttières 16px, signature et choix d’accueil compacts."
       },
       {
-        "name": "compact",
-        "value": "1100px"
+        "name": "catalogue-form-full-row-max",
+        "value": "1350px",
+        "scope": "Catalogue uniquement",
+        "purpose": "max-width ; recherche et filtres sur deux rangées ; recherche plafonnée à 560px."
       },
       {
-        "name": "wide-actions",
-        "value": "1280px"
+        "name": "catalogue-filters-two-columns-max",
+        "value": "960px",
+        "scope": "Filtres du catalogue uniquement",
+        "purpose": "max-width ; deux colonnes de champs et Appliquer sur la largeur."
+      },
+      {
+        "name": "catalogue-filters-single-column-max",
+        "value": "400px",
+        "scope": "Filtres ouverts du catalogue uniquement",
+        "purpose": "max-width ; une colonne pour lire les valeurs sélectionnées."
+      },
+      {
+        "name": "desktop-navigation-compact",
+        "value": "801px–960px",
+        "scope": "Navigation uniquement",
+        "purpose": "min-width: 801px et max-width: 960px ; destination répétée retirée de la barre, conservée dans les univers."
+      },
+      {
+        "name": "marquee-five-logos",
+        "value": "1101px–1280px",
+        "scope": "Bandeau de marques uniquement",
+        "purpose": "min-width: 1101px et max-width: 1280px ; cinq logos visibles."
+      },
+      {
+        "name": "home-editorial-min",
+        "value": "801px",
+        "scope": "Sélection et magasins de l’accueil uniquement",
+        "purpose": "min-width ; compositions asymétriques et lignes éditoriales propres à la page."
+      },
+      {
+        "name": "lens-five-columns-min",
+        "value": "1101px",
+        "scope": "Grille lentilles uniquement",
+        "purpose": "min-width ; cinq colonnes de produits."
       }
     ]
   },
   "components": [
     {
-      "name": "Action primaire",
+      "name": "Action principale",
       "kind": "button",
       "refersTo": "button-primary",
-      "description": "Variante livrée ; focus clavier violet et réponse au survol sans déplacement.",
-      "html": "<a class=\"ds-action-primary\" href=\"/produits/glory-glory\">Découvrir ce modèle<svg width=\"22\" height=\"22\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.7\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M4 12h16m-6-6 6 6-6 6\"/></svg></a>",
-      "css": "@font-face{font-family:\"ds-Manrope\";src:url(\"/fonts/Manrope.ttf\") format(\"truetype\");font-style:normal;font-weight:200 800;font-display:swap;}.ds-action-primary{display:inline-flex;align-items:center;justify-content:space-between;gap:20px;min-height:52px;padding:14px 22px;border:1px solid transparent;border-radius:var(--radius-control,4px);font-family:var(--font-body,\"ds-Manrope\"),sans-serif;font-weight:750;font-size:.94rem;line-height:1.35;text-decoration:none;cursor:pointer;transition:background var(--duration-fast,160ms) ease,color var(--duration-fast,160ms) ease;background:var(--color-yellow,#ffda00);color:var(--color-ink,#171717);}.ds-action-primary svg{flex-shrink:0;}.ds-action-primary:hover{background:var(--color-yellow-hover,#f1c900);}.ds-action-primary:focus-visible{outline:3px solid var(--color-focus,#43328b);outline-offset:4px;}@media(prefers-reduced-motion:reduce){.ds-action-primary{transition-duration:.01ms!important;animation-duration:.01ms!important;animation-iteration-count:1!important;}}"
-    },
-    {
-      "name": "Action sombre",
-      "kind": "button",
-      "refersTo": "button-dark",
-      "description": "Variante livrée ; focus clavier violet et réponse au survol sans déplacement.",
-      "html": "<button class=\"ds-action-dark\" type=\"button\">Rechercher<svg width=\"22\" height=\"22\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.7\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M4 12h16m-6-6 6 6-6 6\"/></svg></button>",
-      "css": "@font-face{font-family:\"ds-Manrope\";src:url(\"/fonts/Manrope.ttf\") format(\"truetype\");font-style:normal;font-weight:200 800;font-display:swap;}.ds-action-dark{display:inline-flex;align-items:center;justify-content:space-between;gap:20px;min-height:52px;padding:14px 22px;border:1px solid transparent;border-radius:var(--radius-control,4px);font-family:var(--font-body,\"ds-Manrope\"),sans-serif;font-weight:750;font-size:.94rem;line-height:1.35;text-decoration:none;cursor:pointer;transition:background var(--duration-fast,160ms) ease,color var(--duration-fast,160ms) ease;background:var(--color-ink,#171717);color:var(--color-paper,#ffffff);}.ds-action-dark svg{flex-shrink:0;}.ds-action-dark:hover{background:var(--color-lavender-ink,#38314f);}.ds-action-dark:focus-visible{outline:3px solid var(--color-focus,#43328b);outline-offset:4px;}@media(prefers-reduced-motion:reduce){.ds-action-dark{transition-duration:.01ms!important;animation-duration:.01ms!important;animation-iteration-count:1!important;}}.ds-action-dark:disabled{cursor:wait;opacity:.55;}"
+      "description": "Lien jaune avec sa réponse au survol et son focus ; primitive partagée.",
+      "html": "<a class=\"ds-action-primary\" href=\"/solaires\">Toutes les solaires<svg width=\"22\" height=\"22\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.7\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M4 12h16m-6-6 6 6-6 6\"/></svg></a>",
+      "css": "@font-face{font-family:\"ds-Manrope\";src:url(\"/fonts/Manrope.ttf\") format(\"truetype\");font-style:normal;font-weight:200 800;font-display:swap;}.ds-action-primary{display:inline-flex;align-items:center;justify-content:space-between;gap:20px;min-height:52px;padding:14px 22px;border:1px solid transparent;border-radius:var(--radius-control,4px);font-family:var(--font-body,\"ds-Manrope\"),sans-serif;font-weight:700;font-size:.94rem;line-height:1.35;text-decoration:none;cursor:pointer;transition:background var(--duration-fast,160ms) ease,color var(--duration-fast,160ms) ease;background:var(--color-yellow,#ffda00);color:var(--color-ink,#171717);}.ds-action-primary svg{flex-shrink:0;}.ds-action-primary:hover{background:var(--color-yellow-hover,#f1c900);}.ds-action-primary:focus-visible{outline:3px solid var(--color-focus,#43328b);outline-offset:4px;}@media(prefers-reduced-motion:reduce){.ds-action-primary{transition-duration:.01ms;}}"
     },
     {
       "name": "Action secondaire",
       "kind": "button",
       "refersTo": "button-secondary",
-      "description": "Variante livrée ; focus clavier violet et réponse au survol sans déplacement.",
-      "html": "<a class=\"ds-action-secondary\" href=\"/magasins\">Trouver un magasin<svg width=\"22\" height=\"22\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.7\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M20 10c0 6-8 11-8 11S4 16 4 10a8 8 0 1 1 16 0Z M15 10a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z\"/></svg></a>",
-      "css": "@font-face{font-family:\"ds-Manrope\";src:url(\"/fonts/Manrope.ttf\") format(\"truetype\");font-style:normal;font-weight:200 800;font-display:swap;}.ds-action-secondary{display:inline-flex;align-items:center;justify-content:space-between;gap:20px;min-height:52px;padding:14px 22px;border:1px solid transparent;border-radius:var(--radius-control,4px);font-family:var(--font-body,\"ds-Manrope\"),sans-serif;font-weight:750;font-size:.94rem;line-height:1.35;text-decoration:none;cursor:pointer;transition:background var(--duration-fast,160ms) ease,color var(--duration-fast,160ms) ease;background:transparent;color:var(--color-ink,#171717);border-color:var(--color-ink,#171717);}.ds-action-secondary svg{flex-shrink:0;}.ds-action-secondary:hover{background:var(--color-surface,#f3f3f5);}.ds-action-secondary:focus-visible{outline:3px solid var(--color-focus,#43328b);outline-offset:4px;}@media(prefers-reduced-motion:reduce){.ds-action-secondary{transition-duration:.01ms!important;animation-duration:.01ms!important;animation-iteration-count:1!important;}}"
+      "description": "Action à contour d’encre ; fond gris au survol.",
+      "html": "<a class=\"ds-action-secondary\" href=\"/magasins\">Choisir un magasin<svg width=\"22\" height=\"22\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.7\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M4 12h16m-6-6 6 6-6 6\"/></svg></a>",
+      "css": "@font-face{font-family:\"ds-Manrope\";src:url(\"/fonts/Manrope.ttf\") format(\"truetype\");font-style:normal;font-weight:200 800;font-display:swap;}.ds-action-secondary{display:inline-flex;align-items:center;justify-content:space-between;gap:20px;min-height:52px;padding:14px 22px;border:1px solid transparent;border-radius:var(--radius-control,4px);font-family:var(--font-body,\"ds-Manrope\"),sans-serif;font-weight:700;font-size:.94rem;line-height:1.35;text-decoration:none;cursor:pointer;transition:background var(--duration-fast,160ms) ease,color var(--duration-fast,160ms) ease;border-color:var(--color-ink,#171717);background:transparent;color:var(--color-ink,#171717);}.ds-action-secondary svg{flex-shrink:0;}.ds-action-secondary:hover{background:var(--color-surface,#f3f3f5);}.ds-action-secondary:focus-visible{outline:3px solid var(--color-focus,#43328b);outline-offset:4px;}@media(prefers-reduced-motion:reduce){.ds-action-secondary{transition-duration:.01ms;}}"
     },
     {
       "name": "Action texte",
       "kind": "button",
       "refersTo": "button-text",
-      "description": "Variante livrée ; focus clavier violet et réponse au survol sans déplacement.",
-      "html": "<a class=\"ds-action-text\" href=\"/solaires\">Explorer la collection<svg width=\"22\" height=\"22\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.7\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M4 12h16m-6-6 6 6-6 6\"/></svg></a>",
-      "css": "@font-face{font-family:\"ds-Manrope\";src:url(\"/fonts/Manrope.ttf\") format(\"truetype\");font-style:normal;font-weight:200 800;font-display:swap;}.ds-action-text{display:inline-flex;align-items:center;justify-content:space-between;gap:20px;min-height:52px;padding:14px 22px;border:1px solid transparent;border-radius:var(--radius-control,4px);font-family:var(--font-body,\"ds-Manrope\"),sans-serif;font-weight:750;font-size:.94rem;line-height:1.35;text-decoration:none;cursor:pointer;transition:background var(--duration-fast,160ms) ease,color var(--duration-fast,160ms) ease;background:transparent;color:var(--color-ink,#171717);border:0;padding:12px 0;min-height:44px;}.ds-action-text svg{flex-shrink:0;}.ds-action-text:hover{text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:5px;}.ds-action-text:focus-visible{outline:3px solid var(--color-focus,#43328b);outline-offset:4px;}@media(prefers-reduced-motion:reduce){.ds-action-text{transition-duration:.01ms!important;animation-duration:.01ms!important;animation-iteration-count:1!important;}}"
+      "description": "Action sans contour, soulignée au survol, avec une cible minimale de 44px.",
+      "html": "<a class=\"ds-action-text\" href=\"/rendez-vous\">Préparer un rendez-vous<svg width=\"22\" height=\"22\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.7\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M4 12h16m-6-6 6 6-6 6\"/></svg></a>",
+      "css": "@font-face{font-family:\"ds-Manrope\";src:url(\"/fonts/Manrope.ttf\") format(\"truetype\");font-style:normal;font-weight:200 800;font-display:swap;}.ds-action-text{display:inline-flex;align-items:center;justify-content:space-between;gap:20px;min-height:52px;padding:14px 22px;border:1px solid transparent;border-radius:var(--radius-control,4px);font-family:var(--font-body,\"ds-Manrope\"),sans-serif;font-weight:700;font-size:.94rem;line-height:1.35;text-decoration:none;cursor:pointer;transition:background var(--duration-fast,160ms) ease,color var(--duration-fast,160ms) ease;min-height:44px;padding:12px 0;border:0;background:transparent;color:var(--color-ink,#171717);text-underline-offset:5px;}.ds-action-text svg{flex-shrink:0;}.ds-action-text:hover{text-decoration:underline;text-decoration-thickness:2px;}.ds-action-text:focus-visible{outline:3px solid var(--color-focus,#43328b);outline-offset:4px;}@media(prefers-reduced-motion:reduce){.ds-action-text{transition-duration:.01ms;}}"
+    },
+    {
+      "name": "Recherche sombre",
+      "kind": "button",
+      "refersTo": "button-dark",
+      "description": "Adaptation réellement employée dans le catalogue : flèche visible, nom Rechercher pour les technologies d’assistance. Extrait visuel sans soumission applicative.",
+      "html": "<button class=\"ds-search-submit\" type=\"button\"><span class=\"ds-search-name\">Rechercher</span><svg width=\"22\" height=\"22\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.7\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M4 12h16m-6-6 6 6-6 6\"/></svg></button>",
+      "css": "@font-face{font-family:\"ds-Manrope\";src:url(\"/fonts/Manrope.ttf\") format(\"truetype\");font-style:normal;font-weight:200 800;font-display:swap;}.ds-search-submit{display:inline-flex;align-items:center;justify-content:space-between;gap:20px;min-height:52px;padding:14px 22px;border:1px solid transparent;border-radius:var(--radius-control,4px);font-family:var(--font-body,\"ds-Manrope\"),sans-serif;font-weight:700;font-size:.94rem;line-height:1.35;text-decoration:none;cursor:pointer;transition:background var(--duration-fast,160ms) ease,color var(--duration-fast,160ms) ease;min-height:48px;padding:10px 13px;font-size:0;gap:0;background:var(--color-ink,#171717);color:var(--color-paper,#ffffff);}.ds-search-submit svg{width:22px;height:22px;flex-shrink:0;}.ds-search-name{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap;border:0;}.ds-search-submit:hover{background:var(--color-lavender-ink,#38314f);}.ds-search-submit:focus-visible{outline:3px solid var(--color-focus,#43328b);outline-offset:4px;}.ds-search-submit:disabled{cursor:wait;opacity:.55;}@media(prefers-reduced-motion:reduce){.ds-search-submit{transition-duration:.01ms;}}"
     },
     {
       "name": "Champ de recherche",
       "kind": "input",
       "refersTo": "search-input",
-      "description": "Champ de recherche réel, libellé accessible et focus sur le groupe ; aucun changement de fond au survol.",
-      "html": "<label class=\"ds-search\"><span class=\"ds-search-label\">Rechercher un modèle ou un coloris</span><svg width=\"22\" height=\"22\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.7\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M16.5 16.5 21 21M18 10a8 8 0 1 1-16 0 8 8 0 0 1 16 0Z\"/></svg><input class=\"ds-search-field\" type=\"search\" name=\"q\" maxlength=\"120\" placeholder=\"Un modèle, un coloris…\" /></label>",
-      "css": "@font-face{font-family:\"ds-Manrope\";src:url(\"/fonts/Manrope.ttf\") format(\"truetype\");font-style:normal;font-weight:200 800;font-display:swap;}.ds-search{display:flex;align-items:center;gap:12px;background:var(--color-paper,#ffffff);border:1px solid var(--color-line,#c7c7ce);padding:0 16px;min-height:52px;border-radius:var(--radius-control,4px);min-width:0;color:var(--color-ink,#171717);font-family:var(--font-body,\"ds-Manrope\"),sans-serif;font-size:16px;line-height:1.6;}.ds-search:hover{background:var(--color-paper,#ffffff);}.ds-search:focus-within{outline:2px solid var(--color-focus,#43328b);outline-offset:1px;}.ds-search-label{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap;border:0;}.ds-search-field{border:0;background:transparent;width:100%;min-width:0;padding:13px 0;outline:0;font:inherit;color:inherit;caret-color:var(--color-focus,#43328b);border-radius:var(--radius-control,4px);}.ds-search-field::placeholder{color:var(--color-muted,#56565e);opacity:1;}.ds-search svg{flex-shrink:0;}.ds-search-field:focus-visible{outline:3px solid var(--color-focus,#43328b);outline-offset:4px;}.ds-search-field:focus-visible{outline:0;}@media(max-width:600px){.ds-search{min-height:48px;padding-inline:10px;gap:8px;}.ds-search-field{font-size:13px;padding-block:12px;}.ds-search svg{width:18px;height:18px;}}"
+      "description": "Champ blanc à icône, avec focus sur l’enveloppe ; saisie native sans runtime.",
+      "html": "<label class=\"ds-search-label\" for=\"ds-model-search\">Rechercher un modèle ou un coloris</label><div class=\"ds-search-input\"><svg width=\"22\" height=\"22\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.7\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M16.5 16.5 21 21M18 10a8 8 0 1 1-16 0 8 8 0 0 1 16 0Z\"/></svg><input id=\"ds-model-search\" name=\"q\" type=\"search\" maxlength=\"120\" placeholder=\"Nom ou coloris…\" /></div>",
+      "css": "@font-face{font-family:\"ds-Manrope\";src:url(\"/fonts/Manrope.ttf\") format(\"truetype\");font-style:normal;font-weight:200 800;font-display:swap;}.ds-search-label{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap;border:0;}.ds-search-input{display:flex;align-items:center;gap:12px;background:var(--color-paper,#ffffff);color:var(--color-ink,#171717);border:1px solid var(--color-line,#c7c7ce);padding:0 14px;min-height:48px;min-width:0;border-radius:var(--radius-control,4px);font-family:var(--font-body,\"ds-Manrope\"),sans-serif;font-size:16px;line-height:1.6;}.ds-search-input svg{flex-shrink:0;}.ds-search-input input{font:inherit;color:inherit;border:0;border-radius:var(--radius-control,4px);background:transparent;width:100%;min-width:0;padding:13px 0;outline:0;caret-color:var(--color-focus,#43328b);}.ds-search-input input::placeholder{color:var(--color-muted,#56565e);opacity:1;}.ds-search-input:focus-within{outline:2px solid var(--color-focus,#43328b);outline-offset:1px;}@media(max-width:600px){.ds-search-input{padding-inline:10px;gap:8px;}.ds-search-input input{font-size:13px;padding-block:12px;}.ds-search-input svg{width:18px;height:18px;}}"
     },
     {
-      "name": "Action avec icône en tête",
-      "kind": "button",
-      "refersTo": "button-primary",
-      "description": "Action de rendez-vous : calendrier avant le libellé, groupe aligné à gauche ; la flèche finale indique une sortie ou une progression.",
-      "html": "<a class=\"ds-action-leading\" href=\"/rendez-vous\"><svg width=\"22\" height=\"22\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.7\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M8 3v4m8-4v4M4 10h16M5 5h14a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1Z\"/></svg>Préparer un RDV</a>",
-      "css": "@font-face{font-family:\"ds-Manrope\";src:url(\"/fonts/Manrope.ttf\") format(\"truetype\");font-style:normal;font-weight:200 800;font-display:swap;}.ds-action-leading{display:inline-flex;align-items:center;justify-content:flex-start;gap:20px;min-height:52px;padding:14px 22px;border:1px solid transparent;border-radius:var(--radius-control,4px);font-family:var(--font-body,\"ds-Manrope\"),sans-serif;font-weight:750;font-size:.94rem;line-height:1.35;text-decoration:none;cursor:pointer;transition:background var(--duration-fast,160ms) ease,color var(--duration-fast,160ms) ease;background:var(--color-yellow,#ffda00);color:var(--color-ink,#171717);}.ds-action-leading svg{flex-shrink:0;}.ds-action-leading:hover{background:var(--color-yellow-hover,#f1c900);}.ds-action-leading:focus-visible{outline:3px solid var(--color-focus,#43328b);outline-offset:4px;}@media(prefers-reduced-motion:reduce){.ds-action-leading{transition-duration:.01ms!important;}}"
-    },
-    {
-      "name": "Navigation principale",
+      "name": "Navigation noire",
       "kind": "nav",
       "refersTo": "navigation",
-      "description": "Extrait de la barre ordinateur (84px) sur son fond noir ; la page courante et le survol sont jaunes. Le panneau des univers est un composant distinct.",
-      "html": "<nav class=\"ds-nav\" aria-label=\"Navigation principale\"><a class=\"ds-nav-link\" href=\"/solaires\" aria-current=\"page\">Les solaires</a><a class=\"ds-nav-link\" href=\"/marques\">Nos marques</a><a class=\"ds-nav-link\" href=\"/magasins\">Nos magasins</a></nav>",
-      "css": "@font-face{font-family:\"ds-Manrope\";src:url(\"/fonts/Manrope.ttf\") format(\"truetype\");font-style:normal;font-weight:200 800;font-display:swap;}.ds-nav{display:flex;align-items:center;justify-content:center;gap:28px;background:#000000;color:var(--color-paper,#ffffff);font-family:var(--font-body,\"ds-Manrope\"),sans-serif;font-size:14px;font-weight:650;line-height:1.6;}.ds-nav-link{display:flex;align-items:center;min-height:44px;white-space:nowrap;color:inherit;text-decoration:none;}.ds-nav-link[aria-current],.ds-nav-link:hover{color:var(--color-yellow,#ffda00);}.ds-nav-link:focus-visible{outline:3px solid var(--color-yellow,#ffda00);outline-offset:4px;}"
+      "description": "Extrait des liens du bandeau et de leur état courant ; le bouton Menu illustre le seuil mobile sans ouvrir de dialogue dans cet extrait.",
+      "html": "<div class=\"ds-navigation-shell\"><nav class=\"ds-navigation\" aria-label=\"Navigation principale\"><a href=\"/solaires\" aria-current=\"page\">Les solaires</a><a href=\"/marques\">Nos marques</a><a href=\"/magasins\">Nos magasins</a></nav><button class=\"ds-menu-trigger\" type=\"button\">Menu<svg width=\"22\" height=\"22\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.7\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M4 7h16M4 12h16M4 17h16\"/></svg></button></div>",
+      "css": "@font-face{font-family:\"ds-Manrope\";src:url(\"/fonts/Manrope.ttf\") format(\"truetype\");font-style:normal;font-weight:200 800;font-display:swap;}.ds-navigation-shell{display:flex;align-items:center;min-height:78px;padding:0 48px;background:#000000;color:var(--color-paper,#ffffff);font-family:var(--font-body,\"ds-Manrope\"),sans-serif;font-size:14px;font-weight:600;line-height:1.6;}.ds-navigation{display:flex;align-items:center;justify-content:center;gap:28px;}.ds-navigation a{display:flex;align-items:center;min-height:44px;color:inherit;text-decoration:none;white-space:nowrap;}.ds-navigation a:hover,.ds-navigation a[aria-current]{color:var(--color-yellow,#ffda00);}.ds-navigation a[aria-current]{text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:8px;}.ds-navigation a:focus-visible,.ds-menu-trigger:focus-visible{outline:3px solid var(--color-yellow,#ffda00);outline-offset:4px;}.ds-menu-trigger{display:none;}@media(max-width:1100px){.ds-navigation-shell{padding-inline:32px;}.ds-navigation{gap:18px;}}@media(max-width:800px){.ds-navigation-shell{min-height:72px;}.ds-navigation{display:none;}.ds-menu-trigger{display:inline-flex;align-items:center;justify-content:space-between;gap:12px;margin-left:auto;background:transparent;border:0;border-radius:var(--radius-control,4px);color:inherit;padding:12px 0 12px 12px;font:inherit;font-size:14px;font-weight:400;cursor:pointer;}}@media(max-width:600px){.ds-navigation-shell{padding-inline:20px;min-height:68px;}.ds-menu-trigger{font-size:12px;gap:8px;}}@media(max-width:370px){.ds-navigation-shell{padding-inline:16px;}}"
     },
     {
       "name": "Filtre actif",
       "kind": "chip",
       "refersTo": "filter-chip",
-      "description": "Lien de retrait d’un filtre nommé ; pas de nouvelle couleur de survol, focus visible et croix SVG.",
-      "html": "<a class=\"ds-filter-chip\" href=\"/solaires\" aria-label=\"Retirer le filtre Femme\">Femme<svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.7\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"m6 6 12 12M6 18 18 6\"/></svg></a>",
-      "css": "@font-face{font-family:\"ds-Manrope\";src:url(\"/fonts/Manrope.ttf\") format(\"truetype\");font-style:normal;font-weight:200 800;font-display:swap;}.ds-filter-chip{display:inline-flex;gap:10px;align-items:center;padding:8px 12px;background:var(--color-lavender-soft,#eeecf6);color:var(--color-ink,#171717);font-family:var(--font-body,\"ds-Manrope\"),sans-serif;font-size:12px;font-weight:400;line-height:1.6;border-radius:var(--radius-control,4px);max-width:100%;overflow-wrap:anywhere;text-decoration:none;}.ds-filter-chip svg{flex-shrink:0;}.ds-filter-chip:hover{text-decoration-thickness:2px;}.ds-filter-chip:focus-visible{outline:3px solid var(--color-focus,#43328b);outline-offset:4px;}@media(max-width:600px){.ds-filter-chip{padding:8px 10px;gap:10px;}}"
+      "description": "Lavande douce, nom complet et croix SVG ; le lien représente le retrait du filtre nommé.",
+      "html": "<a class=\"ds-filter-chip\" href=\"/solaires\" aria-label=\"Retirer le filtre Moins de 30 000 XPF\">Moins de 30 000 XPF<svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.7\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"m6 6 12 12M6 18 18 6\"/></svg></a>",
+      "css": "@font-face{font-family:\"ds-Manrope\";src:url(\"/fonts/Manrope.ttf\") format(\"truetype\");font-style:normal;font-weight:200 800;font-display:swap;}.ds-filter-chip{display:inline-flex;gap:10px;align-items:center;min-height:44px;padding:8px 12px;background:var(--color-lavender-soft,#eeecf6);color:var(--color-ink,#171717);font-family:var(--font-body,\"ds-Manrope\"),sans-serif;font-size:12px;font-weight:400;line-height:1.6;border-radius:var(--radius-control,4px);max-width:100%;overflow-wrap:anywhere;text-decoration:none;text-underline-offset:5px;}.ds-filter-chip svg{flex-shrink:0;}.ds-filter-chip:hover{text-decoration-thickness:2px;}.ds-filter-chip:focus-visible{outline:3px solid var(--color-focus,#43328b);outline-offset:4px;}@media(max-width:600px){.ds-filter-chip{padding:8px 10px;}}"
     },
     {
-      "name": "Carte produit",
+      "name": "Carte produit sur blanc",
       "kind": "card",
       "refersTo": "product-card",
-      "description": "Carte de Glory Glory issue du snapshot ; plateau, vrai média, nom complet et prix source.",
+      "description": "Vrai packshot local et informations du catalogue public figé ; prix source, à confirmer en magasin. Aucun plateau ajouté.",
       "html": "<article class=\"ds-product-card\"><a class=\"ds-product-link\" href=\"/produits/glory-glory?retour=%2Fsolaires\"><div class=\"ds-product-image\"><img src=\"/media/91e500d26c-HS833-12F_quarter.webp\" alt=\"Glory Glory, monture Maui Jim\" width=\"900\" height=\"320\" /></div><div class=\"ds-product-heading\"><h3>Glory Glory</h3><svg width=\"22\" height=\"22\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.7\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M4 12h16m-6-6 6 6-6 6\"/></svg></div><p class=\"ds-product-brand\">Maui Jim · 5 coloris</p><p class=\"ds-product-price\"><span>À partir de </span>34 600 XPF</p></a></article>",
-      "css": "@font-face{font-family:\"ds-Manrope\";src:url(\"/fonts/Manrope.ttf\") format(\"truetype\");font-style:normal;font-weight:200 800;font-display:swap;}@font-face{font-family:\"ds-Sora\";src:url(\"/fonts/Sora.ttf\") format(\"truetype\");font-style:normal;font-weight:100 800;font-display:swap;}.ds-product-card{min-width:0;color:var(--color-ink,#171717);font-family:var(--font-body,\"ds-Manrope\"),sans-serif;line-height:1.6;}.ds-product-link{display:block;color:inherit;text-decoration:none;}.ds-product-image{background:var(--color-surface,#f3f3f5);padding:12px;margin-bottom:18px;}.ds-product-image img{display:block;width:100%;height:185px;max-width:100%;object-fit:contain;background:var(--color-paper,#ffffff);}.ds-product-heading{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;}.ds-product-heading h3{margin:0;font-family:var(--font-display,\"ds-Sora\"),sans-serif;font-size:19px;font-weight:600;line-height:1.25;letter-spacing:-.025em;text-wrap:pretty;overflow-wrap:anywhere;}.ds-product-heading svg{width:18px;height:22px;flex-shrink:0;}.ds-product-brand{margin:6px 0 0;color:var(--color-muted,#56565e);font-size:13px;}.ds-product-price{margin:12px 0 0;font-size:15px;font-weight:750;font-variant-numeric:tabular-nums;}.ds-product-price>span{font-size:12px;font-weight:500;}.ds-product-link:hover .ds-product-heading{text-decoration:underline;text-underline-offset:5px;text-decoration-thickness:2px;}.ds-product-link:focus-visible{outline:3px solid var(--color-focus,#43328b);outline-offset:4px;}@media(max-width:600px){.ds-product-image{padding:6px;margin-bottom:12px;}.ds-product-image img{height:122px;}.ds-product-heading{gap:6px;}.ds-product-heading h3{font-size:16px;line-height:1.3;}.ds-product-heading svg{width:15px;height:20px;}.ds-product-brand{font-size:12px;margin-top:5px;}.ds-product-price{font-size:13px;margin-top:9px;}.ds-product-price>span{font-size:12px;display:block;}}"
+      "css": "@font-face{font-family:\"ds-Manrope\";src:url(\"/fonts/Manrope.ttf\") format(\"truetype\");font-style:normal;font-weight:200 800;font-display:swap;}.ds-product-card{min-width:0;color:var(--color-ink,#171717);font-family:var(--font-body,\"ds-Manrope\"),sans-serif;line-height:1.6;}.ds-product-link{display:block;color:inherit;text-decoration:none;}.ds-product-image{margin-bottom:14px;}.ds-product-image img{display:block;max-width:100%;width:100%;height:auto;aspect-ratio:16/9;object-fit:contain;}.ds-product-heading{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;}.ds-product-heading h3{margin:0;font-family:var(--font-display,var(--font-body,\"ds-Manrope\")),sans-serif;font-size:19px;font-weight:650;line-height:1.25;letter-spacing:-.02em;text-wrap:pretty;overflow-wrap:anywhere;}.ds-product-heading svg{width:18px;height:22px;flex-shrink:0;}.ds-product-brand{margin:6px 0 0;color:var(--color-muted,#56565e);font-size:13px;}.ds-product-price{margin:12px 0 0;font-size:15px;font-weight:750;font-variant-numeric:tabular-nums;}.ds-product-price>span{font-size:12px;font-weight:500;}.ds-product-link:hover .ds-product-heading{text-decoration:underline;text-underline-offset:5px;text-decoration-thickness:2px;}.ds-product-link:focus-visible{outline:3px solid var(--color-focus,#43328b);outline-offset:4px;}@media(max-width:600px){.ds-product-image{margin-bottom:10px;}.ds-product-heading{gap:6px;}.ds-product-heading h3{font-size:16px;line-height:1.3;}.ds-product-heading svg{width:15px;height:20px;}.ds-product-brand{font-size:12px;margin-top:5px;}.ds-product-price{font-size:13px;margin-top:9px;}.ds-product-price>span{font-size:12px;display:block;}}"
     },
     {
-      "name": "Choix de coloris",
+      "name": "Options de coloris",
       "kind": "custom",
       "refersTo": "variant-option",
-      "description": "Deux options réelles de Glory Glory ; extrait des états initial et sélectionné, sans simulation de la mise à jour applicative.",
-      "html": "<fieldset class=\"ds-variant-picker\"><legend>Choisissez votre coloris</legend><div class=\"ds-variant-options\"><button class=\"ds-variant-option\" type=\"button\" aria-pressed=\"true\"><img src=\"/media/91e500d26c-HS833-12F_quarter.webp\" width=\"64\" height=\"35\" alt=\"\" /><span>Cannelle transparente</span><span class=\"ds-variant-check\"><svg width=\"22\" height=\"22\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.7\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"m4 12 5 5L20 6\"/></svg></span></button><button class=\"ds-variant-option\" type=\"button\" aria-pressed=\"false\"><img src=\"/media/dd557ea82e-RS833-13D_quarter.webp\" width=\"64\" height=\"35\" alt=\"\" /><span>Framboise Lactée Transparente</span><span class=\"ds-variant-check\"></span></button></div></fieldset>",
-      "css": "@font-face{font-family:\"ds-Manrope\";src:url(\"/fonts/Manrope.ttf\") format(\"truetype\");font-style:normal;font-weight:200 800;font-display:swap;}.ds-variant-picker{padding:0;margin:0;border:0;min-width:0;color:var(--color-ink,#171717);font-family:var(--font-body,\"ds-Manrope\"),sans-serif;line-height:1.6;}.ds-variant-picker legend{font-size:15px;font-weight:750;margin-bottom:12px;}.ds-variant-options{display:grid;gap:8px;}.ds-variant-option{display:grid;grid-template-columns:64px minmax(0,1fr) 20px;gap:12px;align-items:center;min-height:61px;text-align:left;border:1px solid var(--color-line,#c7c7ce);border-radius:var(--radius-control,4px);padding:7px 12px;background:var(--color-paper,#ffffff);color:inherit;font-family:inherit;font-size:12px;line-height:1.6;cursor:pointer;}.ds-variant-option img{display:block;width:64px;height:35px;object-fit:contain;}.ds-variant-option span{overflow-wrap:anywhere;}.ds-variant-option:hover{background:var(--color-surface,#f3f3f5);}.ds-variant-option[aria-pressed=true]{border:2px solid var(--color-ink,#171717);padding:6px 11px;font-weight:750;}.ds-variant-option:focus-visible{outline:3px solid var(--color-focus,#43328b);outline-offset:4px;}@media(max-width:800px) and (min-width:601px){.ds-variant-option{grid-template-columns:48px minmax(0,1fr) 18px;gap:8px;padding-inline:8px;}.ds-variant-option img{width:48px;}.ds-variant-option[aria-pressed=true]{padding-inline:7px;}}@media(max-width:600px){.ds-variant-option{padding:8px 12px;}.ds-variant-option[aria-pressed=true]{padding:7px 11px;}}"
+      "description": "Deux vrais coloris montrant les états choisi et non choisi. Extrait visuel ; la synchronisation galerie/prix reste applicative.",
+      "html": "<fieldset class=\"ds-variant-picker\"><legend>Choisissez votre coloris</legend><div class=\"ds-variant-options\"><button class=\"ds-variant-option\" type=\"button\" aria-pressed=\"true\"><img src=\"/media/91e500d26c-HS833-12F_quarter.webp\" width=\"56\" height=\"32\" alt=\"\" /><span>Cannelle transparente</span><span class=\"ds-variant-check\"><svg width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.7\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"m4 12 5 5L20 6\"/></svg></span></button><button class=\"ds-variant-option\" type=\"button\" aria-pressed=\"false\"><img src=\"/media/dd557ea82e-RS833-13D_quarter.webp\" width=\"56\" height=\"32\" alt=\"\" /><span>Framboise Lactée Transparente</span><span class=\"ds-variant-check\"></span></button></div></fieldset>",
+      "css": "@font-face{font-family:\"ds-Manrope\";src:url(\"/fonts/Manrope.ttf\") format(\"truetype\");font-style:normal;font-weight:200 800;font-display:swap;}.ds-variant-picker{padding:0;margin:0;border:0;min-width:0;color:var(--color-ink,#171717);font-family:var(--font-body,\"ds-Manrope\"),sans-serif;line-height:1.6;}.ds-variant-picker legend{font-size:15px;font-weight:750;margin-bottom:12px;}.ds-variant-options{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;}.ds-variant-option{display:grid;grid-template-columns:56px minmax(0,1fr);grid-auto-flow:column;grid-auto-columns:auto;gap:10px;align-items:center;min-height:56px;text-align:left;border:1px solid var(--color-line,#c7c7ce);border-radius:var(--radius-control,4px);padding:7px 10px;background:var(--color-paper,#ffffff);color:inherit;font:inherit;font-size:12px;line-height:1.35;cursor:pointer;}.ds-variant-option img{display:block;width:56px;height:32px;object-fit:contain;}.ds-variant-option span{overflow-wrap:break-word;}.ds-variant-check:empty{display:none;}.ds-variant-check svg{width:18px;height:18px;flex-shrink:0;}.ds-variant-option:hover{background:var(--color-surface,#f3f3f5);}.ds-variant-option[aria-pressed=true]{border:2px solid var(--color-ink,#171717);padding:6px 9px;background:var(--color-lavender-soft,#eeecf6);font-weight:750;}.ds-variant-option:focus-visible{outline:3px solid var(--color-focus,#43328b);outline-offset:4px;}@media(max-width:800px){.ds-variant-options{grid-template-columns:minmax(0,1fr);}}@media(max-width:600px){.ds-variant-options{grid-template-columns:repeat(2,minmax(0,1fr));}.ds-variant-option{grid-template-columns:44px minmax(0,1fr);gap:8px;padding-inline:8px;}.ds-variant-option[aria-pressed=true]{padding-inline:7px;}.ds-variant-option img{width:44px;height:26px;}}"
     },
     {
-      "name": "Détail dépliable",
+      "name": "Choix du modèle sur filet",
       "kind": "custom",
-      "refersTo": "product-details",
-      "description": "Accordéon natif de la fiche produit ; ouvert/fermé au clavier ou au pointeur, chevron orienté selon l’état.",
-      "html": "<div class=\"ds-product-details\"><details><summary>Préparer votre visite<svg width=\"22\" height=\"22\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.7\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"m6 9 6 6 6-6\"/></svg></summary><div><p>Contactez le magasin de votre choix pour confirmer le prix et la disponibilité de cette référence avant de vous déplacer.</p><p>Aucune réservation n’est effectuée sur ce site.</p></div></details></div>",
-      "css": "@font-face{font-family:\"ds-Manrope\";src:url(\"/fonts/Manrope.ttf\") format(\"truetype\");font-style:normal;font-weight:200 800;font-display:swap;}.ds-product-details{color:var(--color-ink,#171717);font-family:var(--font-body,\"ds-Manrope\"),sans-serif;line-height:1.6;}.ds-product-details details{border-top:1px solid var(--color-line,#c7c7ce);}.ds-product-details summary{list-style:none;cursor:pointer;min-height:60px;display:flex;justify-content:space-between;align-items:center;gap:12px;font-weight:700;font-size:13px;}.ds-product-details summary::-webkit-details-marker{display:none;}.ds-product-details summary:hover{cursor:pointer;}.ds-product-details details[open] summary svg{transform:rotate(180deg);}.ds-product-details details>div{padding:2px 0 22px;font-size:13px;color:var(--color-muted,#56565e);}.ds-product-details p{margin:0;}.ds-product-details p+p{margin-top:14px;}.ds-product-details svg{flex-shrink:0;}.ds-product-details summary:focus-visible{outline:3px solid var(--color-focus,#43328b);outline-offset:4px;}"
-    },
-    {
-      "name": "Panneau des univers",
-      "kind": "nav",
-      "refersTo": "navigation",
-      "description": "Panneau de papier compact ancré sous la barre noire : six univers sur deux colonnes, enseigne dans une colonne plus étroite, groupes séparés par l’espace, sans descriptif ni filet par ligne.",
-      "html": "<div class=\"ds-panel\"><div class=\"ds-panel-group\"><h2>Nos univers</h2><ul><li><a class=\"ds-panel-link\" href=\"/lunettes-de-vue\">Lunettes de vue</a></li><li><a class=\"ds-panel-link\" href=\"/solaires\" aria-current=\"page\">Les solaires</a></li><li><a class=\"ds-panel-link\" href=\"/lentilles\">Lentilles</a></li><li><a class=\"ds-panel-link\" href=\"/jumelles-et-telescopes\">Jumelles et télescopes</a></li><li><a class=\"ds-panel-link\" href=\"/basse-vision\">Basse vision</a></li><li><a class=\"ds-panel-link\" href=\"/protheses-oculaires\">Prothèses oculaires</a></li></ul></div><div class=\"ds-panel-group\"><h2>L’enseigne</h2><ul><li><a class=\"ds-panel-link\" href=\"/services-et-garanties\">Services et garanties</a></li><li><a class=\"ds-panel-link\" href=\"/qui-sommes-nous\">Qui sommes-nous</a></li></ul></div></div>",
-      "css": "@font-face{font-family:\"ds-Manrope\";src:url(\"/fonts/Manrope.ttf\") format(\"truetype\");font-style:normal;font-weight:200 800;font-display:swap;}.ds-panel{display:grid;grid-template-columns:minmax(0,2fr) minmax(0,1fr);gap:32px;width:min(820px,100%);padding:24px 28px 28px;background:var(--color-paper,#ffffff);color:var(--color-ink,#171717);border-radius:0 0 4px 4px;box-shadow:0 24px 48px -28px rgb(23 23 23 / 45%);font-family:var(--font-body,\"ds-Manrope\"),sans-serif;}.ds-panel h2{margin:0 0 6px;font-family:var(--font-body,\"ds-Manrope\"),sans-serif;font-size:13px;font-weight:750;line-height:1.6;letter-spacing:0;color:var(--color-muted,#56565e);}.ds-panel ul{list-style:none;margin:0 -12px;padding:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:2px 16px;}.ds-panel-group:last-child ul{grid-template-columns:minmax(0,1fr);}.ds-panel-link{display:flex;align-items:center;min-height:44px;padding:8px 12px;border-radius:4px;font-size:17px;font-weight:650;line-height:1.3;color:inherit;text-decoration:none;transition:background 160ms ease;}.ds-panel-link:hover{background:var(--color-surface,#f3f3f5);}.ds-panel-link[aria-current]{background:var(--color-lavender-soft,#eeecf6);font-weight:800;text-decoration:underline;text-decoration-thickness:2px;}.ds-panel-link:focus-visible{outline:3px solid var(--color-focus,#43328b);outline-offset:0;}"
-    },
-    {
-      "name": "Choix de modèle du nuancier",
-      "kind": "custom",
-      "refersTo": "navigation",
-      "description": "Trois boutons nommés du nuancier d’accueil, sur le champ lavande : choix `aria-pressed` souligné d’encre, sans cadre ni onglet cloisonné.",
-      "html": "<div class=\"ds-model\" role=\"group\" aria-label=\"Choisir un modèle à découvrir\"><button type=\"button\" class=\"ds-model-choice\" aria-pressed=\"true\">Glory Glory</button><button type=\"button\" class=\"ds-model-choice\" aria-pressed=\"false\">Baby Beach</button><button type=\"button\" class=\"ds-model-choice\" aria-pressed=\"false\">The Bird</button></div>",
-      "css": "@font-face{font-family:\"ds-Manrope\";src:url(\"/fonts/Manrope.ttf\") format(\"truetype\");font-style:normal;font-weight:200 800;font-display:swap;}.ds-model{display:flex;flex-wrap:wrap;gap:0 24px;padding:8px 16px;background:var(--color-lavender,#aba5d2);font-family:var(--font-body,\"ds-Manrope\"),sans-serif;}.ds-model-choice{position:relative;min-height:44px;padding:0;border:0;border-radius:0;background:transparent;color:var(--color-lavender-ink,#38314f);font:inherit;font-size:14px;font-weight:750;cursor:pointer;}.ds-model-choice::after{content:\"\";position:absolute;left:0;right:0;bottom:7px;height:2px;background:var(--color-ink,#171717);transform:scaleX(0);transform-origin:left;transition:transform 160ms ease;}.ds-model-choice[aria-pressed=true]{color:var(--color-ink,#171717);}.ds-model-choice[aria-pressed=true]::after{transform:none;}.ds-model-choice:hover{color:var(--color-ink,#171717);}.ds-model-choice:focus-visible{outline:3px solid var(--color-focus,#43328b);outline-offset:2px;}"
+      "refersTo": "model-selector",
+      "description": "Les trois noms du choix manuel ; l’état choisi épaissit le filet supérieur. Extrait visuel sans changement automatique.",
+      "html": "<div class=\"ds-showcase-rule\"><div class=\"ds-model-selector\" role=\"group\" aria-label=\"Choisir un modèle à découvrir\"><button type=\"button\" aria-pressed=\"true\">Glory Glory</button><button type=\"button\" aria-pressed=\"false\">Baby Beach</button><button type=\"button\" aria-pressed=\"false\">The Bird</button></div></div>",
+      "css": "@font-face{font-family:\"ds-Manrope\";src:url(\"/fonts/Manrope.ttf\") format(\"truetype\");font-style:normal;font-weight:200 800;font-display:swap;}.ds-showcase-rule{border-top:1px solid var(--color-ink,#171717);background:var(--color-paper,#ffffff);}.ds-model-selector{display:flex;gap:0 32px;font-family:var(--font-body,\"ds-Manrope\"),sans-serif;}.ds-model-selector button{position:relative;min-height:52px;padding:14px 0 0;background:transparent;border:0;border-radius:0;color:var(--color-muted,#56565e);font:inherit;font-weight:650;font-size:15px;line-height:1.4;white-space:nowrap;cursor:pointer;}.ds-model-selector button::after{content:\"\";position:absolute;left:0;right:0;top:-1px;height:3px;background:var(--color-ink,#171717);transform:scaleX(0);transform-origin:left;transition:transform var(--duration-fast,160ms) ease;}.ds-model-selector button[aria-pressed=true]{color:var(--color-ink,#171717);}.ds-model-selector button[aria-pressed=true]::after{transform:none;}@media(hover:hover){.ds-model-selector button:hover{color:var(--color-ink,#171717);}}.ds-model-selector button:focus-visible{outline:3px solid var(--color-focus,#43328b);outline-offset:2px;}@media(max-width:600px){.ds-model-selector{gap:0 22px;}.ds-model-selector button{min-height:44px;padding-top:10px;font-size:14px;}}@media(max-width:370px){.ds-model-selector{gap:0 16px;}}@media(prefers-reduced-motion:reduce){.ds-model-selector button::after{transition-duration:.01ms;}}"
     }
   ],
   "narrative": {
-    "northStar": "Le nuancier solaire",
-    "overview": "**Creative North Star: \"Le nuancier solaire\"**\n\n« Le nuancier solaire » associe une lavande franche, des lettres géométriques, des informations noires et des actions jaunes. Le sujet reste la vraie monture : elle apparaît sur un plateau clair, à son échelle et sans déformation. Les magasins sont représentés par leurs photographies authentiques et les marques par leurs logos intacts.\n\nLe système est direct et calme dans les parcours de recherche, de comparaison et de contact. Les surfaces sont planes, les contours simples et la densité s’adapte à la tâche. Sora donne de la présence aux titres ; Manrope maintient la lisibilité des informations, des prix et des commandes. La lavande contextualise, le jaune invite à agir et le focus reste distinct.\n\nCette documentation décrit le prototype effectivement livré (S1, complété par S4, accueil et navigation recomposés en S5/r2) : Next.js 16.4.2, React 19.3.1 et CSS natif, sans bibliothèque UI. La palette et les polices constituent une direction de prototype confirmée, pas une charte officielle du client. S5/r2 affine l’identité existante (logo réel, noir, lavande, jaune, Sora, Manrope) par une recomposition éditoriale de l’accueil, de la navigation et du pied de page ; ce n’est ni une nouvelle identité ni une décomposition en maquettes. La composition de l’accueil et de ses trois modèles appartient à son contrat de surface ; elle ne devient pas un gabarit pour les écrans suivants, dont la reprise (S6) est seulement prévue et non figée ici.\n\n- Montures fidèles sur plateaux clairs ; photos et logos authentiques.\n- Lavande de contexte, jaune d’action, encre de lecture.\n- Titres Sora et lecture Manrope, avec polices locales variables.\n- Surfaces planes, coins simples et séparateurs fins.\n- Choix explicites, focus visible et parcours réversibles.\n- Accueil éditorial : texte sur un champ lavande calme, matière filmée dans sa propre part, jamais sous le texte.",
+    "northStar": "Les montures sur blanc",
+    "overview": "« Les montures sur blanc » est le nom descriptif employé ici pour le système construit : un fond blanc continu, une typographie noire et des photographies de montures qui conservent leur propre espace. Le logo réel structure les zones noires ; les autres marques gardent leurs proportions et leurs couleurs. Les images de magasins et d’équipe apportent le contexte local.\n\nLa présence vient des différences d’échelle, des alignements, des blancs et des filets. Le jaune rend les actions principales immédiatement repérables ; la lavande ponctue une sélection ou un accompagnement. Une seule Manrope locale relie titres, lecture, prix et commandes, avec des graisses plus calmes dans les grands titres et plus fermes dans les petits repères.\n\nCe relevé décrit le prototype au 22 octobre 2026. Les noms de couleurs et de règles sont des choix de rédaction tirés du rendu et du code ; ils ne constituent ni une charte officielle Optic 2000 ni une approbation esthétique humaine. La composition propre à chaque page reste dans ses contrats de surface. La grammaire commune ci-dessous s’applique aussi aux parcours de catalogue, de fiche, de contact et de rendez-vous.",
     "keyCharacteristics": [
-      "Montures fidèles sur plateaux clairs ; photos et logos authentiques.",
-      "Lavande de contexte, jaune d’action, encre de lecture.",
-      "Titres Sora et lecture Manrope, avec polices locales variables.",
-      "Surfaces planes, coins simples et séparateurs fins.",
-      "Choix explicites, focus visible et parcours réversibles.",
-      "Accueil éditorial : texte sur un champ lavande calme, matière filmée dans sa propre part, jamais sous le texte."
+      "Montures et logos entiers sur des champs simples.",
+      "Blanc dominant, noir structurel, jaune d’action et lavande ponctuelle.",
+      "Manrope locale unique, titres resserrés et informations lisibles.",
+      "Cartes planes, contours fins et petits angles adoucis sur les commandes.",
+      "Choix nommés, états visibles et focus distinct de la sélection.",
+      "Mouvement borné du produit choisi ; médias décoratifs soumis aux préférences et au contexte."
     ],
     "rules": [
       {
-        "name": "The Plateau fidèle Rule",
-        "body": "Présenter les montures et les logos entiers, y compris dans le bandeau et au focus, avec object-fit: contain ; réserver object-fit: cover aux photographies de magasin et au film décoratif d’ambiance de l’accueil.",
+        "name": "The Action lisible Rule",
+        "body": "Employer le jaune pour les actions principales et les repères interactifs du fond noir. Accompagner toute sélection ou destination courante d’un libellé et d’un signe visible, sans faire porter le sens à la couleur seule.",
         "section": "colors"
       },
       {
-        "name": "The Action jaune Rule",
-        "body": "Associer le jaune aux actions principales et aux repères interactifs ; conserver les libellés et les états sémantiques pour que la couleur ne porte jamais seule le sens.",
+        "name": "The Photographie entière Rule",
+        "body": "Conserver les montures et les logos entiers avec object-fit: contain. Les cadrages à couverture appartiennent aux photographies de contexte et au film ; ils ne deviennent pas un traitement des produits.",
         "section": "colors"
       },
       {
-        "name": "The Texte sur champ calme Rule",
-        "body": "Poser le texte sur la lavande unie, jamais sur l’image en mouvement : le film occupe sa propre part du hero, sans voile ni filtre à simuler. Le contraste se mesure donc sur la lavande pure ; `check:contrast` compare 17 paires dérivées de la feuille de style (hero, panneau, menu mobile, pied de page) aux paires historiques, et ne contient aucun composite de texte sur film.",
-        "section": "colors"
-      },
-      {
-        "name": "The Deux voix Rule",
-        "body": "Réserver Sora aux titres et Manrope à la lecture, aux prix et aux commandes ; conserver les noms longs sans troncature.",
+        "name": "The Une seule famille Rule",
+        "body": "Utiliser Manrope pour les titres comme pour la lecture et les commandes. Changer l’échelle, la graisse et l’interlettrage avant d’introduire une autre voix typographique.",
         "section": "typography"
       },
       {
-        "name": "The Plan de travail Rule",
-        "body": "Séparer les contenus par le ton du fond, les blancs et les filets ; ne pas ajouter une ombre pour transformer une carte plane en objet flottant. L’ombre du panneau ancré est une exception bornée à ce panneau, pas un vocabulaire.",
+        "name": "The Cartes planes Rule",
+        "body": "Séparer les contenus par le blanc, le ton du fond et les filets. L’ombre diffuse du panneau des univers indique sa superposition ; elle ne devient pas une ombre de carte.",
         "section": "elevation"
       }
     ],
     "dos": [
-      "Do — Préserver les photographies de monture entières, les logos intacts et les images locales avec leur provenance.",
-      "Do — Réutiliser les primitives du frontmatter et les états de focus du composant avant d’ajouter une valeur locale.",
-      "Do — Garder la distinction entre surface persuasive et parcours de tâche ; appliquer les règles du monde sans recopier la composition de l’accueil.",
-      "Do — Associer chaque choix à un libellé, aria-pressed ou aria-current selon le cas, et une réponse visible.",
-      "Do — Laisser la grille, les noms longs, les prix XPF et les contrôles se réorganiser aux seuils documentés.",
-      "Do — Conserver les états vide, invalide, chargement, erreur et photo indisponible, avec une sortie utile.",
-      "Do — Garder légendes, prix, cartes et réserves à (12px) au minimum ; dans le rendez-vous, distinguer les aides de champ, indications de champs obligatoires et notes de soumission de la colonne principale à (14px), les erreurs de champ à (13px) et les tailles locales des réserves.",
-      "Do — Réserver l’entrée de la photographie d’accueil à ce composant ; garder les formulaires sans entrée spatiale.",
-      "Do — Aligner le texte du hero sur la colonne du conteneur à toutes les largeurs et laisser la matière dans sa propre part.",
-      "Do — Arrêter un média décoratif par ses conditions (champ, onglet, préférences, focus), non par une commande."
+      "Do — Partir des tokens du frontmatter et des primitives existantes pour étendre une surface.",
+      "Do — Préserver les proportions des montures, les logos complets et les photographies authentiques avec leur provenance.",
+      "Do — Garder les noms, les coloris et les valeurs sélectionnées lisibles ; redistribuer les contrôles avant de manquer de largeur.",
+      "Do — Conserver les libellés et les repères de sélection en plus de la couleur, avec un focus visible au clavier.",
+      "Do — Laisser les images produit se poser directement sur le blanc et garder leurs légendes hors de l’image.",
+      "Do — Maintenir des commandes tactiles d’au moins (44px) dans les parcours de catalogue et de fiche.",
+      "Do — Garder les états vide, invalide, chargement, erreur et média indisponible avec une issue compréhensible.",
+      "Do — Respecter les préférences de mouvement et les replis des médias ; conserver le choix manuel de la monture.",
+      "Do — Appliquer les seuils de chaque composant dans leur périmètre, en vérifiant les largeurs intermédiaires."
     ],
     "donts": [
-      "Don't — Présenter cette palette, Sora ou Manrope comme une charte officielle Optic 2000.",
-      "Don't — Ajouter de verre dépoli, de relief décoratif ou de recadrage qui altère une monture ou un logo.",
-      "Don't — Utiliser la couleur seule pour un coloris, une sélection, une disponibilité ou une erreur.",
-      "Don't — Donner aux rampes synthétiques documentaires du sidecar le statut de couleurs livrées ; seuls les tokens du frontmatter font autorité.",
-      "Don't — Poser du texte sur le film, y ajouter un voile ou un filtre pour « corriger » un contraste, ou offrir une commande Pause/Lire (ni pour le film ni pour les marques).",
-      "Don't — Rétablir le cadre à filet noir, les onglets cloisonnés du nuancier ou le panneau lavande plein écran, remplacés à la demande de Hugo ; l’historique reste dans `docs/decisions.md`.",
-      "Don't — Étendre l’ombre du panneau des univers à des cartes ou à d’autres surfaces.",
-      "Don't — Hériter du rayon de carte inutilisé, créer une variante visuelle de bouton non livrée ou annoncer un état métier absent du prototype."
+      "Don't — Présenter cette direction de prototype ou ses choix de rédaction comme une charte officielle ou un comp approuvé.",
+      "Don't — Réintroduire Sora dans les titres : elle n’est plus chargée par le layout final.",
+      "Don't — Entourer les packshots d’une double surface grise, d’un cadre décoratif ou d’une ombre de carte.",
+      "Don't — Étendre les seuils locaux des filtres à l’ensemble du site ou prendre une ellipse native pour un modèle de lisibilité.",
+      "Don't — Faire de la couleur le seul indicateur d’un choix, d’une erreur, d’un état ou d’une disponibilité.",
+      "Don't — Poser de texte sur le film, ajouter un voile pour le rendre lisible ou remettre une commande Pause/Lire à ces médias décoratifs.",
+      "Don't — Transformer l’arrivée bornée d’une monture en carrousel automatique, ni ajouter une entrée spatiale aux formulaires.",
+      "Don't — Employer les rampes synthétiques du sidecar comme de nouvelles couleurs du produit.",
+      "Don't — Déduire des images ou du style une promesse de stock, de prix actuel, de droits supplémentaires ou de réservation."
     ]
   }
 }

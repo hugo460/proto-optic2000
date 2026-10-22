@@ -50,7 +50,7 @@ const products: Product[] = read<{ products: RawProduct[] }>('catalogue.public.j
   const categories = p.categories.map(c => c.slug);
   if (kind === 'solar') for (const c of ['lunettes-de-soleil', 'maui-jim']) if (!categories.includes(c)) categories.push(c);
   return {
-    id: p.id, name: p.name, slug: p.slug, type: p.type, kind, brandId,
+    id: p.id, name: p.name.replace(/&rsquo;/g, '’'), slug: p.slug, type: p.type, kind, brandId,
     price: Number(p.prices.price), minPrice: Math.min(...prices), maxPrice: Math.max(...prices),
     description: p.description, shortDescription: p.shortDescription,
     categories, sourceCategories: p.categories, attributes, defaultAttributes: p.defaults,

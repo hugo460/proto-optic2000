@@ -13,7 +13,7 @@ Mode: Operate. Route: `/lentilles` (ancre `#couleur-et-fantaisie` pour l’alias
 
 THESIS: Les cinq vrais produits d’abord, après une introduction courte ; refuse le rayon fictif, le conseil clinique, l’ordonnance et le délai promis.
 
-OWN-WORLD: Monde « Le nuancier solaire » inchangé : plateaux gris et photos produit entières, grille catalogue existante, titres Sora, lecture Manrope, liens soulignés, lavande douce pour la demande, jaune pour la seule action.
+OWN-WORLD: Système commun S5/r3 de DESIGN.md : photos produit entières sur blanc, grille catalogue existante, titres et lecture Manrope, liens soulignés, lavande douce pour la demande, jaune pour la seule action. La composition détaillée reste prévue en S6/r2.
 
 STORY: Le visiteur lit deux phrases, choisit une lentille dans la grille (retour vers `/lentilles`), ou descend vers familles, entretien et laboratoires, puis prépare une demande `sujet=lentilles`.
 

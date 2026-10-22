@@ -39,6 +39,9 @@ const offset = (page: Page) => track(page).evaluate(element => new DOMMatrix(get
 test('Marquee: real logos move slowly with no pause control, stop on hover and on focus, focus shows the original links only', async ({ page }) => {
   await page.goto('/');
   const marquee = page.locator('.brand-marquee');
+  // S5/r3: the large hero pushes the strip below the first screen, and the row only moves while it is in view: scroll to it first.
+  await marquee.scrollIntoViewIfNeeded();
+  await expect(marquee).toBeInViewport();
   const links = marquee.locator('.marquee-group:not(.marquee-clone) a');
   const count = await links.count();
   expect(count).toBeGreaterThanOrEqual(8);
@@ -93,6 +96,7 @@ test('Marquee: real logos move slowly with no pause control, stop on hover and o
 
 test('Visible loop copies keep their brand destination usable with a pointer near the end of a cycle', async ({ page }) => {
   await page.goto('/');
+  await page.locator('.brand-marquee').scrollIntoViewIfNeeded();
   await page.locator('.marquee-track').evaluate(element => {
     const animation = element.getAnimations()[0];
     animation.currentTime = Number(animation.effect!.getTiming().duration) - 1000;
@@ -114,7 +118,9 @@ test('Marquee stops off screen and in a hidden tab, then resumes; no page overfl
   const marquee = page.locator('.brand-marquee');
   await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
   await expect(marquee).toHaveAttribute('data-away', 'true');
-  await page.evaluate(() => window.scrollTo(0, 0));
+  // Back to the strip itself (the first screen now belongs to the hero, the strip is reached by scrolling).
+  await marquee.scrollIntoViewIfNeeded();
+  await expect(marquee).toBeInViewport();
   await expect(marquee).not.toHaveAttribute('data-away', 'true');
   await page.evaluate(() => { Object.defineProperty(document, 'visibilityState', { value: 'hidden', configurable: true }); document.dispatchEvent(new Event('visibilitychange')); });
   await expect(marquee).toHaveAttribute('data-away', 'true');
@@ -222,17 +228,26 @@ test('Showcase: a missing photo keeps a bounded fallback, the right text and lin
   await page.route('**/_next/image?**', route => (new URL(route.request().url()).searchParams.get('url') ?? '') === missing ? route.abort() : route.continue());
   await page.goto('/');
   const stage = page.locator('.showcase-stage');
-  // The box reserved for the photo (the keyed wrapper inside the plateau) while a photo is shown.
+  // The box reserved for the photo (the keyed wrapper) while a photo is shown.
   await expect(stage.locator('.showcase-image img')).toBeVisible();
-  const reserved = await stage.locator('.showcase-image').evaluate(element => ({ height: (element as HTMLElement).offsetHeight, plateau: Math.round(element.closest('.showcase-plateau')!.getBoundingClientRect().height) }));
+  const reserved = await stage.locator('.showcase-image').evaluate(element => ({ height: (element as HTMLElement).offsetHeight, width: (element as HTMLElement).offsetWidth }));
   expect(reserved.height).toBeGreaterThan(0);
   await page.getByRole('button', { name: 'Baby Beach', exact: true }).click();
   await expect(stage.locator('.image-fallback')).toBeVisible();
   await expect(stage.locator('h2')).toHaveText('Baby Beach');
   await expect(stage.getByRole('link', { name: 'Découvrir ce modèle' })).toHaveAttribute('href', '/produits/baby-beach');
-  // Layout height, independent of the arrival transform: the fallback keeps the photo's reserved box inside the same plateau
-  // (the former fixed 265 px of the tall white card is obsolete: the ribbon is compact).
-  expect(await stage.locator('.image-fallback').evaluate(element => ({ height: (element as HTMLElement).offsetHeight, plateau: Math.round(element.closest('.showcase-plateau')!.getBoundingClientRect().height) }))).toEqual(reserved);
+  // The responsive photo reserves its own 900:320 box. An unavailable image must keep that exact layout box,
+  // independently of the arrival transform: a redesign does not permit a jump when the media fails.
+  expect(await stage.locator('.image-fallback').evaluate(element => ({ height: (element as HTMLElement).offsetHeight, width: (element as HTMLElement).offsetWidth }))).toEqual(reserved);
+  const fallback = await stage.locator('.image-fallback').evaluate(element => {
+    const box = element.getBoundingClientRect(), frame = (element.closest('.showcase-plateau') ?? element.closest('.showcase-stage'))!.getBoundingClientRect();
+    return { height: box.height, width: box.width, inside: box.top >= frame.top - .5 && box.bottom <= frame.bottom + .5, onScreen: box.left >= -.5 && box.right <= innerWidth + .5, overflow: document.documentElement.scrollWidth - innerWidth };
+  });
+  expect(fallback.inside, 'the fallback stays inside its frame').toBe(true);
+  expect(fallback.onScreen).toBe(true);
+  expect(fallback.height, 'the fallback is a real box, not a collapsed line').toBeGreaterThanOrEqual(44);
+  expect(fallback.width).toBeGreaterThanOrEqual(80);
+  expect(fallback.overflow).toBeLessThanOrEqual(0);
   await page.getByRole('button', { name: 'The Bird', exact: true }).click();
   await expectModel(page, 'the-bird');
 });
@@ -268,7 +283,7 @@ async function fillPerson(page: Page, watch: Watch) {
 
 test('Appointment entries: home, header, mobile menu, footer, the three stores with their store, vue, services and prostheses', async ({ page }) => {
   await page.goto('/');
-  await page.locator('.hero-intro').getByRole('link', { name: 'Préparer un rendez-vous' }).click();
+  await page.locator('.hero-actions').getByRole('link', { name: 'Préparer un rendez-vous' }).click();
   await expect(h1(page)).toHaveText('Préparer un RDV.');
   await expect(page.locator('input[name="rdv-store"]:checked')).toHaveCount(0);
   await page.locator('.header-cta').click();

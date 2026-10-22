@@ -1,4 +1,4 @@
-# Décisions du prototype (S1 à S5/r2)
+# Décisions du prototype (S1 à S5/r3)
 
 | Décision | Conséquence |
 | --- | --- |
@@ -60,11 +60,11 @@
 
 S5/r1 a été demandé par Hugo le 21/10/2026 (plateau plus petit et encadré, film discret derrière, gros plans de lunettes et matières sans visage) puis **rejeté** par Hugo malgré des tests verts. Ses prescriptions suivantes sont **remplacées** et ne s’appliquent plus : cadre opaque à filet d’encre de 1 px (440–476 px) avec fiche et bande de trois choix à filets ; film désaturé sous voile lavande ; film de 8 s composé de 4 s suivies de 4 s inversées ; commande Pause/Lire du film et commande Pause du bandeau ; menu « Nos univers » lavande plein écran à filets. Restent valables de S5 : le choix « sans visage », le film local et décoratif sans lien affirmé avec le catalogue ou les magasins, le poster seul en mouvement réduit, économie de données ou échec, et l’absence de dépendance.
 
-## Décisions de S5/r2 (accueil, navigation et pied de page recomposés)
+## Historique S5/r2 (prescriptions visuelles remplacées par S5/r3)
 
 | Décision | Conséquence |
 | --- | --- |
-| Hugo, 21/10/2026 : rendu S5/r1 jugé vieillot (bordures noires, grand cadre de lunettes, Pause, boucle reconnaissable) ; il veut donner envie à Optic 2000 de changer de site | Reprise en deux sessions : S5/r2 (accueil, film, menus, marques, pied de page, règles communes) est livrée ; S6/r1 est prévue seulement après le brief du pilote, détails non figés |
+| Hugo, 21/10/2026 : rendu S5/r1 jugé vieillot (bordures noires, grand cadre de lunettes, Pause, boucle reconnaissable) ; il veut donner envie à Optic 2000 de changer de site | Reprise en deux sessions : S5/r2 (accueil, film, menus, marques, pied de page, règles communes) était livrée ; S6/r1 était prévue, puis a été déclarée dépassée au profit de S5/r3 et S6/r2 |
 | Identité conservée | Logo réel, noir, lavande, jaune, Sora, Manrope ; seed historique `ec9ae70fdd93869f` inchangé. Recomposition éditoriale directement en code, ni décomposition en maquettes ni nouvelle identité |
 | Hero en deux parts | Texte 45 % / film 55 % au-dessus de 1100 px, 50 / 50 de 801 à 1100 px, bande de film puis texte jusqu’à 800 px. Texte aligné sur la colonne du conteneur ; jamais de texte sur le film, donc ni voile ni filtre à simuler |
 | Actions du hero | Une action jaune « Toutes les solaires » et le lien « Préparer un rendez-vous » ; en colonne jusqu’à 1280 px, en ligne avec retour à la ligne au-dessus |
@@ -107,3 +107,17 @@ Recherche officielle standard du 21/10/2026 pour S2, aperçus inspectés :
 Les comportements mobile/clavier, les états d’erreur et de succès et le nuancier d’accueil sont notre adaptation, vérifiés séparément ; ils ne sont pas une propriété démontrée par les captures Mobbin. Couleurs et polices d’interface ne constituent pas une charte officielle du client.
 
 La finition S4 garde l’action principale au niveau de l’étape : sur le RDV, le pied de page propose la demande en lien texte. Les calendriers précèdent les libellés ; les flèches de fin désignent une sortie. Sur le RDV sans contexte public, l’action de l’en-tête ramène le focus à l’étape courante sans modifier l’historique ; depuis un contexte prérempli, elle ouvre une nouvelle entrée générique.
+
+## Décisions de S5/r3 (22/10/2026)
+
+| Décision | Conséquence |
+| --- | --- |
+| Hugo rejette le hero et demande une refonte ambitieuse | La composition S5/r2 est remplacée ; ses tests fonctionnels et données restent la base. S6/r1 est dépassée, S6/r2 prévue seulement. |
+| Montures réelles au premier plan | Hero sur un champ blanc commun, titre maîtrisé, grande monture entière, trois modèles manuels et légende ; le film quitte le premier écran. Aucun faux produit ni nouvelle promesse commerciale. |
+| Blanc, noir, jaune et lavande précise | Logo authentique et couleurs reconnaissables ; typographie et proportions de prototype révisées, sans prétendre disposer d’une charte officielle. |
+| Média animé secondaire | Fichier et poster locaux conservés, sans visage ni attribution fictive ; mêmes replis et aucun téléchargement en mouvement réduit ou saveData, aucune commande Pause/Lire. |
+| Catalogue compact | Recherche/filtres GET et URL conservés, produits visibles tôt, packshots sur un seul champ blanc ; aucune option masquée pour la capture. |
+| Fiche produit | Galerie secondaire dans un rail horizontal, toutes les vues conservées ; cinq coloris nommés compacts, aucune présélection ; prix/image/ID/contexte synchronisés. Lentilles partagées inchangées dans leurs règles. |
+| Trois noms contenant une entité littérale dans l’archive | `&rsquo;` devient l’apostrophe typographique dans les noms normalisés de Pu’u Kukui, Ho’okipa Asian fit et Dragon’s Teeth. Slugs, IDs, graphie des mots et sources restent intacts ; aucun rendu HTML injecté. |
+| Construction directe en code | Proposition concrète de composition affichée ; aucun choix humain ni satisfaction esthétique présumés. Contrats de surface mis à jour, revue visuelle indépendante distincte de la revue code. |
+| Livraison | Main, push normal et même cible Vercel depuis export propre ; aucun message à Omar ni lancement de S6. Réserves commerciales inchangées. |

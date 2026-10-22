@@ -118,7 +118,7 @@ async function expectStoreAside(page: Page, slug: string) {
 // Navigation
 // =====================================================================================================================
 const destinations = [
-  ['/lunettes-de-vue', 'Lunettes de vue.'], ['/solaires', 'Les lunettes de soleil'], ['/lentilles', 'Lentilles.'], ['/jumelles-et-telescopes', 'Jumelles et télescopes.'],
+  ['/lunettes-de-vue', 'Lunettes de vue.'], ['/solaires', 'Les solaires'], ['/lentilles', 'Lentilles.'], ['/jumelles-et-telescopes', 'Jumelles et télescopes.'],
   ['/basse-vision', 'Basse vision.'], ['/protheses-oculaires', 'Prothèses oculaires.'], ['/services-et-garanties', 'Services et garanties.'], ['/qui-sommes-nous', 'Vos opticiens à Tahiti.'],
 ] as const;
 
@@ -237,7 +237,7 @@ test('Home shows the whole house beyond Maui Jim without hiding the first models
   for (const viewport of [{ width: 1440, height: 1000 }, { width: 768, height: 1024 }, { width: 390, height: 844 }]) {
     await page.setViewportSize(viewport);
     await page.goto('/');
-    await expect(h1(page)).toHaveText(/Le soleil\.\s*À votre façon\./);
+    await expect(h1(page)).toHaveText(/Le soleil,\s*autrement\./);
     await expect(page.locator('.showcase-stage')).toBeInViewport();
     // S4: the yellow header action prepares an appointment; « Nos magasins » keeps the store directory one click away.
     if (viewport.width >= 1101) { await expect(page.locator('.header-cta')).toBeVisible(); await expect(page.getByRole('navigation', { name: 'Navigation principale' }).getByRole('link', { name: 'Nos magasins', exact: true })).toBeVisible(); }

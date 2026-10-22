@@ -11,7 +11,7 @@ test.afterEach(() => expect(failures.splice(0)).toEqual([]));
 
 test('Home model selection, Maui Jim collection, Ray-Ban in-store destination', async ({ page }) => {
   await page.goto('/');
-  await expect(page.getByRole('heading', { name: 'Le soleil. À votre façon.' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: /Le soleil,\s*autrement\./ })).toBeVisible();
   const stage = page.locator('.showcase-stage');
   await expect(stage.getByRole('heading', { name: 'Glory Glory' })).toBeVisible();
   await page.getByRole('button', { name: 'Baby Beach', exact: true }).click();

@@ -295,3 +295,10 @@ test('Appointment links carry public identifiers only; unknown, contradictory an
   assert.equal(read('produit=inconnu').ignored, true);
   assert.equal(read('variante=1949').ignored, true, 'a variant without product is not trusted');
 });
+
+// Literal entities in the public archive are decoded as text; identifiers and archives remain intact.
+test('Archived apostrophe entities become plain product names without changing slugs', () => {
+  for (const [slug, name] of [['puu-kukui', 'Pu’u Kukui'], ['hookipa-asian-fit', 'Ho’okipa Asian fit'], ['dragons-teeth', 'Dragon’s Teeth']]) {
+    assert.equal(products.find(product => product.slug === slug)?.name, name);
+  }
+});

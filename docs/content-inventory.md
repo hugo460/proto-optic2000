@@ -146,9 +146,9 @@ Statuts : **repris** (contenu présenté), **réorganisé** (regroupé/corrigé 
 - Autres campagnes sociales (POST01/13/14/24…), visuels « équipe offre », photos magasin supplémentaires : non nécessaires, non repris. Essai virtuel Fittingbox et vidéos : non repris, aucun faux bouton.
 - Médias S2 ajoutés (WebP q88, dimensions/proportions d’origine, provenance embarquée + sidecar Impeccable) : campagnes `4fc6abc0d6` (POST27) et `62e14c3acf` (POST21), photo d’équipe `6b3c1455b1` (sans identification des personnes), `b413c0bdf9` (Perl) et `16bd866170` (Celestron).
 
-## Fond d’ambiance S5/r2 — médias externes localisés
+## Film d’ambiance S5/r2, déplacé en S5/r3 — médias externes localisés
 
-Le hero utilise un film décoratif de trois plans de lunettes et de matières, sans visage, tirés de la banque d’images Pexels ([licence Pexels](https://www.pexels.com/license/) vérifiée le 21/10/2026, Tahiti : usage web et montage permis, sans suggérer d’approbation par les marques représentées). Il remplace le plan unique de S5 (clip 5241167, 8 s en aller-retour), qui n’est plus livré.
+L’accueil conserve, dans une séquence secondaire depuis S5/r3, un film décoratif de trois plans de lunettes et de matières, sans visage, tirés de la banque d’images Pexels ([licence Pexels](https://www.pexels.com/license/) vérifiée le 21/10/2026, Tahiti : usage web et montage permis, sans suggérer d’approbation par les marques représentées). Il remplace le plan unique de S5 (clip 5241167, 8 s en aller-retour), qui n’est plus livré.
 
 | Plan | Source | Extrait natif utilisé | Auteur |
 | --- | --- | --- | --- |
@@ -163,3 +163,5 @@ Seuls les dérivés finaux sont livrés sous `public/media/ambience/` : `eyewear
 ## Logos du bandeau de marques (S5/r2)
 
 Treize rendus dérivés de logos déjà repris (`public/media/brand-strip/*.webp`, WebP qualité 90, au plus 640 × 320 px sans agrandissement), produits par `node scripts/prepare-marquee.mjs` : seul le canevas extérieur vide (blanc ou transparent) est retiré ; logo et signature restent entiers et proportionnels. Les 760 images d’origine sont inchangées et les 38 identités du catalogue aussi. Référence de chaque logo, origine, empreintes et poids : [marquee-media.json](marquee-media.json) et `src/data/marquee-media.json`. `pnpm check:media` contrôle les 13 rendus.
+
+S5/r3 corrige uniquement trois entités `&rsquo;` littérales dans les noms de produits normalisés : Pu’u Kukui, Ho’okipa Asian fit et Dragon’s Teeth. L’archive publique reste inchangée, comme les IDs, slugs, prix, attributs et médias ; aucune injection HTML n’est utilisée.

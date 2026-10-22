@@ -5,6 +5,7 @@ import { chromium, type Page } from '@playwright/test';
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import { join, relative, resolve } from 'node:path';
 import { products } from '../src/data';
+import { frameInkSource, type FrameInk } from '../tests/support/frame-ink';
 
 // Captures of the real prototype, driven by real user actions (clicks, typing, keyboard). Nothing is simulated in the DOM.
 // Before EVERY capture: reduced motion, fonts ready, images eager and decoded, scroll back to the top, one stabilisation frame.
@@ -12,6 +13,10 @@ import { products } from '../src/data';
 // copies are gone). The captures use reduced motion, so the film is never loaded: they show the poster, the layout and the menus,
 // never the film itself, whose playback is judged by watching it. Technical measures recorded with a capture (photo whole, texts
 // not clipped, panel inside the screen) are listed in `checks`; a non-empty list makes the run fail.
+// S5/r3: the home is a single white hero (heading and yellow action, one large frame, the three models) and the film lives in a
+// secondary passage further down: the full-page captures show it (poster only, reduced motion) and their checks require that no text
+// overlaps it. Every crop of the motion frames and of the marquee is computed from a locator (scrolled into view, then measured),
+// never from absolute coordinates.
 // The manifest ties each PNG to its route, viewport, dimensions, broken images, overflow, errors, network and date, and to the
 // exact code that was served (HEAD plus a digest of every source file, tracked or not).
 async function codeManifest() {
@@ -109,39 +114,97 @@ async function snap(name: string, fullPage: boolean, checks: string[] = []) {
 async function go(path: string, width: number, height: number) {
   await page.setViewportSize({ width, height });
   await page.goto(base + path);
+  // Wait for hydration before changing lazy image attributes for the capture.
+  await page.waitForLoadState('networkidle');
   await page.locator('h1').first().waitFor();
 }
-// Whole photo of the model shown (loaded, true proportions, contained inside its plateau), texts of the showcase not clipped.
+// Whole photo of the model shown (loaded, true proportions, contained by its own box) and whole frame on the screen: the photo may be
+// wider than a phone screen, only its white margins falling outside, so the drawn frame (not the <img> box) is measured, by the shared
+// probe of tests/support/frame-ink.ts. Texts of the showcase not clipped, no media control, one pressed choice.
 async function showcaseChecks(slug: string) {
   const media = products.find(item => item.slug === slug)!.images[0];
-  await settle(page);
+  // A model click can create its img before the cached resource is decoded. Check the same stable state we capture.
+  await prepare(page);
+  const photo = await page.evaluate<FrameInk | null>(frameInkSource);
   const state = await page.evaluate(() => {
-    const image = document.querySelector<HTMLImageElement>('.showcase-image img');
-    const plateau = document.querySelector('.showcase-plateau')?.getBoundingClientRect();
-    if (!image || !plateau) return null;
-    const box = image.getBoundingClientRect();
+    const film = document.querySelector('.ambient-film, .hero-ambience');
+    const passage = film?.closest('section') ?? film?.parentElement;
     return {
-      loaded: image.complete && image.naturalWidth > 0, naturalWidth: image.naturalWidth, naturalHeight: image.naturalHeight, fit: getComputedStyle(image).objectFit, width: box.width,
-      inside: box.left >= plateau.left - .5 && box.right <= plateau.right + .5 && box.top >= plateau.top - .5 && box.bottom <= plateau.bottom + .5,
-      clipped: [...document.querySelectorAll('.showcase-info :is(h2, p, a)')].filter(node => node.scrollWidth > node.clientWidth + 1).map(node => node.textContent?.trim() ?? ''),
+      clipped: [...document.querySelectorAll('.showcase-info :is(h2, p, a), .showcase-link, .model-selector button')].filter(node => node.scrollWidth > node.clientWidth + 1).map(node => node.textContent?.trim() ?? ''),
       pressed: [...document.querySelectorAll('.model-selector button[aria-pressed="true"]')].map(node => node.textContent?.trim()),
-      controls: [...document.querySelectorAll('.home-hero button, .brand-marquee button')].map(node => node.textContent?.trim() ?? '').filter(text => /pause|lire|lecture|défilement/i.test(`${text}`)),
+      // The hero, the marquee and the passage that holds the film (the film is no longer inside the hero).
+      controls: [...document.querySelectorAll('.home-hero button, .brand-marquee button'), ...(passage?.querySelectorAll('button') ?? [])].map(node => node.textContent?.trim() ?? '').filter(text => /pause|lire|lecture|défilement/i.test(`${text}`)),
     };
   });
   const checks: string[] = [];
-  if (!state) return [`${slug}: no photo or plateau found`];
-  if (!state.loaded) checks.push(`${slug}: photo not loaded`);
-  // The natural size is scaled by the srcset density and rounded by the browser: the height expected from the natural width and the
-  // source ratio may differ by the rounding of at most one natural pixel.
-  if (Math.abs(state.naturalHeight - state.naturalWidth * media.height / media.width) > 1) checks.push(`${slug}: proportions ${state.naturalWidth}×${state.naturalHeight} for a ${media.width}×${media.height} source`);
-  if (!['contain', 'scale-down'].includes(state.fit)) checks.push(`${slug}: object-fit ${state.fit} may crop the frame`);
-  if (!state.inside) checks.push(`${slug}: photo leaves its plateau`);
-  if (state.width < 80) checks.push(`${slug}: photo only ${Math.round(state.width)} px wide`);
+  if (!photo) return [`${slug}: no photo found`];
+  if (!photo.loaded) checks.push(`${slug}: photo not loaded`);
+  // Check encoded pixels; density-corrected natural dimensions are independently rounded down by the browser.
+  if (Math.abs(photo.rasterHeight - photo.rasterWidth * media.height / media.width) > 1) checks.push(`${slug}: proportions ${photo.rasterWidth}×${photo.rasterHeight} for a ${media.width}×${media.height} source`);
+  if (!['contain', 'scale-down'].includes(photo.fit)) checks.push(`${slug}: object-fit ${photo.fit} may crop the frame`);
+  if (photo.error || !photo.ink) checks.push(`${slug}: frame not readable (${photo.error})`);
+  else {
+    if (photo.ink.left < -1 || photo.ink.right > photo.screen.width + 1) checks.push(`${slug}: the frame leaves the screen (${Math.round(photo.ink.left)}→${Math.round(photo.ink.right)} of ${photo.screen.width} px)`);
+    // Legible frame: from 260 px on a phone, 600 px on the 1440 px desktop (360 px is the narrowest review size); the photo never exceeds 1000 px.
+    if (photo.screen.width >= 360 && photo.ink.width < (photo.screen.width >= 1440 ? 600 : 260)) checks.push(`${slug}: frame only ${Math.round(photo.ink.width)} px wide`);
+  }
+  if (photo.box.width > 1000.5) checks.push(`${slug}: photo ${Math.round(photo.box.width)} px wide, beyond its maximum`);
   if (state.clipped.length) checks.push(`${slug}: clipped text ${state.clipped.join(', ')}`);
   if (state.pressed.length !== 1) checks.push(`${slug}: ${state.pressed.length} pressed choices`);
   if (state.controls.length) checks.push(`media control found: ${state.controls.join(', ')}`);
   return checks;
 }
+// First screen and film passage of the home, read at the top of the page: heading and primary action whole (from 360 px), the photo
+// started, no film inside the hero, the film below the first screen and after the hero, and no text anywhere over the film passage or
+// over the photo. The page code runs in the browser, so it holds plain data only: the geometry is compared here.
+// Beware: the page code is rewritten by tsx (which keeps function names with a helper that does not exist in the page), so it
+// declares no named function; DOMRect.toJSON() gives plain numbers.
+interface Spot { left: number; right: number; top: number; bottom: number }
+interface TextSpot extends Spot { text: string; inFilm: boolean; inHero: boolean }
+const overlapOf = (a: Spot, b: Spot) => Math.max(0, Math.min(a.right, b.right) - Math.max(a.left, b.left)) * Math.max(0, Math.min(a.bottom, b.bottom) - Math.max(a.top, b.top));
+async function homeChecks() {
+  await page.evaluate(() => window.scrollTo({ top: 0, left: 0, behavior: 'instant' }));
+  await settle(page);
+  const state = await page.evaluate(() => ({
+    title: document.querySelector('#hero-title')?.getBoundingClientRect().toJSON() as Spot | undefined,
+    action: document.querySelector('.hero-actions .action-primary')?.getBoundingClientRect().toJSON() as Spot | undefined,
+    photo: document.querySelector('.showcase-image img')?.getBoundingClientRect().toJSON() as Spot | undefined,
+    film: document.querySelector('.ambient-film, .hero-ambience')?.getBoundingClientRect().toJSON() as Spot | undefined,
+    viewport: innerHeight, width: innerWidth, heroFilm: document.querySelectorAll('.home-hero :is(.ambient-film, .hero-ambience), .home-hero video').length,
+    texts: [...document.querySelectorAll('h1, h2, h3, h4, p, a, button, li, figcaption, label')].filter(node => node.getClientRects().length && (node.textContent ?? '').trim())
+      .map(node => ({ ...node.getBoundingClientRect().toJSON(), text: (node.textContent ?? '').trim().slice(0, 30), inFilm: !!node.closest('.ambient-film, .hero-ambience'), inHero: !!node.closest('.home-hero') })) as TextSpot[],
+    filmAfterHero: !!(document.querySelector('.home-hero') && document.querySelector('.ambient-film, .hero-ambience') && (document.querySelector('.home-hero')!.compareDocumentPosition(document.querySelector('.ambient-film, .hero-ambience')!) & Node.DOCUMENT_POSITION_FOLLOWING)),
+  }));
+  const checks: string[] = [];
+  const { title, action, photo, film } = state;
+  if (!title || !action || !photo || !film) return ['hero or film passage not found'];
+  if (state.width >= 360 && title.bottom > state.viewport) checks.push(`heading ends at ${Math.round(title.bottom)} px, beyond the first screen (${state.viewport})`);
+  if (state.width >= 360 && action.bottom > state.viewport) checks.push(`primary action ends at ${Math.round(action.bottom)} px, beyond the first screen (${state.viewport})`);
+  if (state.width >= 360 && photo.top >= state.viewport) checks.push('the photo starts below the first screen');
+  if (state.heroFilm) checks.push('the film is still inside the hero');
+  if (!state.filmAfterHero) checks.push('the film passage does not follow the hero');
+  if (film.top < state.viewport) checks.push('the film passage starts inside the first screen');
+  const overFilm = state.texts.filter(text => !text.inFilm && overlapOf(text, film) > 4).map(text => text.text);
+  if (overFilm.length) checks.push(`text over the film passage: ${overFilm.join(', ')}`);
+  const overPhoto = state.texts.filter(text => text.inHero && overlapOf(text, photo) > 4).map(text => text.text);
+  if (overPhoto.length) checks.push(`text over the photo: ${overPhoto.join(', ')}`);
+  return checks;
+}
+// Product gallery: every view in one horizontal rail (one row), the last view reachable by the keyboard and inside the rail.
+async function galleryChecks(count: number) {
+  const state = await page.evaluate(() => {
+    const rail = document.querySelector('.gallery-thumbnails')!, frame = rail.getBoundingClientRect();
+    const buttons = [...rail.querySelectorAll('button')].map(button => button.getBoundingClientRect());
+    return { count: buttons.length, rows: new Set(buttons.map(item => Math.round(item.top - frame.top))).size, small: buttons.filter(item => item.height < 44 || item.width < 44).length, overflow: document.documentElement.scrollWidth - innerWidth };
+  });
+  const checks: string[] = [];
+  if (state.count !== count) checks.push(`${state.count} views instead of ${count}`);
+  if (state.rows !== 1) checks.push(`views on ${state.rows} rows instead of one rail`);
+  if (state.small) checks.push(`${state.small} views smaller than 44 px`);
+  if (state.overflow > 0) checks.push(`the rail widens the page by ${state.overflow} px`);
+  return checks;
+}
+
 // Menu panels: every link readable and inside the screen (long names such as « Jumelles et télescopes », « Prothèses oculaires »).
 const menuChecks = (selector: string) => page.evaluate(scope => {
   const root = document.querySelector(scope);
@@ -175,6 +238,7 @@ for (const [name, route, width, height, fullPage] of scenarios) {
 }
 
 // ---- S5/r2: the home at the six review sizes, first screen for each of the three models, then the whole page ---------------
+// S5/r3: the two thresholds of the header are added (800/801, 1100/1101 at 900 px high) for the first screen only.
 for (const [width, height] of [[360, 800], [390, 844], [768, 1024], [1024, 768], [1280, 800], [1440, 900]] as const) {
   await go('/', width, height);
   for (const [index, slug] of ['glory-glory', 'baby-beach', 'the-bird'].entries()) {
@@ -182,7 +246,38 @@ for (const [width, height] of [[360, 800], [390, 844], [768, 1024], [1024, 768],
     await snap(`home-${width}-first-${slug}`, false, await showcaseChecks(slug));
   }
   await page.getByRole('button', { name: products.find(item => item.slug === 'glory-glory')!.name, exact: true }).click();
-  await snap(`home-${width}-full`, true, await showcaseChecks('glory-glory'));
+  await snap(`home-${width}-full`, true, [...await showcaseChecks('glory-glory'), ...await homeChecks()]);
+}
+for (const width of [800, 801, 1100, 1101]) {
+  await go('/', width, 900);
+  await snap(`home-${width}-first`, false, [...await showcaseChecks('glory-glory'), ...await homeChecks()]);
+}
+
+// ---- S5/r3: catalogue (first row, filters closed on a phone) and Glory Glory (rail of 15 views, Gris transparent) ---------------
+// The first row is gated by `firstRowBottom` in the manifest (photos and names inside the screen); the checks below add the rail.
+const glory = products.find(item => item.slug === 'glory-glory')!;
+for (const [width, height] of [[1440, 900], [1280, 800], [390, 844]] as const) {
+  await go('/solaires', width, height);
+  await snap(`catalogue-${width}`, false);
+  await go('/catalogue', width, height);
+  await snap(`catalogue-all-${width}`, false);
+  await go('/produits/glory-glory', width, height);
+  await snap(`glory-${width}-initial`, true, await galleryChecks(glory.images.length));
+  // The last view, reached with the keyboard (Tab through the rail) and chosen with Enter: it must be inside the rail.
+  await page.getByRole('button', { name: 'Voir la vue 1', exact: true }).focus();
+  for (let step = 1; step < glory.images.length; step++) await page.keyboard.press('Tab');
+  assert(await page.getByRole('button', { name: `Voir la vue ${glory.images.length}`, exact: true }).evaluate(el => el === document.activeElement), 'Tab reaches the last view of the rail');
+  await page.keyboard.press('Enter');
+  const last = await page.evaluate(() => { const button = document.activeElement!.getBoundingClientRect(), frame = document.querySelector('.gallery-thumbnails')!.getBoundingClientRect(); return button.left >= frame.left - 1 && button.right <= frame.right + 1; });
+  await snap(`glory-${width}-last-view`, true, last ? [] : ['the focused last view is outside the rail']);
+  // Gris transparent (ID 1607, 34 600 XPF): three views, chosen through the real colour control.
+  await go('/produits/glory-glory', width, height);
+  await page.getByRole('button', { name: 'Gris transparent', exact: true }).click();
+  // The initial price range already contains 34 600: wait for the actual selected state before measuring its gallery.
+  await page.locator('.variant-option[aria-pressed="true"]', { hasText: 'Gris transparent' }).waitFor();
+  assert.match(await page.locator('.detail-price').innerText(), /^34\s*600\s*XPF$/);
+  assert.equal(new URL(page.url()).search, '?variante=1607');
+  await snap(`glory-${width}-gris-transparent`, true, await galleryChecks(3));
 }
 
 // ---- S2 matrix: the same six states at the three main sizes --------------------------------------------------------
@@ -278,7 +373,7 @@ await go('/magasins/taravao?produit=freshlook-colorblends&variante=1949&couleur=
 await snap('taravao-lens-context-mobile', true);
 
 // ---- Publication matrix: proof limits closed before hosting ------------------------------------------------------------
-// Desktop navigation inside 801–1100 px (1024 px), closed then open, on the lavender home and on a light reading page.
+// Desktop navigation inside 801–1100 px (1024 px), closed then open, on the home and on a light reading page.
 for (const [name, route] of [['home', '/'], ['services', '/services-et-garanties']] as const) {
   await go(route, 1024, 768);
   const universes = page.getByRole('button', { name: 'Nos univers' });
@@ -387,14 +482,28 @@ motion.on('console', message => { if (message.type() === 'error') errors.push(`m
 const motionPage = await motion.newPage();
 motionPage.on('pageerror', error => errors.push(`pageerror: ${error.message}`));
 await motionPage.goto(base + '/');
+await motionPage.waitForLoadState('networkidle');
 await motionPage.evaluate(async () => { await document.fonts.ready; await Promise.all([...document.images].map(async image => { image.loading = 'eager'; try { await image.decode(); } catch { /* recorded by the other captures */ } })); });
 await motionPage.waitForTimeout(1200);
 const motionFrames: { name: string; ms: number; transform: string; marquee: number }[] = [];
+// The crop follows the element, not a fixed rectangle: the viewport-relative box of the locator (the screenshot clip is relative to the
+// viewport when the page is not captured whole), widened to the full width and padded, clamped to what the viewport shows.
+const cropAround = async (target: Page, selector: string, pad: number) => {
+  const box = await target.locator(selector).boundingBox();
+  assert(box, `${selector} has a box to crop around`);
+  const viewport = target.viewportSize()!;
+  const y = Math.max(0, Math.floor(box.y - pad)), bottom = Math.min(viewport.height, Math.ceil(box.y + box.height + pad));
+  assert(bottom > y, `${selector} is inside the viewport for its crop`);
+  return { x: 0, y, width: viewport.width, height: bottom - y };
+};
+// The marquee does not move while it is out of view: it is scrolled to so that the strip is measured in its running state.
 const frame = async (name: string, ms: number) => {
   const state = await motionPage.evaluate(() => ({ transform: getComputedStyle(document.querySelector('.showcase-image')!).transform, marquee: new DOMMatrix(getComputedStyle(document.querySelector('.marquee-track')!).transform).m41 }));
-  await motionPage.screenshot({ path: join(out, `${name}.png`), clip: { x: 0, y: 340, width: 1440, height: 560 } });
+  await motionPage.screenshot({ path: join(out, `${name}.png`), clip: await cropAround(motionPage, '.showcase-stage', 24) });
   motionFrames.push({ name, ms, ...state });
 };
+// The showcase is brought into view for real (scroll), then the first frame is taken at rest.
+await motionPage.locator('.showcase-stage').scrollIntoViewIfNeeded();
 await frame('motion-rest-before', 0);
 await motionPage.getByRole('button', { name: 'Baby Beach', exact: true }).click();
 const clicked = Date.now();
@@ -403,11 +512,16 @@ await motionPage.waitForTimeout(150); await frame('motion-arrival-mid', Date.now
 await motionPage.waitForTimeout(700); await frame('motion-arrival-rest', Date.now() - clicked);
 const still = (transform: string) => ['none', 'matrix(1, 0, 0, 1, 0, 0)'].includes(transform);
 assert(!still(motionFrames[1].transform) && still(motionFrames[3].transform), 'the frame moves on arrival, then rests');
-assert(motionFrames[3].marquee < motionFrames[0].marquee, 'the marquee moves with the default motion preference');
+// The strip only runs while it is in view and the large hero keeps it below the first screen: scroll to it, then read it move.
+await motionPage.locator('.brand-marquee').scrollIntoViewIfNeeded();
+const marqueeOffset = () => motionPage.evaluate(() => new DOMMatrix(getComputedStyle(document.querySelector('.marquee-track')!).transform).m41);
+const marqueeBefore = await marqueeOffset();
+await motionPage.waitForTimeout(500);
+assert((await marqueeOffset()) < marqueeBefore, 'the marquee moves with the default motion preference');
 await motionPage.locator('.marquee-group a').nth(5).focus();
 await motionPage.keyboard.press('Tab');
 await motionPage.waitForTimeout(150);
-await motionPage.screenshot({ path: join(out, 'marquee-focus-desktop.png'), clip: { x: 0, y: 740, width: 1440, height: 160 } });
+await motionPage.screenshot({ path: join(out, 'marquee-focus-desktop.png'), clip: await cropAround(motionPage, '.brand-marquee', 12) });
 // Normal-motion first views and the complete marquee controls at the two smaller representative sizes.
 const responsiveMotion: { name: string; width: number; height: number; transform: string; marquee: number }[] = [];
 for (const size of [{ name: 'mobile', width: 390, height: 844 }, { name: 'tablet', width: 768, height: 1024 }]) {

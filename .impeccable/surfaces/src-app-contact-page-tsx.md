@@ -13,7 +13,7 @@ Mode: Operate. Route: `/contact`, ouverte directement ou depuis produit, magasin
 
 THESIS: Une demande claire au bon magasin, dont la simulation est dite avant et après l’action ; refuse la modale, le faux envoi et la promesse de réponse.
 
-OWN-WORLD: Fond blanc, champs papier à filet et focus violet, titres Sora, jaune pour la seule action, lavande douce pour la sélection jointe et l’annonce de simulation, encre pour les erreurs nommées.
+OWN-WORLD: Système commun S5/r3 de DESIGN.md : fond blanc, champs papier à filet et focus violet, titres et lecture Manrope, jaune pour la seule action, lavande douce pour la sélection jointe et l’annonce de simulation, encre pour les erreurs nommées. La composition détaillée reste prévue en S6/r2.
 
 STORY: Le visiteur comprend que rien n’est envoyé, choisit son magasin et l’objet, écrit nom, e-mail et message, corrige les erreurs signalées, voit la demande préparée puis revient à sa sélection, au magasin ou recommence.
 

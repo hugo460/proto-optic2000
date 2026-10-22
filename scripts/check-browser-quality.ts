@@ -3,6 +3,7 @@ import { chromium } from '@playwright/test';
 import { mkdir, writeFile } from 'node:fs/promises';
 import { join, relative, resolve } from 'node:path';
 import { brands, products } from '../src/data';
+import { frameInkSource, type FrameInk } from '../tests/support/frame-ink';
 import { houseLinks, universes } from '../src/data/navigation';
 import { stores } from '../src/data/stores';
 let activeBrowser: Awaited<ReturnType<typeof chromium.launch>> | undefined;
@@ -179,8 +180,11 @@ async function main() {
   await motionPage.goto(base + '/');
   await motionPage.waitForTimeout(1000);
   const shift = () => motionPage.locator('.marquee-track').evaluate(e => new DOMMatrix(getComputedStyle(e).transform).m41);
+  // The strip only runs while it is in view and the large hero keeps it below the first screen: scroll to it for real first.
+  await motionPage.locator('.brand-marquee').scrollIntoViewIfNeeded();
   const a = await shift(); await motionPage.waitForTimeout(500); const b = await shift();
   check(b < a, 'Marquee moves with the default motion preference');
+  await motionPage.locator('.showcase-stage').scrollIntoViewIfNeeded();
   await motionPage.getByRole('button', { name: 'Baby Beach', exact: true }).click();
   const frames: { at: number; transform: string; opacity: string }[] = [];
   for (const at of [40, 160, 320, 800]) {
@@ -276,32 +280,53 @@ async function main() {
       await page.getByRole('button', { name: product.name, exact: true }).click();
       await page.locator(`.showcase-info h2:text-is("${product.name}")`).waitFor();
       await loaded();
-      const photo = await page.evaluate(() => {
-        const image = document.querySelector<HTMLImageElement>('.showcase-image img'), plateau = document.querySelector('.showcase-plateau')?.getBoundingClientRect();
-        if (!image || !plateau) return null;
-        const box = image.getBoundingClientRect();
-        return { loaded: image.complete && image.naturalWidth > 0, naturalWidth: image.naturalWidth, naturalHeight: image.naturalHeight, fit: getComputedStyle(image).objectFit, width: box.width, inside: box.left >= plateau.left - .5 && box.right <= plateau.right + .5 && box.top >= plateau.top - .5 && box.bottom <= plateau.bottom + .5,
-          clipped: [...document.querySelectorAll('.showcase-info :is(h2, p, a), .model-selector button')].filter(node => node.scrollWidth > node.clientWidth + 1).map(node => node.textContent?.trim() ?? '') };
-      });
+      // The photo may be wider than a phone screen (only its white margins fall outside): the drawn frame is measured by the shared probe.
+      const photo = await page.evaluate<FrameInk | null>(frameInkSource);
+      const clipped = await page.evaluate(() => [...document.querySelectorAll('.showcase-info :is(h2, p, a), .showcase-link, .model-selector button')].filter(node => node.scrollWidth > node.clientWidth + 1).map(node => node.textContent?.trim() ?? ''));
       const media = product.images[0];
-      check(photo, `${width}px ${slug}: showcase photo or plateau missing`);
+      check(photo, `${width}px ${slug}: showcase photo missing`);
       if (photo) {
         check(photo.loaded, `${width}px ${slug}: photo not loaded`);
-        // Natural size scaled by the srcset density and rounded by the browser: at most one natural pixel from the source ratio.
-        check(Math.abs(photo.naturalHeight - photo.naturalWidth * media.height / media.width) <= 1, `${width}px ${slug}: altered proportions (${photo.naturalWidth}×${photo.naturalHeight} for a ${media.width}×${media.height} source)`);
+        // Encoded pixels keep the source ratio; density-corrected natural dimensions are rounded independently.
+        check(Math.abs(photo.rasterHeight - photo.rasterWidth * media.height / media.width) <= 1, `${width}px ${slug}: altered proportions (${photo.rasterWidth}×${photo.rasterHeight} for a ${media.width}×${media.height} source)`);
         check(['contain', 'scale-down'].includes(photo.fit), `${width}px ${slug}: object-fit ${photo.fit} may crop the frame`);
-        check(photo.inside, `${width}px ${slug}: photo leaves its plateau`);
-        check(photo.width >= 80, `${width}px ${slug}: photo only ${Math.round(photo.width)} px wide`);
-        check(photo.clipped.length === 0, `${width}px ${slug}: clipped text ${photo.clipped.join(', ')}`);
+        check(photo.ink && !photo.error, `${width}px ${slug}: the drawn frame cannot be read (${photo.error})`);
+        if (photo.ink) {
+          check(photo.ink.left >= -1 && photo.ink.right <= photo.screen.width + 1, `${width}px ${slug}: the frame leaves the screen (${Math.round(photo.ink.left)}→${Math.round(photo.ink.right)} of ${photo.screen.width} px)`);
+          // Legible frame: from 260 px on a phone, 600 px on the 1440 px desktop; the photo never exceeds 1000 px (the 3024 px screen is only measured for the cap).
+          if (width >= 360 && width <= 1440) check(photo.ink.width >= (width >= 1440 ? 600 : 260), `${width}px ${slug}: frame only ${Math.round(photo.ink.width)} px wide`);
+        }
+        check(photo.box.width <= 1000.5, `${width}px ${slug}: photo ${Math.round(photo.box.width)} px wide, beyond its maximum`);
+        check(clipped.length === 0, `${width}px ${slug}: clipped text ${clipped.join(', ')}`);
       }
     }
     const state = await health();
     check(state.width <= state.viewport, `${width}px home: horizontal overflow ${state.width}/${state.viewport}`);
     check(state.broken.length === 0 && state.fallbacks === 0, `${width}px home: broken images or fallbacks`);
-    const controls = await page.evaluate(() => [...document.querySelectorAll('.home-hero, .brand-marquee')].flatMap(scope => [...scope.querySelectorAll('button, [role="button"], [role="switch"], input, summary, video, [class*="toggle"], [class*="pause"], [class*="play"], [class*="control"]')])
+    // The hero, the marquee and the passage that now holds the film (the film is no longer inside the hero).
+    const controls = await page.evaluate(() => [document.querySelector('.home-hero'), document.querySelector('.brand-marquee'), document.querySelector('.ambient-film, .hero-ambience')?.closest('section') ?? document.querySelector('.ambient-film, .hero-ambience')?.parentElement].flatMap(scope => !scope ? [] : [...scope.querySelectorAll('button, [role="button"], [role="switch"], input, summary, video, [class*="toggle"], [class*="pause"], [class*="play"], [class*="control"]')])
       .filter(element => (element as HTMLVideoElement).controls || /pause|play|lire|lecture|reprendre|d[ée]filement|toggle|vid[ée]o d’ambiance/i.test([element.getAttribute('aria-label'), element.getAttribute('title'), element.textContent, String(element.className), element.id].join(' '))).map(element => `${element.tagName.toLowerCase()}.${String(element.className)}`));
     check(controls.length === 0, `${width}px home: media control found (${controls.join(', ')})`);
-    records.push({ name: 'home-s5', ...state, controls });
+    // S5/r3: heading and action in the first screen, film after the hero and below the fold at the review sizes.
+    // The 3024×1964 stress viewport can naturally show later sections; it still checks separation, text and overflow.
+    await page.evaluate(() => window.scrollTo({ top: 0, left: 0, behavior: 'instant' }));
+    // (the page code declares no named function: tsx rewrites it with a helper that does not exist in the page)
+    const first = await page.evaluate(() => ({
+      title: document.querySelector('#hero-title')?.getBoundingClientRect().bottom ?? null, action: document.querySelector('.hero-actions .action-primary')?.getBoundingClientRect().bottom ?? null,
+      film: document.querySelector('.ambient-film, .hero-ambience')?.getBoundingClientRect().top ?? null, heroFilm: document.querySelectorAll('.home-hero :is(.ambient-film, .hero-ambience), .home-hero video').length, viewport: innerHeight,
+      filmAfterHero: !!(document.querySelector('.home-hero') && document.querySelector('.ambient-film, .hero-ambience') && (document.querySelector('.home-hero')!.compareDocumentPosition(document.querySelector('.ambient-film, .hero-ambience')!) & Node.DOCUMENT_POSITION_FOLLOWING)),
+    }));
+    if (width >= 360) {
+      check(first.title !== null && first.title <= first.viewport, `${width}px home: the heading is not whole in the first screen (ends at ${first.title}, screen ${first.viewport})`);
+      check(first.action !== null && first.action <= first.viewport, `${width}px home: the primary action is not whole in the first screen (ends at ${first.action}, screen ${first.viewport})`);
+    }
+    check(first.heroFilm === 0, `${width}px home: the film is still inside the hero`);
+    check(first.film !== null && first.filmAfterHero, `${width}px home: the film passage must follow the hero`);
+    if (width <= 1440) check(first.film !== null && first.film >= first.viewport, `${width}px home: the film passage starts inside the first screen (${first.film})`);
+    // Reduced motion for this whole run: the film is scrolled to for real and still nothing is requested (counted at the end of the run).
+    await page.locator('.ambient-film, .hero-ambience').scrollIntoViewIfNeeded();
+    await page.waitForTimeout(300);
+    records.push({ name: 'home-s5', ...state, controls, first });
   }
   // Desktop menu: no destination lost at the boundaries (the bar gives way to the panel, never to nothing); links readable and inside the screen.
   const destinations = [...universes, ...houseLinks].map(link => link.href);
@@ -360,6 +385,6 @@ async function main() {
   check(filmRequests.length === 0, `the film was requested ${filmRequests.length} time(s) although motion is reduced for this whole run`);
   await writeFile(join(root, 'browser-quality.json'), JSON.stringify({ timestamp: new Date().toISOString(), zoomMethod: 'Equivalent reflow: CSS viewport 720x500, DPR 2, output 1440x1000; not a manual browser zoom gesture, not a physical device and not an assistive-technology test.', findings, records, remote, errors }, null, 2));
   await browser.close(); assert.equal(remote.length, 0); assert.equal(errors.length, 0); assert.deepEqual(findings, []);
-  console.log(`${records.length} checks; 360 px and 720x500@2x reflow on S1, S2 and S4 routes, keyboard and focus rings (contact, appointment, marquee), Escape, motion frames, long names, missing images, 801/1101/1280 boundaries; home photos whole at 360–1440 and 3024 px, no media control, menu destinations at 801–3024 px, named mobile dialog, long names, no film request under reduced motion; zero overflow/errors/WordPress requests.`);
+  console.log(`${records.length} checks; 360 px and 720x500@2x reflow on S1, S2 and S4 routes, keyboard and focus rings (contact, appointment, marquee), Escape, motion frames, long names, missing images, 801/1101/1280 boundaries; home photos whole at 360–1440 and 3024 px, no media control and no film request after scrolling to the film passage, heading and action in the first screen, menu destinations at 801–3024 px, named mobile dialog, long names, no film request under reduced motion; zero overflow/errors/WordPress requests.`);
 }
 main().catch(async error => { console.error(error); process.exitCode = 1; await activeBrowser?.close(); });

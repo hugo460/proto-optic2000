@@ -46,7 +46,9 @@ export function ProductExperience({ product }: { product: Product }) {
   return <div className="product-experience">
     <div className="product-gallery">
       <div className="product-main-image"><MediaImage media={image} alt={`${product.name}${imageLabel ? ` — ${imageLabel}` : ''} — vue ${imageIndex + 1}`} sizes="(max-width: 800px) 94vw, 56vw" priority /></div>
-      {gallery.length > 1 && <div className="gallery-thumbnails" role="group" aria-label="Vues du modèle">{gallery.map((photo, index) => <button type="button" key={photo.src} aria-pressed={imageIndex === index} aria-label={`Voir la vue ${index + 1}`} onClick={() => setImageIndex(index)}><MediaImage media={photo} alt="" sizes="85px" /></button>)}</div>}
+      {/* One scrollable row of views, whatever their number; a focused view scrolls into the row by itself. The row is
+          keyed by the chosen colour so a new gallery starts again from its first view. */}
+      {gallery.length > 1 && <div className="gallery-rail"><div className="gallery-thumbnails" role="group" aria-label="Vues du modèle" key={variant?.id ?? 'all'}>{gallery.map((photo, index) => <button type="button" key={photo.src} aria-pressed={imageIndex === index} aria-label={`Voir la vue ${index + 1}`} onClick={() => setImageIndex(index)}><MediaImage media={photo} alt="" sizes="85px" /></button>)}</div><p className="gallery-count" aria-hidden="true">{Math.min(imageIndex, gallery.length - 1) + 1} / {gallery.length}</p></div>}
       <p className="gallery-caption">{sharedImage ? 'Photographie du catalogue public, commune à toutes les couleurs : la couleur choisie est indiquée par son nom.' : isLens ? 'Photographie du catalogue public.' : 'Choisissez un coloris pour découvrir ses photographies.'}</p>
     </div>
     <div className="product-information">
@@ -57,10 +59,13 @@ export function ProductExperience({ product }: { product: Product }) {
         : selection.options.length ? <><LensPicker selection={selection} onChange={change} /><p className="lens-guidance">Pour les couleurs et les corrections adaptées à vos besoins, échangez avec nos opticiens.</p></>
         : isLens ? <div className="product-guidance"><h2>Une seule version</h2><p>Ce produit est proposé tel quel dans le catalogue public, sans couleur ni correction à choisir.</p></div>
         : <p>Le modèle est présenté dans le coloris photographié.</p>}
+      {/* The action follows the options directly; availability and its reservations stay right under it. */}
+      <div className="product-actions">
+        <Link className="action action-primary product-store-action" href={storeHref}><Icon name="pin" />Se renseigner en magasin<Icon name="arrow" /></Link>
+        <p className="contact-reassurance">Choisissez votre magasin pour retrouver ses coordonnées.</p>
+        <Link className="action action-text product-request-link" href={contactHref}>Préparer une demande au magasin<Icon name="arrow" /></Link>
+      </div>
       <div className="product-availability"><p>{variant?.availability.toLowerCase().includes('commande') || variant?.sourceStock.backordersAllowed ? 'Sur commande selon le catalogue public.' : 'Disponibilité à confirmer auprès du magasin.'}</p><p>Nos opticiens vous renseignent sur les {isLens ? 'couleurs' : 'coloris'}, les délais et les possibilités d’essai.</p></div>
-      <Link className="action action-primary product-store-action" href={storeHref}><Icon name="pin" />Se renseigner en magasin<Icon name="arrow" /></Link>
-      <p className="contact-reassurance">Choisissez votre magasin pour retrouver ses coordonnées.</p>
-      <Link className="action action-text product-request-link" href={contactHref}>Préparer une demande au magasin<Icon name="arrow" /></Link>
       <div className="product-details"><details open><summary>{isLens ? 'Caractéristiques' : 'Monture et caractéristiques'}<Icon name="chevron" /></summary><div>{details ? details.split('\n').map((line, i) => <p key={i}>{line}</p>) : !lens?.history && <p>Sélectionnez un coloris pour découvrir les caractéristiques de sa monture et de ses verres.</p>}{lens?.history && <p className="lens-history">{lens.history} Ces conditions ne sont pas confirmées aujourd’hui : renseignez-vous en magasin.</p>}</div></details><details><summary>Préparer votre visite<Icon name="chevron" /></summary><div><p>Contactez le magasin de votre choix pour confirmer le prix et la disponibilité de cette référence avant de vous déplacer.</p><p>Aucune réservation n’est effectuée sur ce site.</p></div></details></div>
     </div>
   </div>;

@@ -6,9 +6,9 @@ Lot S2 (accepté localement par le pilote le 21/10/2026 au commit `49458ec`, san
 
 Version de présentation S3 : [ouvrir le prototype](https://proto-optic2000.vercel.app). Mentions adaptées à Vercel, matrice de recette complétée et [guide de démonstration](docs/demo.md). S3 a été acceptée par le pilote.
 
-Complément S4 (demandé par Hugo après le retour d’Omar du 21/10/2026) : bandeau de marques défilant, présentation animée des montures du nuancier, **rendez-vous simulé** en quatre étapes sur `/rendez-vous` (créneaux fictifs en heure de Tahiti, rien n’est réservé ni envoyé) et passe de finition des parcours. L’acceptation de S4 reste au pilote ; les informations commerciales restent à confirmer par l’enseigne.
+Complément S4 (demandé par Hugo après le retour d’Omar du 21/10/2026) : bandeau de marques défilant, présentation animée des montures du nuancier, **rendez-vous simulé** en quatre étapes sur `/rendez-vous` (créneaux fictifs en heure de Tahiti, rien n’est réservé ni envoyé) et passe de finition des parcours. S4 a été acceptée techniquement par le pilote après le correctif documentaire S4/r2 ; les informations commerciales restent à confirmer par l’enseigne.
 
-S5/r2 (livrée à la présentation ; acceptation du pilote à venir) recompose l’accueil, ses menus et le pied de page à la demande de Hugo, après le rejet du rendu S5/r1 : hero éditorial à deux parts avec un film local de 24,32 s sans commande Pause/Lire, nuancier secondaire compact, bandeau de 13 logos sans bouton, panneau des univers clair, menu mobile blanc nommé, pied de page compact. S6 est seulement prévue. Voir [les décisions](docs/decisions.md) et [DESIGN.md](DESIGN.md).
+S5/r3 refond l’accueil après le rejet visuel de S5/r2 : une vraie monture en grand dans un espace clair, trois modèles interactifs, film d’ambiance secondaire, navigation et pied de page recomposés. Catalogue et fiches rapprochent recherche, photos, options et accès au magasin ; les quinze vues initiales de Glory Glory restent dans un rail de miniatures. Les données et parcours de simulation sont conservés. L’acceptation visuelle de Hugo et du pilote reste à recueillir. S6/r1 est dépassée ; S6/r2 est prévue seulement pour les autres familles de pages. Voir [les décisions](docs/decisions.md) et [DESIGN.md](DESIGN.md).
 
 ## Lancer
 

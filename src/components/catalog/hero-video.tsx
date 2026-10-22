@@ -1,7 +1,7 @@
 'use client';
-import { useEffect, useRef, useState, useSyncExternalStore, type RefObject } from 'react';
+import { useEffect, useRef, useState, useSyncExternalStore } from 'react';
 
-// Decorative close-ups of frames beside the home hero copy (provenance in docs/content-inventory.md). Local files only.
+// Decorative close-ups of frames in a quiet passage of the home page, below the hero (provenance in docs/content-inventory.md). Local files only.
 export const heroVideo = '/media/ambience/eyewear-loop.mp4';
 export const heroPoster = '/media/ambience/eyewear-poster.webp';
 
@@ -61,7 +61,7 @@ export function useHeroVideo() {
     document.addEventListener('visibilitychange', onVisibility);
     element.muted = true;
     element.src = heroVideo; // preload="none": nothing is fetched before the first play() in view
-    // On a phone the film is a separate band above the copy: stop when that band leaves the screen.
+    // The film rests whenever its band leaves the screen.
     observer.observe(element);
     return () => {
       live = false; attempt++;
@@ -75,12 +75,13 @@ export function useHeroVideo() {
   return { video, status };
 }
 
-// Poster and film in their own part of the hero, outside the reading order. The poster stays underneath at all times;
-// the film only covers it once frames are really playing (or rest on a played frame).
-export function HeroAmbience({ video, status }: { video: RefObject<HTMLVideoElement | null>; status: HeroVideoStatus }) {
+// Poster and film in their own band, outside the reading order and with no text over them. The poster stays underneath
+// at all times; the film only covers it once frames are really playing (or rest on a played frame).
+export function AmbientFilm() {
+  const { video, status } = useHeroVideo();
   const film = status === 'playing' || status === 'paused';
-  return <div className="hero-ambience" aria-hidden="true">
-    <div className="hero-ambience-media" style={{ backgroundImage: `url(${heroPoster})` }}>
+  return <div className="ambient-film" aria-hidden="true">
+    <div className="ambient-film-media" style={{ backgroundImage: `url(${heroPoster})` }}>
       <video ref={video} data-shown={film || undefined} muted loop playsInline preload="none" tabIndex={-1} />
     </div>
   </div>;

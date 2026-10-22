@@ -14,16 +14,16 @@ Liens prêts à ouvrir : [Rendez-vous](https://proto-optic2000.vercel.app/rendez
 
 ## Parcours 0 — Accueil vivant
 
-1. À l’arrivée, le texte et les actions sont sur un champ lavande calme ; à côté (au-dessus sur téléphone), un film de gros plans de lunettes et de matières passe dans sa propre part. Sous les actions, choisir **Baby Beach**, puis **The Bird** : la monture, seule sur son petit plateau blanc, rejoue sa courte arrivée ; nom, prix et lien changent tout de suite. Il n’existe aucun bouton Pause/Lire : le film se joue seul quand le navigateur l’autorise et s’arrête hors de l’écran, quand l’onglet est masqué, ou si le visiteur a demandé moins d’animation ou l’économie de données.
-2. Ouvrir **Nos univers** dans la barre : un panneau clair, ancré sous l’en-tête, liste les six univers sur deux colonnes et les deux pages de l’enseigne ; Échap, un clic à côté ou une sortie au clavier le referment. Sur téléphone, **Menu** ouvre un dialogue blanc défilable avec l’action « Préparer un RDV » visible.
-3. Le bandeau de marques défile lentement, sans bouton : sur un appareil avec souris, le survoler l’arrête ; au clavier (Tab), la rangée s’immobilise et chaque logo reste entièrement visible. « Toutes les marques » reste fixe, dans sa colonne.
-4. En dessous : une sélection de quatre Maui Jim (Mamane, Alulu, Pehu, Liquid Sunshine), l’index des six univers autour de la photo de l’équipe, puis les trois magasins. Le pied de page est compact : identité et actions, magasins avec plan du site.
-5. Avec la préférence système « réduire les animations », le fond reste une image fixe ; la monture apparaît sans mouvement et les logos forment une rangée à faire défiler à la main. L’économie de données seule empêche le téléchargement du film, sans modifier les animations CSS de la monture ou des marques.
+1. L’accueil s’ouvre sur **Le soleil, autrement.** et une vraie monture Maui Jim en grand. « Toutes les solaires » mène au catalogue ; « Préparer un rendez-vous » reste une sortie discrète. Choisir **Baby Beach**, puis **The Bird** : photo, nom, prix et lien changent immédiatement, avec une courte arrivée de la monture puis repos. Aucun changement de modèle automatique.
+2. Ouvrir **Nos univers** dans la barre : un panneau clair et compact donne accès aux univers et pages de l’enseigne. Échap, un clic à côté ou la sortie au clavier le referment. Sur téléphone, **Menu** ouvre le dialogue blanc avec l’action « Préparer un RDV ».
+3. Le bandeau de marques défile lentement, sans bouton : le survol à la souris l’arrête ; au clavier, la rangée s’immobilise et chaque logo reste entier. « Toutes les marques » rejoint l’annuaire.
+4. En dessous : sélection de quatre Maui Jim (Mamane, Alulu, Pehu, Liquid Sunshine), séquence de matière filmée, univers, équipe réelle et trois magasins. Le film ne montre ni un magasin ni un modèle attribué au catalogue. Il se joue seulement dans son champ et sur un onglet visible, si le navigateur l’autorise.
+5. En mouvement réduit ou en économie de données, le film n’est pas téléchargé ; le poster reste visible. Refus d’autoplay ou erreur donnent aussi le poster. Aucune commande Pause/Lire. Le mouvement réduit rend également les montures immobiles et les marques défilables manuellement.
 
 ## Parcours 1 — Solaire : le prix suit la variante, puis le magasin
 
 1. À l’accueil, parcourir le nuancier : Baby Beach, puis **Glory Glory**. L’image, le prix et le lien suivent le modèle.
-2. Ouvrir Glory Glory (`/produits/glory-glory`). Choisir **Cannelle transparente** : **34 600 XPF**. Choisir **Noir brillant Manchester United** : **38 100 XPF**, la photo change et l’URL indique `variante=1608`.
+2. Ouvrir Glory Glory (`/produits/glory-glory`). Parcourir les quinze vues initiales dans le rail de miniatures, sans coloris présélectionné. Choisir **Gris transparent** : **34 600 XPF**, trois vues et référence **1607**. Choisir **Cannelle transparente** : **34 600 XPF**. Choisir **Noir brillant Manchester United** : **38 100 XPF**, la photo change et l’URL indique `variante=1608`.
 3. « Se renseigner en magasin » : la sélection accompagne la liste des magasins, puis la fiche choisie (`/magasins?produit=glory-glory&variante=1608`). Sur Taravao, les horaires sont « à confirmer auprès du magasin ».
 
 ## Parcours 2 — Lentille Colorblends Grey → Taravao → demande simulée

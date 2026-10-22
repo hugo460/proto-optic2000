@@ -2,29 +2,17 @@
 version: 1
 slug: "src-app-solaires-page-tsx"
 primary_target: "src/app/solaires/page.tsx"
-related_targets: ["src/app/catalogue/page.tsx","src/app/produits/[slug]/page.tsx","src/components/catalog/product-experience.tsx","src/components/catalog/lens-picker.tsx"]
+related_targets: ["src/app/catalogue/page.tsx","src/app/produits/[slug]/page.tsx","src/components/catalog/product-experience.tsx","src/components/catalog/lens-picker.tsx","src/components/catalog/catalogue-view.tsx","src/components/catalog/filter-panel.tsx","src/components/catalog/product-card.tsx"]
 ---
 
-# Parcours catalogue et produit
-
-Mode: Operate. Routes: `/solaires`, `/catalogue`, `/produits/[slug]`. Structure métier prescrite par le brief et le benchmark ; extension du monde visuel de l’accueil.
-
+# Catalogue et fiche — S5/r3
+Mode : Operate. Découvrir un modèle, filtrer/comparer puis transmettre sa sélection publique au magasin. La direction commune S5/r3 remplace l'ancien habillage ; aucune logique métier n'est redessinée.
 ## Direction contract
-
-THESIS: Trouver une monture et comprendre exactement le coloris choisi, puis joindre un magasin.
-
-OWN-WORLD: Fond blanc, plateaux produit sobres, texte noir, filtres regroupés et jaune d’action. Photos contenues sans déformation ; coloris montrés par leur vraie miniature et leur nom.
-
-STORY: Recherche et filtres réversibles, compte réel, ouverture de la fiche, sélection prix/photo, retour au contexte ou accès magasin.
-
-FIRST VIEWPORT: Titre compact, recherche, filtres nommés, tri, compte et premiers modèles. Sur fiche, galerie et choix côte à côte sur ordinateur, galerie puis contenu sur téléphone ; nom long sans troncature.
-
-FORM: Grille fonctionnelle et galerie à variantes, héritées du nuancier confirmé ; seed:ec9ae70fdd93869f. Les données et la tâche fixent la structure ; aucune nouvelle direction autonome.
-
+THESIS: Le produit arrive tôt ; les contrôles se lisent sans s'interposer entre la visite et les montures.
+OWN-WORLD: Blanc dominant, noir précis, jaune d'action, lavande d'état. Packshots entiers sur blanc sans double enveloppe, noms complets, commandes tactiles d'au moins44px.
+STORY: Chercher, filtrer, trier ; ouvrir le modèle avec son retour filtré ; regarder toutes ses vues, choisir un vrai coloris ou une correction, retrouver le prix et joindre un magasin.
+FIRST VIEWPORT: Catalogue : titre direct, collections et formulaire compact, première rangée avec images et noms à1280×800. Fiche : grande photo et informations rapprochées sur bureau ; sur mobile, une photo puis un rail secondaire d'une seule rangée avant le nom/prix. Les quinze vues initiales et les cinq coloris Glory Glory restent tous disponibles sans présélection.
+FORM: Déclinaison opérable du studio de l'accueil, construction directe en code ; seed:3115cd6f4e783bf2. Choix de composition précisément demandé au brief, pas de tournoi additionnel.
 FINISH: unreviewed and undocumented is unfinished; this build ends with the finish review, the verdict, DESIGN.md, and every shipping raster carrying its provenance
-
-États: URL partagée, cumul, tri, aucun résultat, reset, filtre invalide, route inconnue, variante absente/invalide, photo indisponible, réduction du mouvement, clavier et retour.
-
-Lentilles (S2): couleur puis correction choisies séparément, comme deux questions. Couleurs en boutons nommés (aria-pressed, coche, sans pastille inventée), sphère en `select` natif trié par valeur avec libellés exacts signés. Un statut poli dit ce qui manque, ce qui est choisi ou pourquoi le lien a été corrigé ; jamais de couleur déduite d’un défaut de sphère. Produit simple : une seule version, pas de sélecteur. Prix et photo de la référence réelle ; prix commun nommé comme tel. Sélection dans l’URL (`variante`, `couleur`, `sphere`) et transmise au magasin et à la demande simulée.
-
-Caractéristiques lentilles (S2 paquet 2) : conditionnement et renouvellement affichés comme faits (Colorblends boîte de 2 et renouvellement mensuel ; 1-Day et TruBlends boîte de 10 ; TruBlends 5 couleurs sans correction) ; stock, délais et règle « hors période de fêtes » de 2022 seulement en réserve datée (`src/data/lens-facts.ts`). Le lien de famille sous les lentilles associées mène à `/lentilles` (« Toutes les lentilles ») ; `retour=/lentilles` est accepté.
+## Invariants
+URL/retour et filtres GET ; galerie/prix/ID synchronisés ; vide/invalide/fallback/chargement/erreur. Lentilles : +/−, zéro, absence et sphère ouverte distincts, Grey1949 indépendant de la sphère ; boîte simple sans choix. Aucun stock, achat ou disponibilité inventés.
