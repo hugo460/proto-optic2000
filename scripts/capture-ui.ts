@@ -13,9 +13,15 @@ import { frameInkSource, type FrameInk } from '../tests/support/frame-ink';
 // copies are gone). The captures use reduced motion, so the film is never loaded: they show the poster, the layout and the menus,
 // never the film itself, whose playback is judged by watching it. Technical measures recorded with a capture (photo whole, texts
 // not clipped, panel inside the screen) are listed in `checks`; a non-empty list makes the run fail.
-// S5/r3: the home is a single white hero (heading and yellow action, one large frame, the three models) and the film lives in a
-// secondary passage further down: the full-page captures show it (poster only, reduced motion) and their checks require that no text
-// overlaps it. Every crop of the motion frames and of the marquee is computed from a locator (scrolled into view, then measured),
+// S5/r3 (historical, revoked): the film had left the hero for a secondary passage further down the page.
+// S5/r4: the film is back in the hero, as the picture of the first screen. The home captures are therefore two distinct families: the
+// HERO at the top of the page (heading and yellow action composed over the film, here its poster since the captures reduce motion) at the six
+// review sizes (360×800, 390×844, 768×1024, 1024×768, 1280×720, 1440×900) and the four thresholds of the header, whose checks
+// require one video, the visible part of the film to be substantial (height >= 260 px, area >= 20% of the screen, >= 80% of the frame
+// visible, width >= 80% of the screen) and only composed hero/header text over it, with the rectangles and shares recorded in the manifest; and the NUANCIER
+// (the three models in `.home-showcase`), one capture per model after a real choice. A choice scrolls the page down to the showcase, so
+// the hero is always captured first, at the top, and each model capture is aligned on its section, never taken at the bottom by
+// accident. Every crop of the motion frames and of the marquee is computed from a locator (scrolled into view, then measured),
 // never from absolute coordinates.
 // The manifest ties each PNG to its route, viewport, dimensions, broken images, overflow, errors, network and date, and to the
 // exact code that was served (HEAD plus a digest of every source file, tracked or not).
@@ -62,21 +68,28 @@ async function settle(target: Page) {
   const pending = await target.evaluate(async () => {
     const deadline = performance.now() + 4000;
     for (let round = 0; round < 6; round++) {
+      // Sample after paint, not before it: revealing a newly playing film can start its opacity transition on that paint.
+      // Return the quiet sample in this same turn; an empty sample followed by two frames used to reject that new transition.
+      await new Promise<void>(resolveFrame => requestAnimationFrame(() => requestAnimationFrame(() => resolveFrame())));
       const running = document.getAnimations().filter(animation => animation.playState === 'running' && animation.effect && Number.isFinite(animation.effect.getComputedTiming().endTime as number));
-      if (!running.length || performance.now() > deadline) break;
+      if (!running.length) return [];
+      if (performance.now() > deadline) break;
       await Promise.race([Promise.all(running.map(animation => animation.finished.catch(() => undefined))), new Promise(done => setTimeout(done, Math.max(0, deadline - performance.now())))]);
     }
-    await new Promise<void>(resolveFrame => requestAnimationFrame(() => requestAnimationFrame(() => resolveFrame())));
     return document.getAnimations().filter(animation => animation.playState === 'running' && animation.effect && Number.isFinite(animation.effect.getComputedTiming().endTime as number)).map(animation => `${animation.constructor.name} ${(animation as CSSTransition).transitionProperty ?? (animation as CSSAnimation).animationName ?? ''}`);
   });
   assert.deepEqual(pending, [], 'finite animations still running before the measure');
 }
-async function prepare(target: Page) {
-  await target.evaluate(async () => {
+// `scroll: 'keep'` leaves the page where a real choice scrolled it (the nuancier captures); the default goes back to the top.
+async function prepare(target: Page, scroll: 'top' | 'keep' = 'top') {
+  await target.evaluate(async place => {
     await document.fonts.ready;
     await Promise.all([...document.images].map(async image => { image.loading = 'eager'; try { await image.decode(); } catch { /* failure is recorded below */ } }));
-    window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
-  });
+    // The poster of the film is a CSS background: decoded too, so that no capture or measure sees it half drawn.
+    const posterUrl = document.querySelector('.ambient-film-media') ? getComputedStyle(document.querySelector('.ambient-film-media')!).backgroundImage.match(/url\("?([^")]+)"?\)/)?.[1] : undefined;
+    if (posterUrl) { const poster = new Image(); poster.src = posterUrl; await poster.decode().catch(() => undefined); }
+    if (place === 'top') window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+  }, scroll);
   await settle(target);
 }
 const measure = () => ({
@@ -97,17 +110,18 @@ const measure = () => ({
   })(),
   firstLensTop: document.querySelector('.lens-products .product-card')?.getBoundingClientRect().top ?? null,
 });
-interface Capture extends ReturnType<typeof measure> { checks: string[]; name: string; width: number; height: number; fullPage: boolean; date: string; png: { width: number; height: number }; network: { requests: number; nonGet: string[]; withBody: string[]; offOrigin: string[] }; errorsSinceLast: string[] }
+interface Capture extends ReturnType<typeof measure> { checks: string[]; keptScroll: boolean; extra: unknown; name: string; width: number; height: number; fullPage: boolean; date: string; png: { width: number; height: number }; network: { requests: number; nonGet: string[]; withBody: string[]; offOrigin: string[] }; errorsSinceLast: string[] }
 const records: Capture[] = [];
 let errorMark = 0;
-async function snap(name: string, fullPage: boolean, checks: string[] = []) {
-  await prepare(page);
+// `keepScroll` is for the nuancier captures only (the page stands on its section on purpose); `extra` is recorded as is in the manifest.
+async function snap(name: string, fullPage: boolean, checks: string[] = [], options: { keepScroll?: boolean; extra?: unknown } = {}) {
+  await prepare(page, options.keepScroll ? 'keep' : 'top');
   const measurements = await page.evaluate(measure);
   const buffer = await page.screenshot({ path: join(out, `${name}.png`), fullPage, animations: 'disabled' });
   const viewport = page.viewportSize()!;
   const network = { requests: requests.length, nonGet: requests.filter(r => r.method !== 'GET').map(r => `${r.method} ${r.url}`), withBody: requests.filter(r => r.body).map(r => r.url), offOrigin: requests.filter(r => /^https?:/.test(r.url) && new URL(r.url).origin !== origin).map(r => r.url) };
   requests = [];
-  records.push({ name, checks, width: viewport.width, height: viewport.height, fullPage, date: new Date().toISOString(), png: { width: buffer.readUInt32BE(16), height: buffer.readUInt32BE(20) }, ...measurements, network, errorsSinceLast: errors.slice(errorMark) });
+  records.push({ name, checks, keptScroll: !!options.keepScroll, extra: options.extra ?? null, width: viewport.width, height: viewport.height, fullPage, date: new Date().toISOString(), png: { width: buffer.readUInt32BE(16), height: buffer.readUInt32BE(20) }, ...measurements, network, errorsSinceLast: errors.slice(errorMark) });
   errorMark = errors.length;
   console.log(`${name}: ${measurements.pageWidth}/${viewport.width}px, ${measurements.broken.length} broken, ${measurements.fallbackCount} fallbacks, ${buffer.readUInt32BE(16)}×${buffer.readUInt32BE(20)}${checks.length ? `, CHECKS: ${checks.join('; ')}` : ''}`);
 }
@@ -120,20 +134,20 @@ async function go(path: string, width: number, height: number) {
 }
 // Whole photo of the model shown (loaded, true proportions, contained by its own box) and whole frame on the screen: the photo may be
 // wider than a phone screen, only its white margins falling outside, so the drawn frame (not the <img> box) is measured, by the shared
-// probe of tests/support/frame-ink.ts. Texts of the showcase not clipped, no media control, one pressed choice.
+// probe of tests/support/frame-ink.ts. Texts of the showcase not clipped, no media control, one pressed choice. Measured where the page
+// stands (a choice scrolled it to the showcase): the probe reads viewport coordinates.
 async function showcaseChecks(slug: string) {
   const media = products.find(item => item.slug === slug)!.images[0];
   // A model click can create its img before the cached resource is decoded. Check the same stable state we capture.
-  await prepare(page);
+  await prepare(page, 'keep');
   const photo = await page.evaluate<FrameInk | null>(frameInkSource);
   const state = await page.evaluate(() => {
-    const film = document.querySelector('.ambient-film, .hero-ambience');
-    const passage = film?.closest('section') ?? film?.parentElement;
     return {
       clipped: [...document.querySelectorAll('.showcase-info :is(h2, p, a), .showcase-link, .model-selector button')].filter(node => node.scrollWidth > node.clientWidth + 1).map(node => node.textContent?.trim() ?? ''),
       pressed: [...document.querySelectorAll('.model-selector button[aria-pressed="true"]')].map(node => node.textContent?.trim()),
-      // The hero, the marquee and the passage that holds the film (the film is no longer inside the hero).
-      controls: [...document.querySelectorAll('.home-hero button, .brand-marquee button'), ...(passage?.querySelectorAll('button') ?? [])].map(node => node.textContent?.trim() ?? '').filter(text => /pause|lire|lecture|défilement/i.test(`${text}`)),
+      // The hero (which holds the film), the showcase and the marquee: no control, hidden or not.
+      controls: [...document.querySelectorAll('.home-hero button, .home-showcase button, .brand-marquee button')].map(node => node.textContent?.trim() ?? '').filter(text => /pause|lire|lecture|défilement/i.test(`${text}`)),
+      videoControls: [...document.querySelectorAll('.home-hero video, .home-showcase video, .brand-marquee video')].filter(node => (node as HTMLVideoElement).controls).length,
     };
   });
   const checks: string[] = [];
@@ -145,51 +159,79 @@ async function showcaseChecks(slug: string) {
   if (photo.error || !photo.ink) checks.push(`${slug}: frame not readable (${photo.error})`);
   else {
     if (photo.ink.left < -1 || photo.ink.right > photo.screen.width + 1) checks.push(`${slug}: the frame leaves the screen (${Math.round(photo.ink.left)}→${Math.round(photo.ink.right)} of ${photo.screen.width} px)`);
-    // Legible frame: from 260 px on a phone, 600 px on the 1440 px desktop (360 px is the narrowest review size); the photo never exceeds 1000 px.
-    if (photo.screen.width >= 360 && photo.ink.width < (photo.screen.width >= 1440 ? 600 : 260)) checks.push(`${slug}: frame only ${Math.round(photo.ink.width)} px wide`);
+    // Legible frame in its secondary section: from 260 px on a phone, 480 px on the 1440 px desktop (360 px is the narrowest review size; the
+    // former 600 px was the hero picture's); the photo never exceeds 1000 px.
+    if (photo.screen.width >= 360 && photo.ink.width < (photo.screen.width >= 1440 ? 480 : 260)) checks.push(`${slug}: frame only ${Math.round(photo.ink.width)} px wide`);
   }
   if (photo.box.width > 1000.5) checks.push(`${slug}: photo ${Math.round(photo.box.width)} px wide, beyond its maximum`);
   if (state.clipped.length) checks.push(`${slug}: clipped text ${state.clipped.join(', ')}`);
   if (state.pressed.length !== 1) checks.push(`${slug}: ${state.pressed.length} pressed choices`);
-  if (state.controls.length) checks.push(`media control found: ${state.controls.join(', ')}`);
+  if (state.controls.length || state.videoControls) checks.push(`media control found: ${[...state.controls, ...(state.videoControls ? ['video controls'] : [])].join(', ')}`);
   return checks;
 }
-// First screen and film passage of the home, read at the top of the page: heading and primary action whole (from 360 px), the photo
-// started, no film inside the hero, the film below the first screen and after the hero, and no text anywhere over the film passage or
-// over the photo. The page code runs in the browser, so it holds plain data only: the geometry is compared here.
+// First screen of the home (the hero), read at the top of the page: heading and primary action whole (from 360 px), the film inside the
+// hero and substantial in the first screen (review sizes up to 1440 px: visible height >= 260 px, visible area >= 20% of the screen,
+// >= 80% of its frame visible, visible width >= 80% of the screen), exactly one video in the DOM and in the hero, nothing of the
+// showcase, marquee or products inside the hero, the heading then actions and hero before showcase/marquee; only composed text on the film and no text on the showcase photo. The rectangles and shares are returned for the manifest. The page code runs in the
+// browser, so it holds plain data only: the geometry is compared here.
 // Beware: the page code is rewritten by tsx (which keeps function names with a helper that does not exist in the page), so it
 // declares no named function; DOMRect.toJSON() gives plain numbers.
 interface Spot { left: number; right: number; top: number; bottom: number }
-interface TextSpot extends Spot { text: string; inFilm: boolean; inHero: boolean }
+interface TextSpot extends Spot { text: string; inShowcase: boolean; composed: boolean }
 const overlapOf = (a: Spot, b: Spot) => Math.max(0, Math.min(a.right, b.right) - Math.max(a.left, b.left)) * Math.max(0, Math.min(a.bottom, b.bottom) - Math.max(a.top, b.top));
 async function homeChecks() {
-  await page.evaluate(() => window.scrollTo({ top: 0, left: 0, behavior: 'instant' }));
-  await settle(page);
+  await prepare(page);
   const state = await page.evaluate(() => ({
     title: document.querySelector('#hero-title')?.getBoundingClientRect().toJSON() as Spot | undefined,
     action: document.querySelector('.hero-actions .action-primary')?.getBoundingClientRect().toJSON() as Spot | undefined,
     photo: document.querySelector('.showcase-image img')?.getBoundingClientRect().toJSON() as Spot | undefined,
-    film: document.querySelector('.ambient-film, .hero-ambience')?.getBoundingClientRect().toJSON() as Spot | undefined,
-    viewport: innerHeight, width: innerWidth, heroFilm: document.querySelectorAll('.home-hero :is(.ambient-film, .hero-ambience), .home-hero video').length,
-    texts: [...document.querySelectorAll('h1, h2, h3, h4, p, a, button, li, figcaption, label')].filter(node => node.getClientRects().length && (node.textContent ?? '').trim())
-      .map(node => ({ ...node.getBoundingClientRect().toJSON(), text: (node.textContent ?? '').trim().slice(0, 30), inFilm: !!node.closest('.ambient-film, .hero-ambience'), inHero: !!node.closest('.home-hero') })) as TextSpot[],
-    filmAfterHero: !!(document.querySelector('.home-hero') && document.querySelector('.ambient-film, .hero-ambience') && (document.querySelector('.home-hero')!.compareDocumentPosition(document.querySelector('.ambient-film, .hero-ambience')!) & Node.DOCUMENT_POSITION_FOLLOWING)),
+    film: document.querySelector('.home-hero .ambient-film')?.getBoundingClientRect().toJSON() as Spot | undefined,
+    viewport: innerHeight, width: innerWidth,
+    videos: document.querySelectorAll('video').length, heroVideos: document.querySelectorAll('.home-hero video').length, heroFilms: document.querySelectorAll('.home-hero .ambient-film').length,
+    enclosed: document.querySelectorAll('.home-hero .home-showcase, .home-hero .showcase-stage, .home-hero .brand-marquee, .home-hero .home-products, .home-hero .product-card').length,
+    texts: [...document.querySelectorAll('h1, h2, h3, h4, p, a, button, li, figcaption, label')].filter(node => node.getClientRects().length && (node.textContent ?? '').trim() && !node.closest('.ambient-film'))
+      .map(node => ({ ...node.getBoundingClientRect().toJSON(), text: (node.textContent ?? '').trim().slice(0, 30), inShowcase: !!node.closest('.home-showcase'), composed: !!node.closest('.home-hero, .site-header') })) as TextSpot[],
+    inOrder: !!(document.querySelector('#hero-title') && document.querySelector('.hero-actions') && document.querySelector('.ambient-film') && document.querySelector('.home-showcase') && document.querySelector('.brand-marquee')
+      && (document.querySelector('#hero-title')!.compareDocumentPosition(document.querySelector('.hero-actions')!) & Node.DOCUMENT_POSITION_FOLLOWING)
+            && (document.querySelector('.ambient-film')!.compareDocumentPosition(document.querySelector('.home-showcase')!) & Node.DOCUMENT_POSITION_FOLLOWING)
+      && (document.querySelector('.home-showcase')!.compareDocumentPosition(document.querySelector('.brand-marquee')!) & Node.DOCUMENT_POSITION_FOLLOWING)),
   }));
   const checks: string[] = [];
   const { title, action, photo, film } = state;
-  if (!title || !action || !photo || !film) return ['hero or film passage not found'];
+  if (!title || !action || !photo || !film) return { checks: ['hero, film or showcase not found'], geometry: null };
+  const visibleWidth = Math.max(0, Math.min(film.right, state.width) - Math.max(film.left, 0)), visibleHeight = Math.max(0, Math.min(film.bottom, state.viewport) - Math.max(film.top, 0));
+  const visibleArea = visibleWidth * visibleHeight, frameArea = (film.right - film.left) * (film.bottom - film.top);
+  const shares = { screenArea: visibleArea / (state.width * state.viewport), frameVisible: frameArea ? visibleArea / frameArea : 0, screenWidth: visibleWidth / state.width };
+  const geometry = { viewport: { width: state.width, height: state.viewport }, title, action, film, visible: { width: visibleWidth, height: visibleHeight, area: visibleArea }, shares, videos: state.videos, heroVideos: state.heroVideos };
   if (state.width >= 360 && title.bottom > state.viewport) checks.push(`heading ends at ${Math.round(title.bottom)} px, beyond the first screen (${state.viewport})`);
   if (state.width >= 360 && action.bottom > state.viewport) checks.push(`primary action ends at ${Math.round(action.bottom)} px, beyond the first screen (${state.viewport})`);
-  if (state.width >= 360 && photo.top >= state.viewport) checks.push('the photo starts below the first screen');
-  if (state.heroFilm) checks.push('the film is still inside the hero');
-  if (!state.filmAfterHero) checks.push('the film passage does not follow the hero');
-  if (film.top < state.viewport) checks.push('the film passage starts inside the first screen');
-  const overFilm = state.texts.filter(text => !text.inFilm && overlapOf(text, film) > 4).map(text => text.text);
-  if (overFilm.length) checks.push(`text over the film passage: ${overFilm.join(', ')}`);
-  const overPhoto = state.texts.filter(text => text.inHero && overlapOf(text, photo) > 4).map(text => text.text);
+  if (state.videos !== 1 || state.heroVideos !== 1 || state.heroFilms !== 1) checks.push(`expected exactly one video in the DOM and in the hero (${state.videos} / ${state.heroVideos}, ${state.heroFilms} film frames)`);
+  if (state.enclosed) checks.push(`the hero encloses ${state.enclosed} showcase, marquee or product element(s)`);
+  if (!state.inOrder) checks.push('heading/actions or hero/showcase/marquee reading order is broken');
+  if (film.right - film.left <= 0 || film.bottom - film.top <= 0) checks.push('the film frame has no box');
+  // The review sizes and thresholds (360–1440 px): the film is the substantial picture of the first screen.
+  if (state.width >= 360 && state.width <= 1440) {
+    if (visibleHeight < 260) checks.push(`only ${Math.round(visibleHeight)} px of the film are visible in the first screen (minimum 260)`);
+    if (shares.screenArea < .2) checks.push(`the visible film covers ${Math.round(shares.screenArea * 100)}% of the screen (minimum 20%)`);
+    if (shares.frameVisible < .8) checks.push(`only ${Math.round(shares.frameVisible * 100)}% of the film frame is visible (minimum 80%)`);
+    if (shares.screenWidth < .8) checks.push(`the visible film is ${Math.round(shares.screenWidth * 100)}% of the screen width (minimum 80%)`);
+  }
+  const overFilm = state.texts.filter(text => !text.composed && overlapOf(text, film) > 4).map(text => text.text);
+  if (overFilm.length) checks.push(`unrelated text over the film: ${overFilm.join(', ')}`);
+  const overPhoto = state.texts.filter(text => text.inShowcase && overlapOf(text, photo) > 4).map(text => text.text);
   if (overPhoto.length) checks.push(`text over the photo: ${overPhoto.join(', ')}`);
-  return checks;
+  return { checks, geometry };
 }
+// The nuancier section, brought to the top of the screen by a real scroll (a choice already scrolled the page there): the photo, the
+// three choices, the caption and the model link must then be whole in the captured screen.
+async function toShowcase() {
+  await page.evaluate(() => window.scrollTo({ top: Math.max(0, scrollY + document.querySelector('.home-showcase')!.getBoundingClientRect().top - 16), left: 0, behavior: 'instant' }));
+  await settle(page);
+}
+const showcaseInScreen = () => page.evaluate(() => ['.home-showcase', '.showcase-image', '.model-selector', '.showcase-info', '.showcase-link'].flatMap(selector => {
+  const box = document.querySelector(selector)?.getBoundingClientRect();
+  return !box || box.top < -1 || box.bottom > innerHeight + 1 ? [`${selector} is not whole in the screen (${box ? `${Math.round(box.top)}→${Math.round(box.bottom)} of ${innerHeight}` : 'missing'})`] : [];
+}));
 // Product gallery: every view in one horizontal rail (one row), the last view reachable by the keyboard and inside the rail.
 async function galleryChecks(count: number) {
   const state = await page.evaluate(() => {
@@ -237,20 +279,31 @@ for (const [name, route, width, height, fullPage] of scenarios) {
   await snap(name, fullPage);
 }
 
-// ---- S5/r2: the home at the six review sizes, first screen for each of the three models, then the whole page ---------------
-// S5/r3: the two thresholds of the header are added (800/801, 1100/1101 at 900 px high) for the first screen only.
-for (const [width, height] of [[360, 800], [390, 844], [768, 1024], [1024, 768], [1280, 800], [1440, 900]] as const) {
+// ---- S5/r4: the home at the six review sizes: the HERO at the top (heading, action, film), then the NUANCIER, one capture per model ----
+// The hero capture comes first, before any choice (a choice scrolls the page down to the showcase). Each model is then chosen with a real
+// click, the page stands on `.home-showcase` and the capture shows its photo and its information; the full-page capture follows.
+// The four thresholds of the header (800/801, 1100/1101 at 900 px high) get the same hero capture and the default model's nuancier capture.
+const nuancier = ['glory-glory', 'baby-beach', 'the-bird'] as const;
+const nameOf = (slug: string) => products.find(item => item.slug === slug)!.name;
+for (const [width, height] of [[360, 800], [390, 844], [768, 1024], [1024, 768], [1280, 720], [1440, 900]] as const) {
   await go('/', width, height);
-  for (const [index, slug] of ['glory-glory', 'baby-beach', 'the-bird'].entries()) {
-    if (index) await page.getByRole('button', { name: products.find(item => item.slug === slug)!.name, exact: true }).click();
-    await snap(`home-${width}-first-${slug}`, false, await showcaseChecks(slug));
+  const hero = await homeChecks();
+  await snap(`home-${width}-hero`, false, hero.checks, { extra: hero.geometry });
+  for (const [index, slug] of nuancier.entries()) {
+    if (index) await page.getByRole('button', { name: nameOf(slug), exact: true }).click();
+    await toShowcase();
+    await snap(`home-${width}-showcase-${slug}`, false, [...await showcaseChecks(slug), ...await showcaseInScreen()], { keepScroll: true });
   }
-  await page.getByRole('button', { name: products.find(item => item.slug === 'glory-glory')!.name, exact: true }).click();
-  await snap(`home-${width}-full`, true, [...await showcaseChecks('glory-glory'), ...await homeChecks()]);
+  await page.getByRole('button', { name: nameOf('glory-glory'), exact: true }).click();
+  await snap(`home-${width}-full`, true, [...await showcaseChecks('glory-glory'), ...(await homeChecks()).checks]);
 }
 for (const width of [800, 801, 1100, 1101]) {
   await go('/', width, 900);
-  await snap(`home-${width}-first`, false, [...await showcaseChecks('glory-glory'), ...await homeChecks()]);
+  const hero = await homeChecks();
+  await snap(`home-${width}-hero`, false, hero.checks, { extra: hero.geometry });
+  await page.getByRole('button', { name: nameOf('glory-glory'), exact: true }).focus();
+  await toShowcase();
+  await snap(`home-${width}-showcase-glory-glory`, false, [...await showcaseChecks('glory-glory'), ...await showcaseInScreen()], { keepScroll: true });
 }
 
 // ---- S5/r3: catalogue (first row, filters closed on a phone) and Glory Glory (rail of 15 views, Gris transparent) ---------------
@@ -541,7 +594,7 @@ await motion.close();
 await writeFile(join(root, 'motion-frames.json'), JSON.stringify({ timestamp: new Date().toISOString(), note: 'Computed transforms read at the capture moment; no frame-rate or performance metric is measured.', motionRequests, motionFrames, responsiveMotion }, null, 2));
 
 const leaks = typed.flatMap(value => allUrls.filter(url => { try { return decodeURIComponent(url.replace(/\+/g, ' ')).includes(value); } catch { return url.includes(value); } }).map(url => `${value} in ${url}`));
-const problems = records.filter(r => r.broken.length || r.fallbackCount || r.pageWidth > r.width || r.scrollY !== 0 || r.skipLinkOnScreen || r.fonts.status !== 'loaded' || r.network.nonGet.length || r.network.withBody.length || r.checks.length || r.network.offOrigin.length || (r.firstRowBottom !== null && r.firstRowBottom > r.height) || (r.firstLensTop !== null && r.firstLensTop > r.height - 200)).map(r => r.name);
+const problems = records.filter(r => r.broken.length || r.fallbackCount || r.pageWidth > r.width || (r.scrollY !== 0 && !r.keptScroll) || r.skipLinkOnScreen || r.fonts.status !== 'loaded' || r.network.nonGet.length || r.network.withBody.length || r.checks.length || r.network.offOrigin.length || (r.firstRowBottom !== null && r.firstRowBottom > r.height) || (r.firstLensTop !== null && r.firstLensTop > r.height - 200)).map(r => r.name);
 await writeFile(join(root, 'capture-manifest.json'), JSON.stringify({ timestamp: new Date().toISOString(), base, code, captureCount: records.length, records, forbidden, errors, hosts: [...hosts], typedLeaks: leaks, problems }, null, 2));
 await browser.close();
 console.log(`${records.length} captures; problems: ${problems.length ? problems.join(', ') : 'none'}; errors: ${errors.length}; former-domain requests: ${forbidden.length}; typed values in URLs: ${leaks.length}`);

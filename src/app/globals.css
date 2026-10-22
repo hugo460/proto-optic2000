@@ -82,6 +82,16 @@ p { text-wrap: pretty; }
 .header-cta { display: flex; align-items: center; gap: 10px; min-height: 44px; background: var(--color-yellow); color: var(--color-ink); padding: 10px 18px; font-size: 14px; font-weight: 700; border-radius: var(--radius-control); white-space: nowrap; transition: background var(--duration-fast) ease; }
 .header-cta:hover { background: var(--color-yellow-hover); }
 .menu-trigger { display: none; }
+/* Home bar: laid over the hero's film, no black band. A local shade under the bar only; the authentic logo keeps its own
+   transparent official white variant; links and the menu button white. Panel and phone menu keep their paper. */
+.site-header.is-home { position: absolute; inset: 0 0 auto; background: transparent; }
+.site-header.is-home::before { content: ''; position: absolute; inset: 0 0 auto; height: 168px; background: linear-gradient(rgb(0 0 0 / 76%), rgb(0 0 0 / 46%) 52%, rgb(0 0 0 / 0)); pointer-events: none; }
+.is-home .brand-lockup { align-self: center; min-height: 44px; }
+.is-home .brand-lockup > span { margin-top: 0; border-left-color: rgb(255 255 255 / 50%); }
+.is-home .brand-lockup :is(img, .image-fallback) { width: 150px; }
+.is-home :is(.desktop-nav, .menu-trigger) { text-shadow: 0 1px 12px rgb(0 0 0 / 45%); }
+.is-home .universe-panel { text-shadow: none; }
+.is-home .menu-trigger { min-height: 44px; }
 .mobile-navigation { border: 0; background: var(--color-paper); color: var(--color-ink); padding: 0; margin: 0 0 0 auto; width: min(92vw, 420px); max-width: none; max-height: none; height: 100dvh; overflow-y: auto; overscroll-behavior: contain; }
 .mobile-navigation :focus-visible { outline-color: var(--color-focus); outline-offset: 2px; }
 .mobile-navigation::backdrop { background: rgb(0 0 0 / 45%); }
@@ -97,18 +107,22 @@ p { text-wrap: pretty; }
 .mobile-group { margin-top: 18px; }
 .mobile-group h3 { font-family: var(--font-body), sans-serif; font-size: 13px; font-weight: 750; letter-spacing: 0; line-height: 1.6; color: var(--color-muted); margin-bottom: 2px; }
 .mobile-navigation p { margin-top: 24px; font-size: 14px; color: var(--color-muted); }
-/* Hero: one white studio field, no split and no plate. The title and its actions across the top, the real frame
-   crossing the middle at monumental scale (its photo's white ground melts into the field), then one ruled line with
-   the caption, the three named choices and the model link. No text ever sits on a picture. */
-.home-hero { background: var(--color-paper); overflow-x: clip; }
-.hero-content { max-width: var(--content-width); margin-inline: auto; padding: 44px 48px 36px; display: grid; gap: 4px; }
-.hero-heading { display: grid; grid-template-columns: minmax(0, 1fr) minmax(280px, 340px); align-items: end; gap: 24px 64px; }
-.hero-heading h1 { font-size: clamp(2.875rem, 5.8vw, 5.5rem); line-height: 1.02; letter-spacing: -.035em; }
-.hero-intro p { font-size: 17px; line-height: 1.55; color: var(--color-muted); }
-.hero-actions { display: flex; flex-direction: column; align-items: flex-start; gap: 4px; margin-top: 20px; }
-/* The frame keeps the photo's 900 × 320 proportions: about 1000 px wide on a desk, narrower on a short screen. */
+/* Hero: the real film fills the first screen from its very top, the home bar over it. Title, short text and the two
+   actions sit low on the left in the same picture, over a local shade that fades out toward the upper right: the rest
+   of the film keeps its native colours, with no veil or blur. The section grows with zoomed text; nothing is animated in. */
+.home-hero { position: relative; isolation: isolate; display: flex; align-items: flex-end; min-height: clamp(560px, 100svh, 1040px); overflow: clip; background: #1d1813; color: var(--color-paper); }
+.home-hero::after { content: ''; position: absolute; inset: 0; pointer-events: none; background: radial-gradient(ellipse 85% 105% at 0% 100%, rgb(14 11 8 / 74%), rgb(14 11 8 / 48%) 45%, rgb(14 11 8 / 0)), linear-gradient(0deg, rgb(14 11 8 / 40%), rgb(14 11 8 / 0) 36%); }
+.home-hero :focus-visible { outline-color: var(--color-yellow); }
+.hero-content { width: 100%; max-width: var(--content-width); margin-inline: auto; padding: 128px 48px 64px; }
+.hero-heading { position: relative; z-index: 1; display: grid; gap: 22px; max-width: 760px; }
+.hero-heading h1 { font-size: clamp(3rem, 7.2vw, 6rem); font-weight: 650; line-height: .96; letter-spacing: -.04em; text-shadow: 0 2px 28px rgb(0 0 0 / 22%); }
+.hero-intro p { max-width: 36ch; font-size: 18px; font-weight: 500; line-height: 1.5; }
+.hero-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 32px; margin-top: 28px; }
+/* The three models: a calm, compact section of their own right after the hero. The frame keeps the photo's 900 × 320
+   proportions, whole and secondary: 760 px at most, the content width below that. */
+.home-showcase { padding-block: 48px 32px; }
 .showcase-stage { --arrive-x: -32px; display: grid; min-width: 0; }
-.showcase-image { width: min(100%, clamp(560px, calc((100svh - 430px) * 2.8125), 1000px)); margin-inline: auto; }
+.showcase-image { width: min(100%, 760px); margin-inline: auto; }
 .showcase-image :is(img, .image-fallback) { width: 100%; height: auto; aspect-ratio: 900 / 320; object-fit: contain; }
 .showcase-image .image-fallback { background: transparent; }
 /* A visitor's choice brings the new frame in once: a short glide from an already visible state, then still. */
@@ -129,9 +143,9 @@ p { text-wrap: pretty; }
 .showcase-info p { margin-top: 2px; font-size: 14px; color: var(--color-muted); }
 .showcase-info .showcase-price { color: var(--color-ink); font-weight: 700; font-variant-numeric: tabular-nums; }
 .showcase-link.action { grid-area: link; justify-self: end; margin-top: 4px; font-size: 15px; gap: 12px; }
-/* Matter and optics: a measured panoramic passage further down the page, poster first, outside the reading order. Poster
-   and film share one framing, on the middle row of frames of the real shots; no filter, no veil, no text. */
-.ambient-film { --film-frame: 50% 44%; position: relative; height: clamp(240px, 21vw, 300px); overflow: hidden; pointer-events: none; background: var(--color-surface); }
+/* Matter and light: the hero's picture, poster first, outside the reading order, covering the whole section. Poster and
+   film share one framing, centred on the shots; no filter on the picture itself. */
+.ambient-film { --film-frame: 50% 50%; position: absolute; inset: 0; overflow: hidden; pointer-events: none; }
 .ambient-film-media { position: absolute; inset: 0; background-position: var(--film-frame); background-size: cover; background-repeat: no-repeat; }
 .ambient-film video { display: block; width: 100%; height: 100%; object-fit: cover; object-position: var(--film-frame); opacity: 0; transition: opacity .6s ease; }
 .ambient-film video[data-shown] { opacity: 1; }
@@ -487,9 +501,8 @@ textarea { font: inherit; color: inherit; caret-color: var(--color-focus); borde
   .brand-lockup :is(img, .image-fallback) { width: 156px; }
   .header-cta { padding: 12px 14px; gap: 8px; }
   .header-cta-long { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
-  .hero-content { padding: 40px 32px 32px; }
-  .hero-heading { gap: 24px 40px; }
-  .hero-intro p { font-size: 16px; }
+  .hero-content { padding: 120px 32px 56px; }
+  .hero-intro p { font-size: 17px; }
   /* Choices first under the rule, the caption and the model link on the line below. */
   .showcase-bar { grid-template-columns: minmax(0, 1fr) auto; grid-template-areas: "choices choices" "info link"; }
   .showcase-info { padding-top: 4px; }
@@ -521,12 +534,12 @@ textarea { font: inherit; color: inherit; caret-color: var(--color-focus); borde
   .header-inner { height: 72px; }
   .desktop-nav, .header-cta { display: none; }
   .menu-trigger { display: inline-flex; align-items: center; justify-content: space-between; gap: 12px; margin-left: auto; background: transparent; border: 0; color: var(--color-paper); padding: 12px 0 12px 12px; font-size: 14px; }
-  /* Stacked: title, then the short text and the actions, then the frame and its line. */
-  .hero-heading { grid-template-columns: minmax(0, 1fr); gap: 16px; }
-  .hero-heading h1 { font-size: clamp(2.75rem, 7.4vw, 3.5rem); line-height: 1.04; }
-  .hero-actions { flex-direction: row; flex-wrap: wrap; align-items: center; gap: 4px 24px; }
-  .showcase-image { width: 100%; }
-  .ambient-film { height: 240px; }
+  /* Tablet and phone: the film still from the top, a little under a full screen so the white section shows below it;
+     the shade rises from the bottom edge, under the text that spans the width. */
+  .home-hero { min-height: max(560px, 94svh); }
+  .home-hero::after { background: linear-gradient(0deg, rgb(14 11 8 / 78%), rgb(14 11 8 / 56%) 34%, rgb(14 11 8 / 0) 72%); }
+  .hero-heading h1 { font-size: clamp(2.75rem, 9vw, 4.25rem); }
+  .home-showcase { padding-block: 44px 32px; }
   .section { padding-block: 64px; }
   :is(.home-selection, .home-stores) > .section-heading { grid-template-columns: minmax(0, 1fr) auto; }
   :is(.home-selection, .home-stores) > .section-heading p { grid-column: 1 / -1; grid-row: 2; }
@@ -572,15 +585,17 @@ textarea { font: inherit; color: inherit; caret-color: var(--color-focus); borde
   .brand-lockup :is(img, .image-fallback) { width: 136px; }
   .brand-lockup > span { font-size: 12px; padding-left: 8px; margin-top: 8px; }
   .menu-trigger { font-size: 12px; gap: 8px; }
-  .hero-content { gap: 0; padding: 20px 20px 24px; }
-  .hero-heading { gap: 12px; }
-  .hero-heading h1 { font-size: clamp(2.75rem, 12vw, 3rem); }
-  .hero-intro p { font-size: 15px; }
-  .hero-actions { flex-direction: column; align-items: flex-start; gap: 0; margin-top: 16px; }
+  .is-home .brand-lockup :is(img, .image-fallback) { width: 128px; }
+  .hero-content { padding: 104px 20px 32px; }
+  .hero-heading { gap: 16px; }
+  .hero-heading h1 { font-size: clamp(2.5rem, 12.4vw, 3.375rem); line-height: .98; }
+  .hero-intro p { font-size: 16px; }
+  .hero-actions { flex-direction: column; align-items: flex-start; gap: 4px; margin-top: 20px; }
   .hero-actions .action { font-size: 15px; }
   .hero-actions .action-primary { gap: 16px; padding-inline: 20px; }
-  /* Phone: the stage spans the screen and the photo is wider still, so the whole frame crosses it edge to edge; only
-     the photo's white margins fall outside. */
+  /* The stage spans the screen and the photo is wider still, so the whole frame crosses it edge to edge; only the
+     photo's white margins fall outside. */
+  .home-showcase { padding-block: 40px 24px; }
   .showcase-stage { --arrive-x: -16px; margin-inline: -20px; overflow-x: clip; }
   .showcase-image { width: 128%; margin-inline: -14%; }
   .showcase-bar { grid-template-columns: minmax(0, 1fr); grid-template-areas: "choices" "info" "link"; margin-inline: 20px; }
@@ -591,7 +606,6 @@ textarea { font: inherit; color: inherit; caret-color: var(--color-focus); borde
   .showcase-info p { font-size: 13px; margin-top: 0; }
   .showcase-link.action { justify-self: start; font-size: 14px; gap: 10px; }
   .showcase-link.action svg { width: 18px; height: 18px; }
-  .ambient-film { height: 196px; }
   .brand-marquee { --logo-unit: .66px; grid-template-columns: minmax(0, 1fr); gap: 0; padding-block: 16px 4px; }
   .marquee-group a { height: 60px; }
   .marquee-directory.action { justify-self: end; font-size: 13px; }
@@ -715,6 +729,7 @@ textarea { font: inherit; color: inherit; caret-color: var(--color-focus); borde
 @media (max-width: 370px) {
   .container, .header-inner { padding-inline: 16px; }
   .brand-lockup :is(img, .image-fallback) { width: 124px; }
+  .is-home .brand-lockup :is(img, .image-fallback) { width: 116px; }
   .hero-content { padding-inline: 16px; }
   .showcase-stage { margin-inline: -16px; }
   .showcase-bar { margin-inline: 16px; }
@@ -978,6 +993,7 @@ textarea { font: inherit; color: inherit; caret-color: var(--color-focus); borde
   .desktop-nav { gap: 16px; }
   .desktop-nav .nav-repeat { display: none; }
   .brand-lockup :is(img, .image-fallback) { width: 140px; }
+  .is-home .brand-lockup :is(img, .image-fallback) { width: 132px; }
 }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }

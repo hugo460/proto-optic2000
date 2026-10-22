@@ -14,11 +14,12 @@ Liens prêts à ouvrir : [Rendez-vous](https://proto-optic2000.vercel.app/rendez
 
 ## Parcours 0 — Accueil vivant
 
-1. L’accueil s’ouvre sur **Le soleil, autrement.** et une vraie monture Maui Jim en grand. « Toutes les solaires » mène au catalogue ; « Préparer un rendez-vous » reste une sortie discrète. Choisir **Baby Beach**, puis **The Bird** : photo, nom, prix et lien changent immédiatement, avec une courte arrivée de la monture puis repos. Aucun changement de modèle automatique.
-2. Ouvrir **Nos univers** dans la barre : un panneau clair et compact donne accès aux univers et pages de l’enseigne. Échap, un clic à côté ou la sortie au clavier le referment. Sur téléphone, **Menu** ouvre le dialogue blanc avec l’action « Préparer un RDV ».
-3. Le bandeau de marques défile lentement, sans bouton : le survol à la souris l’arrête ; au clavier, la rangée s’immobilise et chaque logo reste entier. « Toutes les marques » rejoint l’annuaire.
-4. En dessous : sélection de quatre Maui Jim (Mamane, Alulu, Pehu, Liquid Sunshine), séquence de matière filmée, univers, équipe réelle et trois magasins. Le film ne montre ni un magasin ni un modèle attribué au catalogue. Il se joue seulement dans son champ et sur un onglet visible, si le navigateur l’autorise.
-5. En mouvement réduit ou en économie de données, le film n’est pas téléchargé ; le poster reste visible. Refus d’autoplay ou erreur donnent aussi le poster. Aucune commande Pause/Lire. Le mouvement réduit rend également les montures immobiles et les marques défilables manuellement.
+1. L’accueil s’ouvre sur **Le soleil, autrement.**, les deux actions composées dans le film et une **vidéo réelle plein cadre dans le hero**, puis un raccord vers le nuancier. Le film est muet et en ligne. Sa lecture démarre sans défilement si les préférences et le navigateur l’autorisent. « Toutes les solaires » mène au catalogue ; « Préparer un rendez-vous » reste une sortie discrète.
+2. Juste après le hero, choisir **Baby Beach**, puis **The Bird** dans le nuancier : photo entière, nom, prix et lien changent immédiatement, avec une courte arrivée de la monture puis repos. Aucun changement de modèle automatique.
+3. Ouvrir **Nos univers** dans la barre : un panneau clair donne accès aux univers et pages de l’enseigne. Échap, un clic à côté ou la sortie au clavier le referment. Sur téléphone, **Menu** ouvre le dialogue blanc avec l’action « Préparer un RDV ».
+4. Le bandeau de marques défile sans bouton : le survol l’arrête ; au clavier, la rangée s’immobilise et chaque logo reste entier. « Toutes les marques » rejoint l’annuaire. Plus bas : les quatre Maui Jim (Mamane, Alulu, Pehu, Liquid Sunshine), les univers, l’équipe réelle et les trois magasins.
+5. Un seul film est monté. Il ne représente ni un magasin ni un modèle attribué au catalogue ; il s’arrête hors champ ou onglet masqué et reprend au retour si le navigateur l’autorise.
+6. En mouvement réduit ou en économie de données, le film n’est pas téléchargé et le poster reste visible. Refus d’autoplay ou erreur donnent aussi le poster, sans commande Pause/Lire. Le mouvement réduit rend les montures immobiles et les marques défilables manuellement.
 
 ## Parcours 1 — Solaire : le prix suit la variante, puis le magasin
 
@@ -57,7 +58,7 @@ Rejouable à toute date : les sept jours proposés commencent toujours au lendem
 
 - Prix, stocks, horaires (dont Taravao), garanties, équipe et mentions historiques viennent des pages publiques de l’ancien site, relevées le 21/10/2026 ; ils restent à confirmer par l’enseigne.
 - Le formulaire et le rendez-vous sont des simulations : aucun envoi au magasin, aucune réservation, aucun compte, panier ni paiement. Les créneaux sont fictifs. La saisie reste dans la page et disparaît au rechargement.
-- Le film d’accueil est une ambiance de lunettes tirée de trois plans d’une banque d’images (Pexels) : il ne montre ni un magasin ni une monture du catalogue ; il n’a pas de commande de lecture.
+- Le film d’accueil est une ambiance de solaires tirée de deux plans d’une banque d’images (Pexels), montée en 16,20 s à vitesse native : il ne montre ni un magasin ni une monture du catalogue ; il n’a pas de commande de lecture.
 - L’hébergeur reçoit, comme pour tout site, les requêtes techniques de navigation ; jamais la saisie du formulaire (voir la page Confidentialité).
 - Le domaine historique, le site WordPress et ses comptes ou commandes ne sont pas touchés. Les CGV de 2022 ne s’appliquent pas.
 

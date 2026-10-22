@@ -146,22 +146,25 @@ Statuts : **repris** (contenu présenté), **réorganisé** (regroupé/corrigé 
 - Autres campagnes sociales (POST01/13/14/24…), visuels « équipe offre », photos magasin supplémentaires : non nécessaires, non repris. Essai virtuel Fittingbox et vidéos : non repris, aucun faux bouton.
 - Médias S2 ajoutés (WebP q88, dimensions/proportions d’origine, provenance embarquée + sidecar Impeccable) : campagnes `4fc6abc0d6` (POST27) et `62e14c3acf` (POST21), photo d’équipe `6b3c1455b1` (sans identification des personnes), `b413c0bdf9` (Perl) et `16bd866170` (Celestron).
 
-## Film d’ambiance S5/r2, déplacé en S5/r3 — médias externes localisés
+## Film du hero S5/r4 — médias externes localisés, montage S5/r2 remplacé
 
-L’accueil conserve, dans une séquence secondaire depuis S5/r3, un film décoratif de trois plans de lunettes et de matières, sans visage, tirés de la banque d’images Pexels ([licence Pexels](https://www.pexels.com/license/) vérifiée le 21/10/2026, Tahiti : usage web et montage permis, sans suggérer d’approbation par les marques représentées). Il remplace le plan unique de S5 (clip 5241167, 8 s en aller-retour), qui n’est plus livré.
+L’accueil utilise dans son hero immersif S5/r4 deux plans de solaires sans visage tirés de Pexels. Le recadrage après rejet du premier essai a conduit à retirer les plans de lunettes optiques et d’enfants de S5/r2. La [licence Pexels](https://www.pexels.com/license/) a été relue le 22/10/2026 : usage web et montage permis, sans suggérer d’approbation par les marques représentées. Le film reste une ambiance de banque d’images, sans attribution à un magasin, un membre de l’équipe ou une monture du catalogue.
 
-| Plan | Source | Extrait natif utilisé | Auteur |
-| --- | --- | --- | --- |
-| 1 | [5241102](https://www.pexels.com/download/video/5241102/) | 0–8,40 s | non confirmé séparément (aucune attribution supposée) |
-| 2 | [5241104](https://www.pexels.com/video/variety-of-eyeglasses-on-display-5241104/) | 2–10,24 s (amorce floue retirée) | Kaboompics (compte Pexels `karola-g`) |
-| 3 | [5241100](https://www.pexels.com/download/video/5241100/) | 0–9,12 s | non confirmé séparément (aucune attribution supposée) |
+| Ordre | Source | Plage source | Attribution |
+|---|---|---|---|
+| 1 | [27979624, montures métal en lumière](https://www.pexels.com/video/a-row-of-pink-sunglasses-on-a-table-27979624/) | 0–6,24 s | Agung Pandit Wiguna |
+| 2 | [3326997, téléchargement Pexels](https://www.pexels.com/download/video/3326997/) | 0–10,92 s | Auteur non confirmé séparément ; aucune attribution supposée |
 
-Montage : vitesse native, sans inversion, répétition ajoutée, ralentissement ni filtre ; fondus de 0,48 s et raccord circulaire avec la tête du premier plan ; durée livrée 24,32 s. Ni visage ni couleur modifiée. Les lunettes et les lieux ne sont ni ceux des magasins tahitiens ni ceux du catalogue ; l’inscription visible sur certaines montures ne vaut pas approbation de marque.
+Deux plans à vitesse et couleurs natives, sans inversion ni ralentissement : montures métal en lumière puis lunettes tenues face au littoral, par une personne vue de dos sans visage visible. Fondus de 0,48 s et raccord circulaire : 16,20 s livrées. La durée courte est un choix de curation, remplaçant la fenêtre 24–40 s de S5/r2 ; le contrôle technique exige désormais 12–40 s. Le lien de téléchargement officiel du premier plan redirige vers son URL CDN actuelle ; taille et ETag/MD5 du CDN correspondent au fichier local. La page canonique de ce premier plan et son auteur ont ensuite été vérifiés. Le deuxième plan est issu des liens « More like this » de cette page ; son lien Pexels officiel redirige vers le fichier livré, sans auteur déduit du seul numéro de source.
 
-Seuls les dérivés finaux sont livrés sous `public/media/ambience/` : `eyewear-loop.mp4` (1920 × 1080, 25 i/s, H.264 High, yuv420p, faststart, sans audio, 4 895 212 octets) et `eyewear-poster.webp` (42 206 octets, première image). Plages utilisées, empreintes SHA-256 des sources et des livrables : [hero-media.json](hero-media.json). `pnpm check:media` en vérifie les limites techniques et la cohérence avec ce manifeste ; il n’établit ni les droits, ni l’absence de visage, ni la qualité artistique de la boucle. Sources lourdes et essais hors dépôt. Aucune requête Pexels ou WordPress au visionnage du prototype.
+Seuls les dérivés finaux sont livrés sous `public/media/ambience/` : `eyewear-loop.mp4` (1920 × 1080, 25 i/s, H.264 High, yuv420p, faststart, sans audio, 3 823 268 octets) et `eyewear-poster.webp` (96 212 octets, première image). Plages utilisées, empreintes SHA-256 des sources et des livrables : [hero-media.json](hero-media.json). `pnpm check:media` en vérifie les limites techniques et la cohérence avec ce manifeste ; il n’établit ni les droits, ni l’absence de visage, ni la qualité artistique de la boucle. Sources lourdes et essais hors dépôt. Aucune requête Pexels ou WordPress au visionnage du prototype.
 
 ## Logos du bandeau de marques (S5/r2)
 
 Treize rendus dérivés de logos déjà repris (`public/media/brand-strip/*.webp`, WebP qualité 90, au plus 640 × 320 px sans agrandissement), produits par `node scripts/prepare-marquee.mjs` : seul le canevas extérieur vide (blanc ou transparent) est retiré ; logo et signature restent entiers et proportionnels. Les 760 images d’origine sont inchangées et les 38 identités du catalogue aussi. Référence de chaque logo, origine, empreintes et poids : [marquee-media.json](marquee-media.json) et `src/data/marquee-media.json`. `pnpm check:media` contrôle les 13 rendus.
 
 S5/r3 corrige uniquement trois entités `&rsquo;` littérales dans les noms de produits normalisés : Pu’u Kukui, Ho’okipa Asian fit et Dragon’s Teeth. L’archive publique reste inchangée, comme les IDs, slugs, prix, attributs et médias ; aucune injection HTML n’est utilisée.
+
+### Logo transparent du header d’accueil (S5/r4)
+
+La variante blanche transparente provient directement du [logo SVG servi par le site officiel Optic 2000](https://www.optic2000.com/media/logo/stores/1/LOGO_BLANC_O2.svg), observé dans son en-tête le 22/10/2026. Le SVG est copié octet pour octet sous `public/media/brand/optic2000-white.svg`, avec source et SHA-256 dans son sidecar. Aucun redessin, filtre ou changement de proportion/couleur. Cette variante est utilisée sur l’accueil immersif ; le logo local existant reste inchangé ailleurs.

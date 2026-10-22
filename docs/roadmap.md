@@ -26,15 +26,16 @@ Accueil et nuancier de trois modèles ; marques/gammes complètes ; recherche, f
 - Passe de finition : hiérarchie de l’en-tête entre 801 et 1100 px, légendes et réserves lisibles, pictogrammes calendrier/horloge dans la famille existante ; pause/lecture retirés en S5/r2.
 - Reste hors prototype : agenda connecté, confirmation de prestations, horaires de Taravao, envoi de rendez-vous. S4 a été acceptée par le pilote après S4/r2 (correctif documentaire, commit `5406830`).
 
-## S5 — refonte visuelle (S5/r3)
+## S5 — refonte visuelle et correction du hero (S5/r3–r4)
 
 - S5/r1 puis S5/r2 constituent l’historique technique ; leurs compositions d’accueil ont été rejetées visuellement par Hugo. Les invariants et les comportements éprouvés restent acquis.
-- **S5/r3 livrée** : nouveau hero où la monture réelle devient le sujet, trois modèles au choix, film déplacé dans une séquence secondaire ; accueil entier, navigation, pied de page, primitives, catalogue et fiches produits recomposés. Les photos, options, prix et liens source sont conservés.
+- **S5/r3 intégrée, direction d’accueil remplacée en S5/r4** : nouveau hero où la monture réelle devient le sujet, trois modèles au choix, film déplacé dans une séquence secondaire ; accueil entier, navigation, pied de page, primitives, catalogue et fiches produits recomposés. Les photos, options, prix et liens source sont conservés.
+- **S5/r4** : vidéo dans le hero initial sur demande explicite de Hugo, puis recomposition immersive après le rejet du premier essai S5/r4 : header intégré, titre/actions dans le film, deux plans de solaires et nuancier complet dans la section suivante. Le passage secondaire est supprimé ; catalogue, fiches et protections média restent conservés. Publication et contrôle documentés dans le rapport du correctif ; acceptation du pilote en attente.
 - Validation technique et revue visuelle indépendante documentées dans le rapport de livraison ; elles ne préjugent pas de l’acceptation esthétique de Hugo, du pilote ou du client.
 
 ## S6 — prévue seulement
 
 - **S6/r1 dépassée, non exécutée** : sa consigne de préserver le hero ne correspond plus à la demande du 22/10.
-- **S6/r2 prévue, non lancée** : recomposition détaillée des marques, magasins, univers éditoriaux, contact et rendez-vous, après contrôle de S5/r3. Ces pages restent fonctionnelles et lisibles avec le nouveau système commun. Aucun brief suivant lancé par cette livraison.
+- **S6/r2 prévue, non lancée** : recomposition détaillée des marques, magasins, univers éditoriaux, contact et rendez-vous, après contrôle du correctif S5/r4. Ces pages restent fonctionnelles et lisibles avec le nouveau système commun. Aucun brief suivant lancé par cette livraison.
 
 La migration CMS/Kauehi, le domaine client, les comptes historiques, les ordonnances, le paiement et les stocks synchronisés ne sont pas construits dans ce prototype.

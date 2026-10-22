@@ -1,7 +1,7 @@
 'use client';
 import { useEffect, useRef, useState, useSyncExternalStore } from 'react';
 
-// Decorative close-ups of frames in a quiet passage of the home page, below the hero (provenance in docs/content-inventory.md). Local files only.
+// Decorative close-ups of frames, the full-bleed picture of the home hero behind its title and actions (provenance in docs/content-inventory.md). Local files only.
 export const heroVideo = '/media/ambience/eyewear-loop.mp4';
 export const heroPoster = '/media/ambience/eyewear-poster.webp';
 
@@ -61,7 +61,7 @@ export function useHeroVideo() {
     document.addEventListener('visibilitychange', onVisibility);
     element.muted = true;
     element.src = heroVideo; // preload="none": nothing is fetched before the first play() in view
-    // The film rests whenever its band leaves the screen.
+    // The film rests whenever its frame leaves the screen.
     observer.observe(element);
     return () => {
       live = false; attempt++;
@@ -75,8 +75,9 @@ export function useHeroVideo() {
   return { video, status };
 }
 
-// Poster and film in their own band, outside the reading order and with no text over them. The poster stays underneath
-// at all times; the film only covers it once frames are really playing (or rest on a played frame).
+// Poster and film in their own frame, outside the reading order; the hero's text lies over it (globals.css sets the
+// local shade). The poster stays underneath at all times; the film only covers it once frames are really playing (or
+// rest on a played frame).
 export function AmbientFilm() {
   const { video, status } = useHeroVideo();
   const film = status === 'playing' || status === 'paused';

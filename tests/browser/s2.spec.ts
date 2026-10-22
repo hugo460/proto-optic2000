@@ -238,13 +238,16 @@ test('Home shows the whole house beyond Maui Jim without hiding the first models
     await page.setViewportSize(viewport);
     await page.goto('/');
     await expect(h1(page)).toHaveText(/Le soleil,\s*autrement\./);
-    await expect(page.locator('.showcase-stage')).toBeInViewport();
     // S4: the yellow header action prepares an appointment; « Nos magasins » keeps the store directory one click away.
     if (viewport.width >= 1101) { await expect(page.locator('.header-cta')).toBeVisible(); await expect(page.getByRole('navigation', { name: 'Navigation principale' }).getByRole('link', { name: 'Nos magasins', exact: true })).toBeVisible(); }
     else await expect(page.getByRole('button', { name: 'Menu', exact: true }).or(page.getByRole('navigation', { name: 'Navigation principale' }))).toBeVisible();
     expect(await page.locator('.home-universes .universe-index a').evaluateAll(links => links.map(link => link.getAttribute('href')))).toEqual(destinations.slice(0, 6).map(([href]) => href));
     expect(await page.locator('.home-universes .universe-more a').evaluateAll(links => links.map(link => link.getAttribute('href')))).toEqual(['/services-et-garanties', '/qui-sommes-nous']);
     await expect(page.locator('.home-products .product-card')).toHaveCount(4);
+    // S5/r4: the first screen belongs to the heading and the film (the hero); the three models are the section that follows it, and
+    // are brought into view by a real scroll before they are checked, never required on arrival.
+    await page.locator('.showcase-stage').scrollIntoViewIfNeeded();
+    await expect(page.locator('.showcase-stage')).toBeInViewport();
     await expectHealthy(page);
   }
   await page.goto('/');

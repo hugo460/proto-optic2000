@@ -23,12 +23,10 @@ const pairs = [
   ['yellow', 'black', 3, 'header and footer focus ring'], ['yellow', 'ink', 3, 'footer focus ring'], ['yellow', 'black', 4.5, 'desktop navigation hover and current page'],
   ['paper', 'ink', 4.5, 'white observation logos (Bosma, Perl) on their dark tile'],
 ] as const;
-// S5/r2: pairs read from the stylesheet itself, so a change of token on the home hero, the desktop panel, the mobile menu or the
-// footer is measured instead of assumed. Each entry names the rule that sets the foreground and the one that sets the background;
-// a missing rule stops the check (update the selector here) rather than silently skipping the pair.
-// S5/r3: the home hero declares its own field (white, not lavender): every hero pair is measured against whatever `.home-hero`
-// declares, and the label no longer names a colour. A foreground that no rule sets (links and buttons inherit the colour of
-// the body: `a, button { color: inherit }`) is the body colour, read from the same stylesheet.
+// Pairs read from the stylesheet: a missing required solid rule fails rather than silently skipping it.
+// S5/r4: the secondary showcase stays on paper, separate from the immersive film. White text/navigation on moving imagery
+// cannot be measured against the hero's solid fallback: the local contrast protection and both real shots are reviewed in
+// rendered captures. This script measures the solid UI fields only; it does not certify text contrast on a photograph.
 const rules = css.replace(/\/\*[\s\S]*?\*\//g, '');
 function declared(selector: string, property: 'color' | 'background'): string {
   const name = property === 'color' ? '(?<![-\\w])color' : '(?<![-\\w])background(?:-color)?';
@@ -45,16 +43,14 @@ function declared(selector: string, property: 'color' | 'background'): string {
 }
 const required = (usage: string, build: () => [string, string, number]): [string, string, number, string] => [...build(), usage];
 const bodyColor = declared('body', 'color'), bodyBackground = declared('body', 'background');
-const heroBackground = declared('.home-hero', 'background'), panelBackground = declared('.universe-panel', 'background'), menuBackground = declared('.mobile-navigation', 'background');
+const showcaseBackground = bodyBackground, panelBackground = declared('.universe-panel', 'background'), menuBackground = declared('.mobile-navigation', 'background');
 const derived = [
-  [bodyColor, heroBackground, 4.5, 'hero: heading and secondary text link'],
-  [declared('.hero-intro p', 'color'), heroBackground, 4.5, 'hero: introduction'],
-  [declared('.model-selector button', 'color'), heroBackground, 4.5, 'hero: inactive model choice'],
-  [declared('.model-selector button[aria-pressed=true]', 'color'), heroBackground, 4.5, 'hero: selected model choice'],
-  [declared('.model-selector button::after', 'background'), heroBackground, 3, 'hero: selection marker (graphic)'],
-  [declared('.showcase-info p', 'color'), heroBackground, 4.5, 'hero: model line (maker, colours)'],
-  [declared('.showcase-info .showcase-price', 'color'), heroBackground, 4.5, 'hero: price'],
-  ['focus', heroBackground, 3, 'hero: focus ring on the hero field'],
+  [declared('.model-selector button', 'color'), showcaseBackground, 4.5, 'showcase: inactive model choice'],
+  [declared('.model-selector button[aria-pressed=true]', 'color'), showcaseBackground, 4.5, 'showcase: selected model choice'],
+  [declared('.model-selector button::after', 'background'), showcaseBackground, 3, 'showcase: selection marker (graphic)'],
+  [declared('.showcase-info p', 'color'), showcaseBackground, 4.5, 'showcase: model line (maker, colours)'],
+  [declared('.showcase-info .showcase-price', 'color'), showcaseBackground, 4.5, 'showcase: price'],
+  ['focus', showcaseBackground, 3, 'showcase: focus ring on paper'],
   [declared('.universe-panel', 'color'), panelBackground, 4.5, 'desktop panel: links'],
   [declared('.universe-panel h2', 'color'), panelBackground, 4.5, 'desktop panel: group titles'],
   [declared('.desktop-nav .universe-panel a[aria-current]', 'color'), declared('.desktop-nav .universe-panel a[aria-current]', 'background'), 4.5, 'desktop panel: current page'],

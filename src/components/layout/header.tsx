@@ -14,6 +14,7 @@ const mobileGroups = [
 ];
 export function Header() {
   const pathname = usePathname();
+  const home = pathname === '/';
   const current = (href: string) => pathname === href || pathname.startsWith(`${href}/`) ? 'page' as const : undefined;
   const dialog = useRef<HTMLDialogElement>(null);
   const trigger = useRef<HTMLButtonElement>(null);
@@ -49,10 +50,11 @@ export function Header() {
   }, [universesOpen]);
   const onUniverseBlur = (event: FocusEvent<HTMLDivElement>) => { if (event.relatedTarget && !event.currentTarget.contains(event.relatedTarget as Node)) setUniversesOpen(false); };
   const universeActive = panelLinks.some(link => link.href !== '/solaires' && current(link.href));
-  return <header className="site-header">
+  // On the home page only, the bar lies over the hero's film; every other route keeps the plain black bar.
+  return <header className={`site-header${home ? ' is-home' : ''}`}>
     <div className="header-inner">
       <Link className="brand-lockup" href="/" aria-label="Optic 2000 Tahiti — Accueil">
-        <Image src="/media/655699e241-logo-optic-2000-quadri.webp" alt="Optic 2000" width={200} height={71} preload />
+        <Image src={home ? "/media/brand/optic2000-white.svg" : "/media/655699e241-logo-optic-2000-quadri.webp"} alt="Optic 2000" width={home ? 160 : 200} height={home ? 33 : 71} preload />
         <span>Tahiti</span>
       </Link>
       <nav className="desktop-nav" aria-label="Navigation principale">

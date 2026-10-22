@@ -1,4 +1,4 @@
-# Décisions du prototype (S1 à S5/r3)
+# Décisions du prototype (S1 à S5/r4)
 
 | Décision | Conséquence |
 | --- | --- |
@@ -108,7 +108,9 @@ Les comportements mobile/clavier, les états d’erreur et de succès et le nuan
 
 La finition S4 garde l’action principale au niveau de l’étape : sur le RDV, le pied de page propose la demande en lien texte. Les calendriers précèdent les libellés ; les flèches de fin désignent une sortie. Sur le RDV sans contexte public, l’action de l’en-tête ramène le focus à l’étape courante sans modifier l’historique ; depuis un contexte prérempli, elle ouvre une nouvelle entrée générique.
 
-## Décisions de S5/r3 (22/10/2026)
+## Historique des décisions S5/r3 (22/10/2026)
+
+Le placement secondaire du film décrit ci-dessous est remplacé par S5/r4. Les améliorations catalogue et fiches restent la base ; la composition d’accueil et son header sont repris en S5/r4.
 
 | Décision | Conséquence |
 | --- | --- |
@@ -121,3 +123,16 @@ La finition S4 garde l’action principale au niveau de l’étape : sur le RDV,
 | Trois noms contenant une entité littérale dans l’archive | `&rsquo;` devient l’apostrophe typographique dans les noms normalisés de Pu’u Kukui, Ho’okipa Asian fit et Dragon’s Teeth. Slugs, IDs, graphie des mots et sources restent intacts ; aucun rendu HTML injecté. |
 | Construction directe en code | Proposition concrète de composition affichée ; aucun choix humain ni satisfaction esthétique présumés. Contrats de surface mis à jour, revue visuelle indépendante distincte de la revue code. |
 | Livraison | Main, push normal et même cible Vercel depuis export propre ; aucun message à Omar ni lancement de S6. Réserves commerciales inchangées. |
+
+
+## Correctif S5/r4 (22/10/2026)
+
+| Décision | Conséquence |
+| --- | --- |
+| Hugo confirme que la vidéo doit être dans le hero | Vraie vidéo significative dès le premier écran desktop et mobile, titre et CTA lisibles ensemble. Cette contrainte remplace la permission S5/r3 de déplacer le film ; elle n’est pas attribuée à une citation absente du mail d’origine. |
+| Rejet du premier essai S5/r4 par Hugo | La rangée blanche suivie d’un rectangle vidéo est abandonnée. Le recadrage demande une scène immersive, une navigation fine intégrée et le titre/actions dans la même image. Les références devlab fixent le niveau de composition, sans copier leurs photos, palettes ou promesses. |
+| Raccord et découverte | Nuancier réel manuel compact immédiatement après le hero, avant les marques ; collection et composants partagés cohérents, données et catalogue/fiches préservés. |
+| Curation du film | Deux plans de solaires natifs, métal en lumière puis lunettes face au littoral, personne vue de dos sans visage visible, boucle circulaire de 16,20 s. Plans d’optiques/enfants retirés. La fenêtre technique 24–40 s de S5/r2 cède à 12–40 s pour ce montage sans répétition ni ralentissement ajoutés. Provenance et recette dans hero-media.json. |
+| Un seul lecteur | Passage secondaire supprimé ; hook, préférences, pauses conditionnelles et nettoyage inchangés. Pas de commande Pause/Lire. Texte sur film autorisé par le recadrage, avec lisibilité protégée localement ; aucun filtre sombre uniforme. |
+| Vérification positive | Lecture réelle au sommet sans scroll, aire utile dans le premier écran, puis pause hors champ ; protections initiales/changées et parcours métier conservés. Les anciennes attentes « zéro film dans le hero » sont obsolètes. |
+| Livraison bornée | Même main et même projet Vercel, export propre poussé et sources comparées ; rapport S5/r4 distinct, contrôle du pilote en attente, aucun message à Omar ni lancement S6. |

@@ -18,7 +18,8 @@ async function main() {
   const context = await browser.newContext({ reducedMotion: 'reduce', viewport: { width: 390, height: 844 } });
   const page = await context.newPage();
   const remote: string[] = [], errors: string[] = [], records: Record<string, unknown>[] = [];
-  // S5/r2: the main context reduces motion, so the film must never be requested during this whole run (checked at the end).
+  // S5/r2: the main context reduces motion, so the film must never be requested during this whole run (checked at the end), although the
+  // S5/r4 hero now holds it in the first screen: only its poster frame is measured here, the playback is judged by tests/browser/s5.spec.ts.
   const filmRequests: string[] = [];
   context.on('request', request => { if (request.url().includes('/media/ambience/eyewear-loop.mp4')) filmRequests.push(request.url()); });
   // S2 checks collect every finding instead of stopping at the first one; S1 assertions below stay fail-fast.
@@ -180,7 +181,7 @@ async function main() {
   await motionPage.goto(base + '/');
   await motionPage.waitForTimeout(1000);
   const shift = () => motionPage.locator('.marquee-track').evaluate(e => new DOMMatrix(getComputedStyle(e).transform).m41);
-  // The strip only runs while it is in view and the large hero keeps it below the first screen: scroll to it for real first.
+  // The strip only runs while it is in view and the hero and the showcase keep it below the first screen: scroll to it for real first.
   await motionPage.locator('.brand-marquee').scrollIntoViewIfNeeded();
   const a = await shift(); await motionPage.waitForTimeout(500); const b = await shift();
   check(b < a, 'Marquee moves with the default motion preference');
@@ -270,8 +271,13 @@ async function main() {
 
   // ---- S5/r2: home at the six review sizes and the large screen, menus at the boundaries, long names --------------------------
   // Whole photos, texts not clipped, no media control (hidden or not), every destination reachable, nothing wider than the screen.
+  // S5/r4: the hero closes with the one film (here its poster, the run reduces motion), measured at the top on a settled page with the
+  // same significant-area criteria as tests/browser/s5.spec.ts: at the review sizes (up to 1440 px; 3024×1964 is only a stress size)
+  // its visible height is at least 260 px, its visible area at least 20% of the screen, at least 80% of its frame is visible and its
+  // visible width is at least 80% of the screen's; the title and the primary action are whole; only composed hero/header text over it; one video in the hero
+  // and in the DOM; nothing of the showcase, the marquee or the products inside the hero. The rectangles and shares go to the manifest.
   const longestBy = <T,>(items: readonly T[], size: (item: T) => number, count: number) => [...items].sort((a, b) => size(b) - size(a)).slice(0, count);
-  for (const [width, height] of [[360, 800], [390, 844], [768, 1024], [1024, 768], [1280, 800], [1440, 900], [3024, 1964]] as const) {
+  for (const [width, height] of [[360, 800], [390, 844], [768, 1024], [1024, 768], [1280, 720], [1280, 800], [1440, 900], [3024, 1964]] as const) {
     await page.setViewportSize({ width, height });
     await page.goto(base + '/');
     await page.locator('.showcase-image img').waitFor();
@@ -293,8 +299,8 @@ async function main() {
         check(photo.ink && !photo.error, `${width}px ${slug}: the drawn frame cannot be read (${photo.error})`);
         if (photo.ink) {
           check(photo.ink.left >= -1 && photo.ink.right <= photo.screen.width + 1, `${width}px ${slug}: the frame leaves the screen (${Math.round(photo.ink.left)}→${Math.round(photo.ink.right)} of ${photo.screen.width} px)`);
-          // Legible frame: from 260 px on a phone, 600 px on the 1440 px desktop; the photo never exceeds 1000 px (the 3024 px screen is only measured for the cap).
-          if (width >= 360 && width <= 1440) check(photo.ink.width >= (width >= 1440 ? 600 : 260), `${width}px ${slug}: frame only ${Math.round(photo.ink.width)} px wide`);
+          // Legible frame in its secondary section: from 260 px on a phone, 480 px on the 1440 px desktop (the former 600 px was the hero picture's); the photo never exceeds 1000 px (the 3024 px screen is only measured for the cap).
+          if (width >= 360 && width <= 1440) check(photo.ink.width >= (width >= 1440 ? 480 : 260), `${width}px ${slug}: frame only ${Math.round(photo.ink.width)} px wide`);
         }
         check(photo.box.width <= 1000.5, `${width}px ${slug}: photo ${Math.round(photo.box.width)} px wide, beyond its maximum`);
         check(clipped.length === 0, `${width}px ${slug}: clipped text ${clipped.join(', ')}`);
@@ -303,29 +309,53 @@ async function main() {
     const state = await health();
     check(state.width <= state.viewport, `${width}px home: horizontal overflow ${state.width}/${state.viewport}`);
     check(state.broken.length === 0 && state.fallbacks === 0, `${width}px home: broken images or fallbacks`);
-    // The hero, the marquee and the passage that now holds the film (the film is no longer inside the hero).
-    const controls = await page.evaluate(() => [document.querySelector('.home-hero'), document.querySelector('.brand-marquee'), document.querySelector('.ambient-film, .hero-ambience')?.closest('section') ?? document.querySelector('.ambient-film, .hero-ambience')?.parentElement].flatMap(scope => !scope ? [] : [...scope.querySelectorAll('button, [role="button"], [role="switch"], input, summary, video, [class*="toggle"], [class*="pause"], [class*="play"], [class*="control"]')])
+    // The hero (which holds the film), the showcase and the marquee: no control of any kind, even hidden.
+    const controls = await page.evaluate(() => [document.querySelector('.home-hero'), document.querySelector('.home-showcase'), document.querySelector('.brand-marquee')].flatMap(scope => !scope ? [] : [...scope.querySelectorAll('button, [role="button"], [role="switch"], input, summary, video, [class*="toggle"], [class*="pause"], [class*="play"], [class*="control"]')])
       .filter(element => (element as HTMLVideoElement).controls || /pause|play|lire|lecture|reprendre|d[ée]filement|toggle|vid[ée]o d’ambiance/i.test([element.getAttribute('aria-label'), element.getAttribute('title'), element.textContent, String(element.className), element.id].join(' '))).map(element => `${element.tagName.toLowerCase()}.${String(element.className)}`));
     check(controls.length === 0, `${width}px home: media control found (${controls.join(', ')})`);
-    // S5/r3: heading and action in the first screen, film after the hero and below the fold at the review sizes.
-    // The 3024×1964 stress viewport can naturally show later sections; it still checks separation, text and overflow.
-    await page.evaluate(() => window.scrollTo({ top: 0, left: 0, behavior: 'instant' }));
-    // (the page code declares no named function: tsx rewrites it with a helper that does not exist in the page)
-    const first = await page.evaluate(() => ({
-      title: document.querySelector('#hero-title')?.getBoundingClientRect().bottom ?? null, action: document.querySelector('.hero-actions .action-primary')?.getBoundingClientRect().bottom ?? null,
-      film: document.querySelector('.ambient-film, .hero-ambience')?.getBoundingClientRect().top ?? null, heroFilm: document.querySelectorAll('.home-hero :is(.ambient-film, .hero-ambience), .home-hero video').length, viewport: innerHeight,
-      filmAfterHero: !!(document.querySelector('.home-hero') && document.querySelector('.ambient-film, .hero-ambience') && (document.querySelector('.home-hero')!.compareDocumentPosition(document.querySelector('.ambient-film, .hero-ambience')!) & Node.DOCUMENT_POSITION_FOLLOWING)),
-    }));
+    // S5/r4: back at the top once fonts, images and the poster are decoded (the page code declares no named function: tsx rewrites it with a
+    // helper that does not exist in the page), the hero is measured: heading and action whole, the film's visible part, nothing over it.
+    const first = await page.evaluate(async () => {
+      await document.fonts.ready;
+      await Promise.all([...document.images].map(image => { image.loading = 'eager'; return image.decode().catch(() => undefined); }));
+      const posterUrl = getComputedStyle(document.querySelector('.ambient-film-media')!).backgroundImage.match(/url\("?([^")]+)"?\)/)?.[1];
+      if (posterUrl) { const poster = new Image(); poster.src = posterUrl; await poster.decode().catch(() => undefined); }
+      window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+      await new Promise<void>(done => requestAnimationFrame(() => requestAnimationFrame(() => done())));
+      const hero = document.querySelector('.home-hero'), ambience = document.querySelector('.home-hero .ambient-film'), frame = ambience?.getBoundingClientRect();
+      const title = document.querySelector('#hero-title')?.getBoundingClientRect(), action = document.querySelector('.hero-actions .action-primary')?.getBoundingClientRect();
+      const visibleWidth = frame ? Math.max(0, Math.min(frame.right, innerWidth) - Math.max(frame.left, 0)) : 0, visibleHeight = frame ? Math.max(0, Math.min(frame.bottom, innerHeight) - Math.max(frame.top, 0)) : 0;
+      const over = !frame ? [] : [...document.querySelectorAll('h1, h2, h3, h4, p, a, button, li, figcaption, label, span')]
+        .filter(node => !node.closest('.ambient-film, .home-hero, .site-header') && node.getClientRects().length && (node.textContent ?? '').trim())
+        .filter(node => { const box = node.getBoundingClientRect(); return Math.max(0, Math.min(box.right, frame.right) - Math.max(box.left, frame.left)) * Math.max(0, Math.min(box.bottom, frame.bottom) - Math.max(box.top, frame.top)) > 4; })
+        .map(node => `${node.tagName.toLowerCase()} "${(node.textContent ?? '').trim().slice(0, 30)}"`);
+      return {
+        titleTop: title?.top ?? null, titleBottom: title?.bottom ?? null, actionTop: action?.top ?? null, actionBottom: action?.bottom ?? null, viewport: innerHeight, screenWidth: innerWidth,
+        frame: frame ? { top: frame.top, bottom: frame.bottom, width: frame.width, height: frame.height } : null,
+        visible: { width: visibleWidth, height: visibleHeight, area: visibleWidth * visibleHeight },
+        shares: frame ? { screenArea: (visibleWidth * visibleHeight) / (innerWidth * innerHeight), frameVisible: (visibleWidth * visibleHeight) / (frame.width * frame.height), screenWidth: visibleWidth / innerWidth } : null,
+        videos: document.querySelectorAll('video').length, heroVideos: document.querySelectorAll('.home-hero video').length, heroFilms: document.querySelectorAll('.home-hero .ambient-film').length,
+        enclosed: document.querySelectorAll('.home-hero .home-showcase, .home-hero .showcase-stage, .home-hero .brand-marquee, .home-hero .home-products, .home-hero .product-card').length,
+        inOrder: !!(hero && ambience && document.querySelector('.home-showcase') && document.querySelector('.brand-marquee') && (document.querySelector('#hero-title')!.compareDocumentPosition(document.querySelector('.hero-actions')!) & Node.DOCUMENT_POSITION_FOLLOWING)  && (ambience.compareDocumentPosition(document.querySelector('.home-showcase')!) & Node.DOCUMENT_POSITION_FOLLOWING) && (document.querySelector('.home-showcase')!.compareDocumentPosition(document.querySelector('.brand-marquee')!) & Node.DOCUMENT_POSITION_FOLLOWING)),
+        over,
+      };
+    });
+    check(first.videos === 1 && first.heroVideos === 1 && first.heroFilms === 1, `${width}px home: expected exactly one video in the DOM and in the hero (${first.videos} / ${first.heroVideos}, ${first.heroFilms} film frames)`);
+    check(first.enclosed === 0, `${width}px home: the hero encloses ${first.enclosed} showcase, marquee or product element(s)`);
+    check(first.inOrder, `${width}px home: heading/actions or hero/showcase/marquee reading order is broken`);
+    check(first.over.length === 0, `${width}px home: unrelated text over the film (${first.over.join(', ')})`);
+    check(first.frame !== null && first.frame.width > 0 && first.frame.height > 0, `${width}px home: the film frame has no box`);
     if (width >= 360) {
-      check(first.title !== null && first.title <= first.viewport, `${width}px home: the heading is not whole in the first screen (ends at ${first.title}, screen ${first.viewport})`);
-      check(first.action !== null && first.action <= first.viewport, `${width}px home: the primary action is not whole in the first screen (ends at ${first.action}, screen ${first.viewport})`);
+      check(first.titleBottom !== null && first.titleTop! >= 0 && first.titleBottom <= first.viewport, `${width}px home: the heading is not whole in the first screen (${first.titleTop}→${first.titleBottom}, screen ${first.viewport})`);
+      check(first.actionBottom !== null && first.actionTop! >= 0 && first.actionBottom <= first.viewport, `${width}px home: the primary action is not whole in the first screen (${first.actionTop}→${first.actionBottom}, screen ${first.viewport})`);
     }
-    check(first.heroFilm === 0, `${width}px home: the film is still inside the hero`);
-    check(first.film !== null && first.filmAfterHero, `${width}px home: the film passage must follow the hero`);
-    if (width <= 1440) check(first.film !== null && first.film >= first.viewport, `${width}px home: the film passage starts inside the first screen (${first.film})`);
-    // Reduced motion for this whole run: the film is scrolled to for real and still nothing is requested (counted at the end of the run).
-    await page.locator('.ambient-film, .hero-ambience').scrollIntoViewIfNeeded();
-    await page.waitForTimeout(300);
+    // The review sizes (up to 1440 px): a substantial part of the film is in the first screen. 3024×1964 is a stress size without relative minima.
+    if (width >= 360 && width <= 1440) {
+      check(first.visible.height >= 260, `${width}px home: only ${Math.round(first.visible.height)} px of the film are visible in the first screen (minimum 260)`);
+      check(first.shares !== null && first.shares.screenArea >= .2, `${width}px home: the visible film covers ${Math.round((first.shares?.screenArea ?? 0) * 100)}% of the screen (minimum 20%)`);
+      check(first.shares !== null && first.shares.frameVisible >= .8, `${width}px home: only ${Math.round((first.shares?.frameVisible ?? 0) * 100)}% of the film frame is visible (minimum 80%)`);
+      check(first.shares !== null && first.shares.screenWidth >= .8, `${width}px home: the visible film is ${Math.round((first.shares?.screenWidth ?? 0) * 100)}% of the screen width (minimum 80%)`);
+    }
     records.push({ name: 'home-s5', ...state, controls, first });
   }
   // Desktop menu: no destination lost at the boundaries (the bar gives way to the panel, never to nothing); links readable and inside the screen.
@@ -385,6 +415,6 @@ async function main() {
   check(filmRequests.length === 0, `the film was requested ${filmRequests.length} time(s) although motion is reduced for this whole run`);
   await writeFile(join(root, 'browser-quality.json'), JSON.stringify({ timestamp: new Date().toISOString(), zoomMethod: 'Equivalent reflow: CSS viewport 720x500, DPR 2, output 1440x1000; not a manual browser zoom gesture, not a physical device and not an assistive-technology test.', findings, records, remote, errors }, null, 2));
   await browser.close(); assert.equal(remote.length, 0); assert.equal(errors.length, 0); assert.deepEqual(findings, []);
-  console.log(`${records.length} checks; 360 px and 720x500@2x reflow on S1, S2 and S4 routes, keyboard and focus rings (contact, appointment, marquee), Escape, motion frames, long names, missing images, 801/1101/1280 boundaries; home photos whole at 360–1440 and 3024 px, no media control and no film request after scrolling to the film passage, heading and action in the first screen, menu destinations at 801–3024 px, named mobile dialog, long names, no film request under reduced motion; zero overflow/errors/WordPress requests.`);
+  console.log(`${records.length} checks; 360 px and 720x500@2x reflow on S1, S2 and S4 routes, keyboard and focus rings (contact, appointment, marquee), Escape, motion frames, long names, missing images, 801/1101/1280 boundaries; home photos whole at 360–1440 and 3024 px, S5/r4 hero film (one video, in the hero, substantial visible height/area/width at the review sizes incl. 1280×720, only composed hero/header text over it) with its rectangles in the manifest, no media control, heading and action in the first screen, menu destinations at 801–3024 px, named mobile dialog, long names, no film request under reduced motion; zero overflow/errors/WordPress requests.`);
 }
 main().catch(async error => { console.error(error); process.exitCode = 1; await activeBrowser?.close(); });

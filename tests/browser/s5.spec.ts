@@ -7,13 +7,16 @@ import { frameInkSource, type FrameInk } from '../support/frame-ink';
 
 // S5 scenarios: the ambient film, the home hero and its showcase, the desktop and mobile menus. The film is read from the
 // media element itself (src, paused, currentTime), never from a class name. S5/r2 replaced the Pause and Play controls by an
-// automatic film (no control of any kind, visible or hidden). S5/r3 recomposed the home: a single white hero (heading and
-// yellow action first, then one large real frame and the three named models) and moved the film OUT of the hero, into a
-// secondary passage further down. The film is therefore not in view on arrival: every playback scenario first scrolls it
-// into view for real (scrollIntoViewIfNeeded, never a forced state), and reduced motion or data saving must request nothing
-// even after that scroll. Same guards as S4: no error, no request outside the local origin, nothing transmitted, nothing
-// typed in any URL; tolerated failures are declared by each scenario. Technical observations (the time advances, the
-// time wraps, no backward jump) say nothing about the artistic quality of the loop: that is a human viewing.
+// automatic film (no control of any kind, visible or hidden). S5/r3 (historical, revoked) had moved the film out of the hero into
+// a secondary passage further down the page. S5/r4 puts the one real film back where Hugo requires it: in the hero, as the
+// picture of the first screen. After Hugo rejected the first r4 composition, the film, heading/actions and integrated header share one scene; `.home-showcase`
+// (the three named models) follows as a calm secondary section, then the brands and the products. Playback therefore starts at
+// page.goto('/') at the top of the page, the tab visible, with no scroll first. Going out of view means really scrolling down to
+// the footer and measuring the media wholly outside the viewport; coming back means scrolling to the top (never a forced state).
+// Reduced motion or data saving must request nothing, wherever the page is scrolled. Geometry is only measured on a settled
+// page (fonts and images decoded), never on attached markup. Same guards as S4: no error, no request outside the local origin,
+// nothing transmitted, nothing typed in any URL; tolerated failures are declared by each scenario. Technical observations (the
+// time advances, the time wraps, no backward jump) say nothing about the artistic quality of the loop: that is a human viewing.
 interface Watch { origin: string; failures: string[]; requests: { method: string; url: string; body: string | null }[]; typed: string[]; tolerate: RegExp[] }
 const safeDecode = (value: string) => { try { return decodeURIComponent(value.replace(/\+/g, ' ')); } catch { return value; } };
 const test = base.extend<{ watch: Watch }>({
@@ -39,25 +42,40 @@ const test = base.extend<{ watch: Watch }>({
 const filmFile = '/media/ambience/eyewear-loop.mp4';
 const posterFile = '/media/ambience/eyewear-poster.webp';
 const filmRoute = `**${filmFile}`;
-// The film is one local file, 24–40 s of distinct content before it repeats (docs/hero-media.json). A loop is observed in real time.
-const minimumLength = 24, maximumLength = 40;
+// S5/r4 curation: two native solar shots, 12–40 s (the former S5/r2 window was 24–40). A loop is observed in real time, never sought.
+const minimumLength = 12, maximumLength = 40;
 const h1 = (page: Page) => page.getByRole('heading', { level: 1 });
 // Copy of the hero, in one place: a change of wording is edited here and nowhere else. The heading may break after the comma.
 const heroTitle = /Le soleil,\s*autrement\./;
 const primaryLabel = 'Toutes les solaires', appointmentLabel = 'Préparer un rendez-vous';
-// The passage of the film and its poster. S5/r3 named them `.ambient-film` / `.ambient-film-media` once the film left the hero; the former
-// `.hero-ambience` names are still accepted so that either naming of the same element is measured (one place to edit).
-const filmBox = '.ambient-film, .hero-ambience', filmPoster = '.ambient-film-media, .hero-ambience-media';
-const film = (page: Page) => page.locator(`:is(${filmBox}) video`);
-// The film is far below the first screen: bring it into view by really scrolling (the observer of the page decides, nothing is
-// forced), or take it back out of view. Smooth scrolling is on, so the position is awaited, not assumed.
-async function toFilm(page: Page) {
-  await film(page).scrollIntoViewIfNeeded();
-  await expect(film(page), 'the film is in view').toBeInViewport();
+// The film and its poster, inside the hero. The film is the one `video` of the page: a second one would be a second download.
+const filmBox = '.home-hero .ambient-film', filmPoster = '.home-hero .ambient-film-media';
+const film = (page: Page) => page.locator(`${filmBox} video`);
+// Smooth scrolling is on in the page, so every jump here is instant and its landing is awaited, never assumed. The top of the page
+// holds the film; leaving it means going down to the footer, where the whole media is outside the viewport.
+async function toTop(page: Page) {
+  await page.evaluate(() => window.scrollTo({ top: 0, behavior: 'instant' }));
+  await expect.poll(() => page.evaluate(() => scrollY), { message: 'the page is at the top' }).toBe(0);
+  await expect(film(page), 'the film is in the first screen').toBeInViewport();
 }
-async function awayFromFilm(page: Page, where: 'top' | 'bottom' = 'top') {
-  await page.evaluate(place => window.scrollTo({ top: place === 'top' ? 0 : document.body.scrollHeight, behavior: 'instant' }), where);
-  await expect(film(page), `the film is out of view (${where})`).not.toBeInViewport();
+async function awayFromFilm(page: Page) {
+  await page.evaluate(() => window.scrollTo({ top: document.documentElement.scrollHeight, behavior: 'instant' }));
+  await expect(page.locator('.site-footer'), 'the footer is reached').toBeInViewport();
+  await expect(film(page), 'the film is out of view').not.toBeInViewport();
+  const place = await page.evaluate(selector => { const box = document.querySelector(selector)!.getBoundingClientRect(); return { top: box.top, bottom: box.bottom, viewport: innerHeight, scrolled: scrollY }; }, filmBox);
+  expect(place.scrolled, 'the page really scrolled').toBeGreaterThan(0);
+  expect(place.bottom <= 0 || place.top >= place.viewport, `the media is wholly outside the viewport (${Math.round(place.top)}→${Math.round(place.bottom)} of ${place.viewport})`).toBe(true);
+}
+// Fonts and images decoded (the poster too, it is a CSS background) and two frames drawn: only then is a box worth measuring.
+async function settled(page: Page) {
+  await page.evaluate(async poster => {
+    await document.fonts.ready;
+    await Promise.all([...document.images].map(image => { image.loading = 'eager'; return image.decode().catch(() => undefined); }));
+    const background = new Image();
+    background.src = poster;
+    await background.decode().catch(() => undefined);
+    await new Promise<void>(done => requestAnimationFrame(() => requestAnimationFrame(() => done())));
+  }, posterFile);
 }
 const filmState = (page: Page) => film(page).evaluate((video: HTMLVideoElement) => ({ src: video.getAttribute('src'), currentSrc: video.currentSrc, sources: video.querySelectorAll('source').length, network: video.networkState, ready: video.readyState, paused: video.paused, time: video.currentTime, duration: video.duration, shown: video.hasAttribute('data-shown') }));
 const filmRequests = (watch: Watch) => watch.requests.filter(request => request.url.includes(filmFile));
@@ -83,9 +101,8 @@ async function noMediaControl(page: Page) {
   const found = await page.evaluate(() => {
     const pattern = /pause|play|lire|lecture|reprendre|d[ée]filement|toggle|vid[ée]o d’ambiance/i;
     const found: string[] = [];
-    // The hero, the marquee and the passage that now holds the film (the film is no longer inside the hero).
-    const passage = document.querySelector('.ambient-film, .hero-ambience')?.closest('section') ?? document.querySelector('.ambient-film, .hero-ambience')?.parentElement;
-    for (const scope of [document.querySelector('.home-hero'), document.querySelector('.brand-marquee'), passage]) {
+    // The hero (which now holds the film), the showcase that follows it and the marquee.
+    for (const scope of [document.querySelector('.home-hero'), document.querySelector('.home-showcase'), document.querySelector('.brand-marquee')]) {
       for (const element of scope?.querySelectorAll('button, [role="button"], [role="switch"], input, summary, video, [class*="toggle"], [class*="pause"], [class*="play"], [class*="control"]') ?? []) {
         const label = [element.getAttribute('aria-label'), element.getAttribute('title'), element.textContent, String(element.className), element.id].join(' ');
         if ((element as HTMLVideoElement).controls || pattern.test(label)) found.push(`${String(scope?.className)} ${element.tagName.toLowerCase()}.${String(element.className)} "${label.trim().slice(0, 40)}"`);
@@ -116,11 +133,64 @@ async function posterOnly(page: Page, watch: Watch) {
 }
 const hideTab = (page: Page, hidden: boolean) => page.evaluate(value => { Object.defineProperty(document, 'visibilityState', { value: value ? 'hidden' : 'visible', configurable: true }); document.dispatchEvent(new Event('visibilitychange')); }, hidden);
 
-test('Film: plays by itself from one local file with no control; a real cycle, then the join and the next loop, never backwards', async ({ page, watch }) => {
+// What the hero really offers in the first screen, measured on a settled page: the title and the primary action, the visible part of
+// the film's frame (clipped by the viewport), any text over the film, overflow and clipped text. The film is the picture of the home:
+// at the six review sizes its visible part must be substantial, not a symbolic strip. These minima also reject the obsolete
+// secondary passage; the final immersive composition fills 94–100% of the first screen, recorded in the capture manifests.
+const significant = { height: 260, screenArea: .2, frameVisible: .8, screenWidth: .8 };
+async function measureHero(page: Page) {
+  await settled(page);
+  return page.evaluate(() => {
+    const rect = (selector: string) => document.querySelector(selector)!.getBoundingClientRect();
+    const overlap = (a: DOMRect, b: DOMRect) => Math.max(0, Math.min(a.right, b.right) - Math.max(a.left, b.left)) * Math.max(0, Math.min(a.bottom, b.bottom) - Math.max(a.top, b.top));
+    const frame = rect('.home-hero .ambient-film'), title = rect('#hero-title'), action = rect('.hero-actions .action-primary');
+    const width = Math.max(0, Math.min(frame.right, innerWidth) - Math.max(frame.left, 0)), height = Math.max(0, Math.min(frame.bottom, innerHeight) - Math.max(frame.top, 0));
+    const text = [...document.querySelectorAll('h1, h2, h3, h4, p, a, button, li, figcaption, label, span')].filter(node => !node.closest('.ambient-film') && node.getClientRects().length && (node.textContent ?? '').trim());
+    return {
+      screen: { width: innerWidth, height: innerHeight },
+      frame: { top: frame.top, bottom: frame.bottom, width: frame.width, height: frame.height },
+      visible: { width, height, area: width * height },
+      title: { top: title.top, bottom: title.bottom }, action: { top: action.top, bottom: action.bottom },
+      over: text.filter(node => !node.closest('.home-hero, .site-header') && overlap(node.getBoundingClientRect(), frame) > 4).map(node => `${node.tagName.toLowerCase()} "${(node.textContent ?? '').trim().slice(0, 30)}"`),
+      clipped: [...document.querySelectorAll('#hero-title, .hero-intro p, .hero-actions :is(a, button)')].filter(node => node.scrollWidth > node.clientWidth + 1).map(node => (node.textContent ?? '').trim()),
+      overflow: document.documentElement.scrollWidth - innerWidth,
+      videos: document.querySelectorAll('video').length, heroVideos: document.querySelectorAll('.home-hero video').length,
+    };
+  });
+}
+type HeroMeasure = Awaited<ReturnType<typeof measureHero>>;
+function expectSignificantFilm(measure: HeroMeasure) {
+  const { visible, frame, screen } = measure;
+  expect(visible.height, `visible film height ${Math.round(visible.height)} px`).toBeGreaterThanOrEqual(significant.height);
+  expect(visible.area / (screen.width * screen.height), 'share of the screen covered by the visible film').toBeGreaterThanOrEqual(significant.screenArea);
+  expect(visible.area / (frame.width * frame.height), 'share of the film frame that is visible').toBeGreaterThanOrEqual(significant.frameVisible);
+  expect(visible.width / screen.width, 'visible film width over screen width').toBeGreaterThanOrEqual(significant.screenWidth);
+}
+// Title and primary action whole in the first screen; only composed hero/header text on the film, no unrelated content, overflow or clipping, one video.
+function expectHeroClean(measure: HeroMeasure) {
+  expect(measure.over, 'only the composed hero and header may overlap the decorative film').toEqual([]);
+  expect(measure.overflow).toBeLessThanOrEqual(0);
+  expect(measure.clipped).toEqual([]);
+  expect(measure.videos, 'exactly one video in the whole DOM').toBe(1);
+  expect(measure.heroVideos, 'exactly one video in the hero').toBe(1);
+  expect(measure.frame.width).toBeGreaterThan(0);
+  expect(measure.frame.height).toBeGreaterThan(0);
+}
+function expectCopyWhole(measure: HeroMeasure) {
+  expect(measure.title.top).toBeGreaterThanOrEqual(0);
+  expect(measure.title.bottom, 'heading whole in the first screen').toBeLessThanOrEqual(measure.screen.height);
+  expect(measure.action.top).toBeGreaterThanOrEqual(0);
+  expect(measure.action.bottom, 'primary action whole in the first screen').toBeLessThanOrEqual(measure.screen.height);
+}
+
+test('Film: plays by itself from the top of the page with one local file and no control; a real cycle, then the join and the next loop, never backwards', async ({ page, watch }) => {
   test.setTimeout(150_000);
   await page.goto('/');
-  await toFilm(page);
+  // Arrival: the top of the page, the tab visible, nothing scrolled. The one film is in the first screen and plays by itself.
+  expect(await page.evaluate(() => ({ scrolled: scrollY, visibility: document.visibilityState, videos: document.querySelectorAll('video').length, heroVideos: document.querySelectorAll('.home-hero video').length, sourceElements: document.querySelectorAll('video source').length }))).toEqual({ scrolled: 0, visibility: 'visible', videos: 1, heroVideos: 1, sourceElements: 0 });
+  await expect(film(page), 'the film is in the first screen on arrival').toBeInViewport();
   await playing(page);
+  expect((await filmState(page)).src, 'a single source, the local film').toContain(filmFile);
   // Decorative and muted, outside the reading order and of any control.
   const traits = await film(page).evaluate((video: HTMLVideoElement) => ({ muted: video.muted, loop: video.loop, inline: video.playsInline, controls: video.controls, tab: video.tabIndex, hidden: !!video.closest('[aria-hidden="true"]') }));
   expect(traits).toEqual({ muted: true, loop: true, inline: true, controls: false, tab: -1, hidden: true });
@@ -162,117 +232,135 @@ test('Server render: poster only, no video source; the film is a client decision
   expect(html).toContain(posterFile);
 });
 
-test('Film placement: outside the hero, after it, out of view on arrival and not fetched before it is shown', async ({ page, watch }) => {
+test('Film placement: one immersive scene holds the heading, actions and video, before the three models, brands and products', async ({ page, watch }) => {
   await page.goto('/');
-  await expect(film(page)).toHaveCount(1);
-  await expect(page.locator('.home-hero :is(.ambient-film, .hero-ambience), .home-hero video'), 'the hero no longer holds the film').toHaveCount(0);
+  await settled(page);
   const place = await page.evaluate(() => {
-    const ambience = document.querySelector('.ambient-film, .hero-ambience')!, hero = document.querySelector('.home-hero')!, box = ambience.getBoundingClientRect();
-    return { after: !!(hero.compareDocumentPosition(ambience) & Node.DOCUMENT_POSITION_FOLLOWING), contained: hero.contains(ambience), top: box.top, viewport: innerHeight, hidden: !!ambience.closest('[aria-hidden="true"]') };
+    const hero = document.querySelector('.home-hero')!, ambience = document.querySelector('.ambient-film')!, box = ambience.getBoundingClientRect(), field = hero.getBoundingClientRect();
+    const after = (first: Element, second: Element) => !!(first.compareDocumentPosition(second) & Node.DOCUMENT_POSITION_FOLLOWING);
+    const chain = ['.home-hero', '.home-showcase', '.brand-marquee', '.home-products'].map(selector => document.querySelector(selector)!);
+    return {
+      videos: document.querySelectorAll('video').length, films: document.querySelectorAll('.ambient-film').length, heroVideos: hero.querySelectorAll('video').length, heroFilms: hero.querySelectorAll('.ambient-film').length,
+      // Nothing of the showcase, the brands or the products is wrapped inside the hero: it is the heading, the actions and the film.
+      enclosed: hero.querySelectorAll('.home-showcase, .showcase-stage, .model-selector, .showcase-image, .brand-marquee, .home-products, .product-card').length,
+      order: chain.every((node, index) => index === 0 || after(chain[index - 1], node)) && after(document.querySelector('#hero-title')!, document.querySelector('.hero-actions')!),
+      insideHero: box.top >= field.top - .5 && box.bottom <= field.bottom + .5,
+      hidden: !!ambience.closest('[aria-hidden="true"]'),
+    };
   });
-  expect(place.contained).toBe(false);
-  expect(place.after, 'the film passage comes after the hero').toBe(true);
-  expect(place.top, 'the film starts below the first screen').toBeGreaterThanOrEqual(place.viewport);
+  expect(place.videos, 'exactly one video in the whole DOM').toBe(1);
+  expect(place.films).toBe(1);
+  expect(place.heroVideos, 'exactly one video in the hero').toBe(1);
+  expect(place.heroFilms).toBe(1);
+  expect(place.enclosed, 'no showcase, marquee or product inside the hero').toBe(0);
+  expect(place.order, 'heading before its actions; hero before models, brands and products').toBe(true);
+  expect(place.insideHero, 'the film frame lies inside the hero').toBe(true);
   expect(place.hidden, 'decorative: hidden from assistive technologies').toBe(true);
-  // preload="none": nothing of the film is fetched while it is not in view; it only starts once scrolled to.
-  await page.waitForTimeout(1500);
-  expect(filmRequests(watch), 'no byte of the film before it is in view').toEqual([]);
-  expect((await filmState(page)).paused).toBe(true);
-  await toFilm(page);
+  const measure = await measureHero(page);
+  expectHeroClean(measure);
+  expectSignificantFilm(measure);
+  // The film is in the first screen, so it is asked for on arrival (preload="none" only keeps it from loading before the first play()).
   await playing(page);
-  expect(filmRequests(watch).length, 'the film is requested once it is in view').toBeGreaterThan(0);
+  expect(filmRequests(watch).length, 'the film is requested once it plays').toBeGreaterThan(0);
 });
 
-// The poster and the film never sit under text: no text of the page overlaps the passage, whatever the width, and the film is
-// reached by scrolling (never forced into view by the layout).
-for (const viewport of [{ width: 360, height: 800 }, { width: 390, height: 844 }, { width: 768, height: 1024 }, { width: 1024, height: 768 }, { width: 1280, height: 800 }, { width: 1440, height: 900 }]) {
-  test(`Film passage at ${viewport.width}×${viewport.height}: no text over the poster or the film, nothing wider than the screen`, async ({ page }) => {
+// The film is the picture of the first screen at the six review sizes: title and primary action whole, exactly one video, and a
+// substantial visible part (height, share of the screen, share of its frame, width); composed hero text, no unrelated content or overflow. It plays
+// there without any scroll and has no control.
+const reviewSizes = [{ width: 360, height: 800 }, { width: 390, height: 844 }, { width: 768, height: 1024 }, { width: 1024, height: 768 }, { width: 1280, height: 720 }, { width: 1440, height: 900 }];
+for (const viewport of reviewSizes) {
+  test(`Film in the hero at ${viewport.width}×${viewport.height}: title and action whole, one substantial film in the first screen, composed text over it, nothing wider than the screen`, async ({ page }) => {
     await page.setViewportSize(viewport);
     await page.goto('/');
-    await toFilm(page);
+    await expect(h1(page)).toBeInViewport({ ratio: 1 });
+    await expect(page.locator('.hero-actions .action-primary')).toBeInViewport({ ratio: 1 });
+    const measure = await measureHero(page);
+    expectCopyWhole(measure);
+    expectSignificantFilm(measure);
+    expectHeroClean(measure);
     await playing(page);
-    const state = await page.evaluate(() => {
-      const ambience = document.querySelector('.ambient-film, .hero-ambience')!.getBoundingClientRect();
-      const overlap = (a: DOMRect, b: DOMRect) => Math.max(0, Math.min(a.right, b.right) - Math.max(a.left, b.left)) * Math.max(0, Math.min(a.bottom, b.bottom) - Math.max(a.top, b.top));
-      const over = [...document.querySelectorAll('h1, h2, h3, h4, p, a, button, li, figcaption, label, span')]
-        .filter(node => !node.closest('.ambient-film, .hero-ambience') && node.getClientRects().length && (node.textContent ?? '').trim() && overlap(node.getBoundingClientRect(), ambience) > 4)
-        .map(node => `${node.tagName.toLowerCase()} "${(node.textContent ?? '').trim().slice(0, 30)}"`);
-      return { over, width: ambience.width, height: ambience.height, overflow: document.documentElement.scrollWidth - innerWidth, inside: ambience.left >= -.5 && ambience.right <= innerWidth + .5 };
-    });
-    expect(state.over, 'no text overlaps the film passage').toEqual([]);
-    expect(state.inside).toBe(true);
-    expect(state.width).toBeGreaterThan(0);
-    expect(state.height).toBeGreaterThan(0);
-    expect(state.overflow).toBeLessThanOrEqual(0);
+    await noMediaControl(page);
+  });
+}
+// 320×640 and 3024×1964 are stress tests, not review targets: reflow, whole text, no overflow and a single film, without a relative
+// area that a very narrow or a very large screen cannot honestly give.
+for (const viewport of [{ width: 320, height: 640 }, { width: 3024, height: 1964 }]) {
+  test(`Film in the hero at the ${viewport.width}×${viewport.height} stress size: text whole, one film, composed text over it, nothing wider than the screen`, async ({ page }) => {
+    await page.setViewportSize(viewport);
+    await page.goto('/');
+    const measure = await measureHero(page);
+    expectHeroClean(measure);
+    await playing(page);
     await noMediaControl(page);
   });
 }
 
 test('Film stops off screen and in a hidden tab and comes back, with no control at any moment', async ({ page }) => {
   await page.goto('/');
-  await toFilm(page);
   await playing(page);
-  // Out of view above (where the page starts), then back by scrolling to it.
-  await awayFromFilm(page, 'top');
+  // Really out of view (down to the footer, the media wholly outside the viewport), then back to the top, where it resumes.
+  await awayFromFilm(page);
   await expect.poll(async () => (await filmState(page)).paused).toBe(true);
-  await toFilm(page);
+  await expectStill(page);
+  await toTop(page);
   await playing(page);
   await hideTab(page, true);
   await expect.poll(async () => (await filmState(page)).paused).toBe(true);
   await noMediaControl(page);
   await hideTab(page, false);
   await playing(page);
-  // Out of view below and hidden together: coming back to the tab alone must not restart a film that is still out of view.
-  await awayFromFilm(page, 'bottom');
+  // Out of view and hidden together: coming back to the tab alone must not restart a film that is still out of view.
+  await awayFromFilm(page);
   await expect.poll(async () => (await filmState(page)).paused).toBe(true);
   await hideTab(page, true);
   await hideTab(page, false);
   await page.waitForTimeout(600);
   await expectStill(page);
-  await toFilm(page);
+  await toTop(page);
   await playing(page);
 });
 
-test.describe('Film passage on a phone', () => {
+test.describe('Film on a phone', () => {
   test.use({ viewport: { width: 390, height: 844 } });
-  test('The first screen holds the heading and the action, not the film; the film plays when scrolled to and rests when the passage leaves the screen', async ({ page }) => {
+  test('The first screen holds the heading, the action and the film, which plays on arrival and rests when the page is scrolled to the footer', async ({ page }) => {
     await page.goto('/');
-    // First screen: the copy of the hero is in view, the film is not and is not playing.
+    // First screen: the copy of the hero and a substantial part of the film are in view, and the film plays with no scroll.
     await expect(h1(page)).toBeInViewport({ ratio: 1 });
     await expect(page.locator('.hero-actions .action-primary')).toBeInViewport({ ratio: 1 });
-    await expect(film(page), 'the film is not in the first screen').not.toBeInViewport();
-    await page.waitForTimeout(800);
-    expect((await filmState(page)).paused, 'nothing plays out of view').toBe(true);
-    await toFilm(page);
+    expectSignificantFilm(await measureHero(page));
     await playing(page);
     await noMediaControl(page);
-    // Scroll back to the top: the heading is on screen again and the film, out of view, rests.
-    await awayFromFilm(page, 'top');
-    await expect(h1(page)).toBeInViewport({ ratio: 1 });
-    await expect.poll(async () => (await filmState(page)).paused, { message: 'the film rests with its passage out of view' }).toBe(true);
+    // Down to the footer: the film, wholly out of view, rests.
+    await awayFromFilm(page);
+    await expect.poll(async () => (await filmState(page)).paused, { message: 'the film rests with its frame out of the screen' }).toBe(true);
     await expectStill(page);
     await noMediaControl(page);
-    await toFilm(page);
+    // Back to the top: the heading is on screen again and the film resumes.
+    await toTop(page);
+    await expect(h1(page)).toBeInViewport({ ratio: 1 });
     await playing(page);
     await noMediaControl(page);
   });
 });
 
-test('Reduced motion from the start: poster only, no video request even after scrolling to it, no control; the showcase still works', async ({ page, watch }) => {
+test('Reduced motion from the start: poster only in the hero, no video request wherever the page is scrolled, no control; the showcase still works', async ({ page, watch }) => {
   await page.emulateMedia({ reducedMotion: 'reduce' });
   await page.goto('/');
   await page.waitForTimeout(1500);
   await posterOnly(page, watch);
   await noMediaControl(page);
   expect(filmRequests(watch)).toEqual([]);
-  // The film is now below the first screen: scroll it into view (then to the very bottom and back) and nothing is requested.
-  await toFilm(page);
+  // The poster is the hero's picture: its frame is really on screen, substantial and clean, though nothing plays.
+  const measure = await measureHero(page);
+  expectHeroClean(measure);
+  expectSignificantFilm(measure);
+  // Down to the footer and back to the top: nothing is requested at any moment.
+  await awayFromFilm(page);
   await page.waitForTimeout(1200);
-  await awayFromFilm(page, 'bottom');
-  await toFilm(page);
+  await toTop(page);
   await posterOnly(page, watch);
   await noMediaControl(page);
-  expect(filmRequests(watch), 'reduced motion: no video request, even after scrolling to the film').toEqual([]);
+  expect(filmRequests(watch), 'reduced motion: no video request, even after scrolling away and back').toEqual([]);
   expect(watch.requests.some(request => request.url.includes(posterFile)), 'the poster is served locally').toBe(true);
   await page.getByRole('button', { name: 'The Bird', exact: true }).click();
   await expect(page.locator('.showcase-stage h2')).toHaveText('The Bird');
@@ -281,7 +369,6 @@ test('Reduced motion from the start: poster only, no video request even after sc
 
 test('Reduced motion switched on during the visit drops the source; switched off, the film resumes by itself', async ({ page, watch }) => {
   await page.goto('/');
-  await toFilm(page);
   await playing(page);
   await page.emulateMedia({ reducedMotion: 'reduce' });
   await expect.poll(async () => (await filmState(page)).src).toBeNull();
@@ -309,11 +396,12 @@ test('Data saving: poster only and zero video request; the hint turning off late
   await posterOnly(page, watch);
   await noMediaControl(page);
   expect(filmRequests(watch), 'no byte of the film').toEqual([]);
-  // Scrolled to for real, still nothing: data saving holds after the film comes into view, not only on arrival.
-  await toFilm(page);
+  // Down to the footer and back to the top, still nothing: data saving holds wherever the page is scrolled, not only on arrival.
+  await awayFromFilm(page);
   await page.waitForTimeout(1200);
+  await toTop(page);
   await posterOnly(page, watch);
-  expect(filmRequests(watch), 'data saving: no byte of the film, even after scrolling to it').toEqual([]);
+  expect(filmRequests(watch), 'data saving: no byte of the film, even after scrolling away and back').toEqual([]);
   await page.evaluate(() => (window as unknown as { setSaveData: (value: boolean) => void }).setSaveData(false));
   await playing(page);
 });
@@ -323,12 +411,13 @@ test('Autoplay refused: the poster stays, still and stable, with no control to s
   await page.addInitScript(() => {
     const play = HTMLMediaElement.prototype.play;
     let clicked = false;
+    (window as unknown as { playAttempts: number }).playAttempts = 0;
     addEventListener('click', event => { if (event.isTrusted) clicked = true; }, true);
-    HTMLMediaElement.prototype.play = function () { return clicked ? play.call(this) : Promise.reject(new DOMException('Autoplay refused', 'NotAllowedError')); };
+    HTMLMediaElement.prototype.play = function () { (window as unknown as { playAttempts: number }).playAttempts++; return clicked ? play.call(this) : Promise.reject(new DOMException('Autoplay refused', 'NotAllowedError')); };
   });
   await page.goto('/');
-  // The play attempt happens when the film comes into view: scroll to it so that the refusal is really exercised.
-  await toFilm(page);
+  // The film is in the first screen, so the play attempt happens on arrival and the refusal is really exercised.
+  await expect.poll(() => page.evaluate(() => (window as unknown as { playAttempts: number }).playAttempts), { message: 'play() was attempted on arrival' }).toBeGreaterThan(0);
   await page.waitForTimeout(1500);
   for (let look = 0; look < 2; look++) {
     const state = await filmState(page);
@@ -351,7 +440,6 @@ for (const [label, answer] of [['missing (404)', { status: 404, body: 'Not found
     watch.tolerate.push(/eyewear-loop\.mp4/);
     await page.route(filmRoute, route => route.fulfill(answer));
     await page.goto('/');
-    await toFilm(page);
     await expect.poll(async () => (await filmState(page)).src, { timeout: 10000 }).toBeNull();
     await posterOnly(page, watch);
     await noMediaControl(page);
@@ -367,33 +455,35 @@ test('Slow network: copy, showcase and actions work before the film arrives; no 
   await page.route(filmRoute, async route => { await pending; await route.continue().catch(() => {}); });
   await page.goto('/');
   await expect(h1(page)).toBeVisible();
-  await page.getByRole('button', { name: 'The Bird', exact: true }).click();
-  await expect(page.locator('.showcase-stage h2')).toHaveText('The Bird');
   await expect(page.locator('.hero-actions').getByRole('link', { name: primaryLabel })).toHaveAttribute('href', '/solaires');
-  // The film is asked for once in view and its bytes are held back: the poster stays alone until it plays.
-  await toFilm(page);
+  // The film is in the first screen, so it is asked for on arrival and its bytes are held back: the poster stays alone until it plays.
   await expect.poll(async () => (await filmState(page)).paused, { message: 'play() was attempted while the bytes are held back' }).toBe(false);
   const early = await filmState(page);
   expect(early.time).toBe(0);
   expect(early.shown).toBe(false);
   expect(await page.locator(filmPoster).evaluate(element => getComputedStyle(element).backgroundImage)).toContain(posterFile);
   await noMediaControl(page);
+  // The showcase works while the film is pending (choosing a model scrolls the page down to it).
+  await page.getByRole('button', { name: 'The Bird', exact: true }).click();
+  await expect(page.locator('.showcase-stage h2')).toHaveText('The Bird');
+  // Back at the top the film is wanted again; the held bytes are released and it plays.
+  await toTop(page);
   release();
   await playing(page);
 });
 
 test('Leaving and coming back: listeners and source are released, the film starts again, nothing errs', async ({ page }) => {
   await page.goto('/');
-  await toFilm(page);
   await playing(page);
   await page.locator('.hero-actions').getByRole('link', { name: primaryLabel }).click();
   await expect(page).toHaveURL(/\/solaires$/);
   await expect(film(page)).toHaveCount(0);
   await page.goBack();
-  // The browser may or may not restore the scroll position: the film is scrolled to again either way.
-  await toFilm(page);
+  // The browser may or may not restore the scroll position: the top is reached again either way.
+  await toTop(page);
   await playing(page);
 });
+
 
 // =====================================================================================================================
 // Showcase: three models, whole photos, quick selection
@@ -412,6 +502,8 @@ async function expectModel(page: Page, slug: string) {
   await expect(stage.locator('button[aria-pressed="true"]')).toHaveCount(1);
 }
 
+// S5/r4: the three models are a calm secondary section, `.home-showcase`, right after the hero (which ends with the film). Choosing
+// a model scrolls the page down to it, so anything measured at the top of the page goes back to the top first.
 test('Showcase: photo, name, price and link for the three models together; one yellow action; no black frame nor separate card; keyboard order with no control', async ({ page }) => {
   await page.goto('/');
   const stage = page.locator('.showcase-stage');
@@ -424,21 +516,22 @@ test('Showcase: photo, name, price and link for the three models together; one y
   const hero = page.locator('.home-hero');
   await expect(hero.locator('.action-primary')).toHaveCount(1);
   await expect(hero.locator('.action-primary')).toHaveText(primaryLabel);
-  // The hero is one white field, so a white background is normal and no longer tested. Still banned: a black (or any dark) frame,
-  // a bordered card and walled-in tabs. Nothing between the heading of the model and the hero is enclosed by borders (a single
-  // ruled line is the design: two or more sides make a card) or sits on a dark background; the three choices carry no border at all;
-  // if a plateau still exists under the photo, it does not enclose the information.
+  // The immersive hero may be dark after the S5/r4 recadrage. The secondary showcase keeps a white field. Still banned in the showcase: a black (or any
+  // dark) frame, a bordered card and walled-in tabs. Nothing between the heading of the model and its section is enclosed by borders
+  // (a single ruled line is the design: two or more sides make a card) or sits on a dark background; the three choices carry no
+  // border at all; if a plateau still exists under the photo, it does not enclose the information.
   const cards = await page.evaluate(() => {
     const sides = ['Top', 'Right', 'Bottom', 'Left'] as const;
     const ruled = (element: Element) => { const style = getComputedStyle(element); return sides.filter(side => parseFloat(style[`border${side}Width`]) > 0 && style[`border${side}Style`] !== 'none').length; };
     const bordered = (element: Element) => ruled(element) > 0;
     const dark = (color: string) => { const [r, g, b, a = 1] = (color.match(/[\d.]+/g) ?? []).map(Number); return a > .5 && (.2126 * r + .7152 * g + .0722 * b) / 255 < .35; };
     const bad: string[] = [];
-    for (let element: Element | null = document.querySelector('.showcase-info h2'); element && !element.classList.contains('home-hero'); element = element.parentElement) {
+    for (let element: Element | null = document.querySelector('.showcase-info h2'); element; element = element.parentElement) {
       if (ruled(element) >= 2) bad.push(`${String(element.className)} is enclosed by borders`);
       if (dark(getComputedStyle(element).backgroundColor)) bad.push(`${String(element.className)} is a dark frame`);
+      if (element.classList.contains('home-showcase')) break;
     }
-    if (dark(getComputedStyle(document.querySelector('.home-hero')!).backgroundColor)) bad.push('the hero field is dark');
+    for (const field of ['.home-showcase']) if (dark(getComputedStyle(document.querySelector(field)!).backgroundColor)) bad.push(`${field} is a dark field`);
     const buttons = [...document.querySelectorAll('.model-selector button')];
     if (buttons.filter(bordered).length > 1) bad.push('the three choices are cells with borders');
     const plateau = document.querySelector('.showcase-plateau')?.getBoundingClientRect(), info = document.querySelector('.showcase-info')!.getBoundingClientRect();
@@ -446,7 +539,11 @@ test('Showcase: photo, name, price and link for the three models together; one y
     return bad;
   });
   expect(cards).toEqual([]);
-  // The title is what a pointer reaches, and nothing over the content fades it (the film is no longer anywhere near the hero).
+  // The title is what a pointer reaches, with no transparent ancestor: it sits over the decorative film, never behind it. The
+  // choices above made the page scroll down to the showcase: back to the top, with the title whole on screen, before the pointer is aimed at it.
+  await page.evaluate(() => window.scrollTo({ top: 0, behavior: 'instant' }));
+  await expect.poll(() => page.evaluate(() => scrollY), { message: 'the page is back at the top' }).toBe(0);
+  await expect(page.locator('#hero-title')).toBeInViewport({ ratio: 1 });
   expect(await page.evaluate(() => {
     const title = document.querySelector('#hero-title')!;
     const box = title.getBoundingClientRect();
@@ -455,7 +552,7 @@ test('Showcase: photo, name, price and link for the three models together; one y
     return { top: title.contains(document.elementFromPoint(box.left + 20, box.top + box.height / 2)), opaque };
   })).toEqual({ top: true, opaque: true });
   // Tab: the heading's actions, then the three choices and the model link in some order (the choices keep their own order),
-  // then the brands. The film is no longer in the hero, so nothing else sits between the hero and the marquee.
+  // then the brands. The film closes the hero but is neither focusable nor announced, so nothing else sits between the actions and the marquee.
   await page.locator('.hero-actions').getByRole('link', { name: primaryLabel }).focus();
   const order: string[] = [];
   for (let i = 0; i < 5; i++) { await page.keyboard.press('Tab'); order.push(await page.evaluate(() => document.activeElement!.textContent!.trim())); }
@@ -495,14 +592,17 @@ test.describe('Touch showcase', () => {
   });
 });
 
-// The recomposed hero at the six review sizes, the 320 px floor and the four thresholds of the header (800/801, 1100/1101): the
-// heading and the yellow action come first and (from 360 px) are whole in the first screen, then one large real frame, whole
-// and legible; the three models stay reachable; no film, no text over the photo, no overflow, no clipped text.
-const heroViewports = [{ width: 320, height: 640 }, { width: 360, height: 800 }, { width: 390, height: 844 }, { width: 768, height: 1024 }, { width: 800, height: 900 }, { width: 801, height: 900 }, { width: 1024, height: 768 }, { width: 1100, height: 900 }, { width: 1101, height: 900 }, { width: 1280, height: 800 }, { width: 1440, height: 900 }];
+// S5/r4 recadrage: the immersive hero (heading and yellow action composed over the film) and the following showcase at the six review
+// sizes, the 320 px floor and the four thresholds of the header (800/801, 1100/1101): the heading and the yellow action come first and
+// (from 360 px) are whole in the first screen, the film starts in that screen (its substantial share is measured by the « Film in
+// the hero » scenarios above), then the three models in their own section, whole and legible; no unrelated text over the film and no text on the product photo, no
+// overflow, no clipped text. (S5/r3, historical: the frame was the hero's picture and the film lay outside the hero.)
+const heroViewports = [{ width: 320, height: 640 }, { width: 360, height: 800 }, { width: 390, height: 844 }, { width: 768, height: 1024 }, { width: 800, height: 900 }, { width: 801, height: 900 }, { width: 1024, height: 768 }, { width: 1100, height: 900 }, { width: 1101, height: 900 }, { width: 1280, height: 720 }, { width: 1280, height: 800 }, { width: 1440, height: 900 }];
 for (const viewport of heroViewports) {
-  test(`Hero at ${viewport.width}×${viewport.height}: heading and action first, one whole legible frame, no film, no text over the photo, touch targets of 44 px, brands reached`, async ({ page }) => {
+  test(`Hero and showcase at ${viewport.width}×${viewport.height}: heading and action in the film scene, the three models follow whole and legible, no unrelated text over the film or the photo, touch targets of 44 px, brands reached`, async ({ page }) => {
     await page.setViewportSize(viewport);
     await page.goto('/');
+    await settled(page);
     await noMediaControl(page);
     expect(await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth)).toBeLessThanOrEqual(0);
     const boxes = await page.evaluate(() => {
@@ -510,45 +610,51 @@ for (const viewport of heroViewports) {
       const fits = (inner: DOMRect, outer: DOMRect) => inner.left >= outer.left - .5 && inner.right <= outer.right + .5;
       const overlap = (a: DOMRect, b: DOMRect) => Math.max(0, Math.min(a.right, b.right) - Math.max(a.left, b.left)) * Math.max(0, Math.min(a.bottom, b.bottom) - Math.max(a.top, b.top));
       const before = (first: string, second: string) => !!(document.querySelector(first)!.compareDocumentPosition(document.querySelector(second)!) & Node.DOCUMENT_POSITION_FOLLOWING);
-      const title = rect('#hero-title'), action = rect('.hero-actions .action-primary'), stage = rect('.showcase-stage'), hero = rect('.home-hero'), image = rect('.showcase-image img');
-      const text = [...document.querySelectorAll('#hero-title, .hero-intro p, .hero-actions :is(a, button), .model-selector button, .showcase-info :is(h2, p, a), .showcase-link')];
+      const title = rect('#hero-title'), action = rect('.hero-actions .action-primary'), hero = rect('.home-hero'), ambience = rect('.home-hero .ambient-film'), section = rect('.home-showcase'), stage = rect('.showcase-stage'), image = rect('.showcase-image img');
+      const heroText = [...document.querySelectorAll('#hero-title, .hero-intro p, .hero-actions :is(a, button)')];
+      const showcaseText = [...document.querySelectorAll('.model-selector button, .showcase-info :is(h2, p, a), .showcase-link')];
+      const allText = [...document.querySelectorAll('h1, h2, h3, h4, p, a, button, li, figcaption, label, span')].filter(node => !node.closest('.ambient-film, .home-hero, .site-header') && node.getClientRects().length && (node.textContent ?? '').trim());
+      const screen = { left: 0, right: innerWidth } as DOMRect;
       return {
-        // Heading, then action, then the showcase, in reading order and from top to bottom of the hero (side by side on a wide screen is
-        // fine: both end above the photo).
-        order: before('#hero-title', '.hero-actions') && before('.hero-actions', '.showcase-stage'),
-        vertical: title.bottom <= image.top + 1 && action.bottom <= image.top + 1,
-        // The photo itself may be wider than a phone screen (only its white margins fall outside, measured below): every text and control
-        // of the hero is inside the screen and inside the hero.
-        inside: fits(title, hero) && fits(stage, { left: 0, right: innerWidth } as DOMRect) && text.every(node => fits(node.getBoundingClientRect(), hero)),
-        // No text ever sits on the photo of the frame.
-        textOnPhoto: text.filter(node => overlap(node.getBoundingClientRect(), image) > 4).map(node => node.textContent!.trim().slice(0, 30)),
-        // The first screen: heading and primary action whole, the photo has started.
-        first: { title: [title.top, title.bottom], action: [action.top, action.bottom], photoTop: image.top, viewport: innerHeight },
-        film: document.querySelectorAll('.home-hero :is(.ambient-film, .hero-ambience), .home-hero video').length,
-        targets: [...document.querySelectorAll('.home-hero :is(a, button)')].map(element => Math.round(element.getBoundingClientRect().height)),
-        clipped: text.filter(node => node.scrollWidth > node.clientWidth + 1).map(node => node.textContent!.trim()),
+        // Accessible title then actions; the decorative film shares their scene. The secondary showcase follows the hero.
+        order: before('#hero-title', '.hero-actions') && before('.home-hero', '.home-showcase'),
+        vertical: title.top >= ambience.top && title.bottom <= ambience.bottom && action.top >= title.bottom && action.bottom <= ambience.bottom && ambience.bottom <= image.top + 1,
+        // Every text and control of the hero is inside the screen and inside the hero, the film too; the showcase text is inside its own
+        // section. The photo itself may be wider than a phone screen (only its white margins fall outside, measured below).
+        inside: fits(title, hero) && fits(ambience, screen) && fits(ambience, hero) && heroText.every(node => fits(node.getBoundingClientRect(), hero)) && fits(stage, screen) && showcaseText.every(node => fits(node.getBoundingClientRect(), section)),
+        // Only hero/header copy may sit on the film; showcase text stays outside its complete product photo.
+        textOnFilm: allText.filter(node => overlap(node.getBoundingClientRect(), ambience) > 4).map(node => (node.textContent ?? '').trim().slice(0, 30)),
+        textOnPhoto: showcaseText.filter(node => overlap(node.getBoundingClientRect(), image) > 4).map(node => node.textContent!.trim().slice(0, 30)),
+        // The first screen: heading and primary action whole, the film has started.
+        first: { title: [title.top, title.bottom], action: [action.top, action.bottom], filmTop: ambience.top, viewport: innerHeight },
+        videos: document.querySelectorAll('video').length, heroVideos: document.querySelectorAll('.home-hero video').length,
+        enclosed: document.querySelectorAll('.home-hero :is(.home-showcase, .showcase-stage, .model-selector, .brand-marquee, .home-products, .product-card)').length,
+        targets: [...document.querySelectorAll('.home-hero :is(a, button), .home-showcase :is(a, button)')].map(element => Math.round(element.getBoundingClientRect().height)),
+        clipped: [...heroText, ...showcaseText].filter(node => node.scrollWidth > node.clientWidth + 1).map(node => node.textContent!.trim()),
       };
     });
     expect(boxes.order).toBe(true);
-    expect(boxes.vertical, 'heading and action end above the photo').toBe(true);
+    expect(boxes.vertical, 'heading and action sit inside the immersive film, the secondary photo follows').toBe(true);
     expect(boxes.inside).toBe(true);
+    expect(boxes.textOnFilm).toEqual([]);
     expect(boxes.textOnPhoto).toEqual([]);
-    expect(boxes.film, 'the film is no longer part of the hero').toBe(0);
+    expect(boxes.videos, 'exactly one video in the whole DOM').toBe(1);
+    expect(boxes.heroVideos, 'exactly one video in the hero').toBe(1);
+    expect(boxes.enclosed, 'no showcase, marquee or product inside the hero').toBe(0);
     expect(boxes.clipped).toEqual([]);
-    // Heading and primary action are whole in the first screen (the 320×640 floor only has to avoid overflow and clipping).
+    // Heading and primary action are whole in the first screen and the film starts there (the 320×640 floor only has to avoid overflow and clipping).
     if (viewport.width >= 360) {
       expect(boxes.first.title[0]).toBeGreaterThanOrEqual(0);
       expect(boxes.first.title[1], 'heading whole in the first screen').toBeLessThanOrEqual(viewport.height);
       expect(boxes.first.action[0]).toBeGreaterThanOrEqual(0);
       expect(boxes.first.action[1], 'primary action whole in the first screen').toBeLessThanOrEqual(viewport.height);
-      expect(boxes.first.photoTop, 'the photo starts inside the first screen').toBeLessThan(viewport.height);
+      expect(boxes.first.filmTop, 'the film starts inside the first screen').toBeLessThan(viewport.height);
     }
     for (const height of boxes.targets) expect(height).toBeGreaterThanOrEqual(44);
-    // The film is out of the first screen, never in the hero.
-    await expect(film(page)).not.toBeInViewport();
     // Each model photo is whole: loaded, in its true proportions (to the pixel), contained (never cropped by its own box), and the frame
     // drawn in it (the dark part, not the white margins) lies inside the screen; texts are not clipped; the frame is large enough to
-    // judge (from 260 px on a phone, from 600 px on the 1440 px desktop) and the photo never exceeds 1000 px.
+    // judge in this secondary section (from 260 px on a phone, from 480 px on the 1440 px desktop: the former 600 px was the hero
+    // picture's) and the photo never exceeds 1000 px. A choice scrolls the page to the showcase; the probe reads viewport coordinates.
     for (const slug of modelSlugs) {
       await page.getByRole('button', { name: model(slug).name, exact: true }).click();
       await page.waitForTimeout(750);
@@ -563,13 +669,13 @@ for (const viewport of heroViewports) {
       expect(photo.error, `${slug}: the drawn frame can be read`).toBeNull();
       expect(photo.ink!.left, `${slug}: frame whole, left edge on the screen`).toBeGreaterThanOrEqual(-1);
       expect(photo.ink!.right, `${slug}: frame whole, right edge on the screen`).toBeLessThanOrEqual(viewport.width + 1);
-      if (viewport.width >= 360) expect(photo.ink!.width, `${slug}: frame legible (${Math.round(photo.ink!.width)} px)`).toBeGreaterThanOrEqual(viewport.width >= 1440 ? 600 : 260);
+      if (viewport.width >= 360) expect(photo.ink!.width, `${slug}: frame legible (${Math.round(photo.ink!.width)} px)`).toBeGreaterThanOrEqual(viewport.width >= 1440 ? 480 : 260);
       expect(photo.box.width, `${slug}: photo kept within its maximum (${Math.round(photo.box.width)} px)`).toBeLessThanOrEqual(1000.5);
       expect(await page.evaluate(() => [...document.querySelectorAll('.showcase-info :is(h2, p, a), .showcase-link, .model-selector button')].filter(node => node.scrollWidth > node.clientWidth + 1).map(node => node.textContent!.trim()))).toEqual([]);
     }
-    // The brands come after the hero and are reached by scrolling (no threshold forces them into the first screen).
+    // The brands come after the hero and the showcase and are reached by scrolling (no threshold forces them into the first screen).
     const marquee = page.locator('.brand-marquee');
-    expect(await page.evaluate(() => !!(document.querySelector('.home-hero')!.compareDocumentPosition(document.querySelector('.brand-marquee')!) & Node.DOCUMENT_POSITION_FOLLOWING))).toBe(true);
+    expect(await page.evaluate(() => !!(document.querySelector('.home-showcase')!.compareDocumentPosition(document.querySelector('.brand-marquee')!) & Node.DOCUMENT_POSITION_FOLLOWING))).toBe(true);
     await marquee.scrollIntoViewIfNeeded();
     await expect(marquee).toBeInViewport();
   });

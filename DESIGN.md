@@ -1,6 +1,6 @@
 ---
 name: "Optic 2000 Tahiti"
-description: "Les montures sur blanc — système construit du prototype catalogue et magasins, relevé le 22 octobre 2026."
+description: "La lumière sur les montures — accueil immersif et système conservé du catalogue, relevé sur le build W-ERYR6iucw2MWkcWN1BR."
 colors:
   yellow: "#ffda00"
   yellow-hover: "#f1c900"
@@ -24,6 +24,12 @@ typography:
     fontWeight: 550
     lineHeight: 1.1
     letterSpacing: "-.035em"
+  home-hero:
+    fontFamily: "Manrope, sans-serif"
+    fontSize: "clamp(3rem, 7.2vw, 6rem)"
+    fontWeight: 650
+    lineHeight: .96
+    letterSpacing: "-.04em"
   headline:
     fontFamily: "Manrope, sans-serif"
     fontSize: "clamp(1.8rem, 3.4vw, 3rem)"
@@ -131,6 +137,16 @@ components:
     backgroundColor: "{colors.brand-black}"
     textColor: "{colors.paper}"
     typography: "{typography.navigation}"
+  navigation-home:
+    backgroundColor: "transparent"
+    textColor: "{colors.paper}"
+    typography: "{typography.navigation}"
+  button-text-inverse:
+    backgroundColor: "transparent"
+    textColor: "{colors.paper}"
+    typography: "{typography.action}"
+    rounded: "{rounded.control}"
+    padding: "12px 0"
   filter-chip:
     backgroundColor: "{colors.lavender-soft}"
     textColor: "{colors.ink}"
@@ -160,22 +176,22 @@ components:
 
 ## Overview
 
-**Creative North Star: "Les montures sur blanc"**
+**Creative North Star: "La lumière sur les montures"**
 
-« Les montures sur blanc » est le nom descriptif employé ici pour le système construit : un fond blanc continu, une typographie noire et des photographies de montures qui conservent leur propre espace. Le logo réel structure les zones noires ; les autres marques gardent leurs proportions et leurs couleurs. Les images de magasins et d’équipe apportent le contexte local.
+La lumière sur le verre et le métal donne sa présence à l’accueil : une scène photographique occupe le premier écran, avec la signature Optic 2000, le titre et les actions dans le même espace. Après cette arrivée, les photographies de montures retrouvent le blanc continu du catalogue et des fiches. Les logos gardent leurs proportions et leurs couleurs ; les photographies authentiques de magasins et d’équipe portent le contexte local.
 
-La présence vient des différences d’échelle, des alignements, des blancs et des filets. Le jaune rend les actions principales immédiatement repérables ; la lavande ponctue une sélection ou un accompagnement. Une seule Manrope locale relie titres, lecture, prix et commandes, avec des graisses plus calmes dans les grands titres et plus fermes dans les petits repères.
+La présence vient de l’échelle, des alignements, des blancs et des filets, ainsi que de la profondeur propre aux médias. Le jaune rend les actions principales immédiatement repérables ; la lavande ponctue les choix et les accompagnements. Manrope locale relie titres, lecture, prix et commandes : grands titres partagés calmes, titre du hero plus affirmé, petits repères fermes.
 
-Ce relevé décrit le prototype au 22 octobre 2026. Les noms de couleurs et de règles sont des choix de rédaction tirés du rendu et du code ; ils ne constituent ni une charte officielle Optic 2000 ni une approbation esthétique humaine. La composition propre à chaque page reste dans ses contrats de surface. La grammaire commune ci-dessous s’applique aussi aux parcours de catalogue, de fiche, de contact et de rendez-vous.
+Ce relevé décrit le code final du build `W-ERYR6iucw2MWkcWN1BR`, après le recadrage S5/r4 du 22 octobre 2026 et sa revue visuelle SHIP. Il ne constitue ni une charte officielle Optic 2000 ni une acceptation esthétique humaine. La composition précise reste dans les contrats de surface. Le hero d’accueil révoque les anciennes règles de blanc dominant, de texte hors film et de vidéo secondaire ; le blanc et les légendes séparées restent la grammaire des produits et de la lecture hors hero.
 
 **Key Characteristics:**
 
-- Montures et logos entiers sur des champs simples.
-- Blanc dominant, noir structurel, jaune d’action et lavande ponctuelle.
+- Film plein cadre dès le sommet, navigation fine intégrée et lecture basse gauche à l’accueil.
+- Montures et logos entiers ; blanc calme du catalogue après la scène photographique.
+- Noir et blanc de marque, jaune d’action précis et lavande ponctuelle.
 - Manrope locale unique, titres resserrés et informations lisibles.
 - Cartes planes, contours fins et petits angles adoucis sur les commandes.
-- Choix nommés, états visibles et focus distinct de la sélection.
-- Mouvement borné du produit choisi ; médias décoratifs soumis aux préférences et au contexte.
+- Choix nommés et manuels, focus distinct de la sélection, médias soumis aux préférences.
 
 ## Colors
 
@@ -200,7 +216,7 @@ Les valeurs du frontmatter sont normatives ; les noms suivants décrivent leur f
 - **Texte secondaire** (`muted`) : explications, marques, légendes et réserves.
 - **Filet clair** (`line`) : séparation, bordure des champs, options et miniatures.
 - **Texte inversé secondaire** (`inverse-muted`) : informations secondaires du pied de page ; sa valeur rejoint le filet clair avec un rôle distinct.
-- **Noir du logo** (`brand-black`) : en-tête et pied de page, au même noir que le fond du logo authentique.
+- **Noir du logo** (`brand-black`) : en-tête des routes hors accueil et pied de page, au même noir que le fond de leur logo authentique. Le header d’accueil est transparent.
 - **Filet inversé** (`inverse-line`) : séparation du pied de page.
 - **Séparation de signature** (`brand-separator`) : petit filet entre le logo et la mention Tahiti.
 
@@ -225,7 +241,7 @@ Les huit nuances de chaque rampe du sidecar sont des interpolations OKLCH docume
 - **Label** (`label`) : petits libellés des filtres, graisse (750), sans capitalisation décorative ajoutée. Les libellés de formulaire ont leur taille locale (14px).
 - **Action / Navigation / Option / Field** : rôles distincts pour commandes, liens du bandeau, choix de variante et champs. Le frontmatter conserve leurs valeurs de base plutôt qu’une seule taille de petit texte.
 
-Les exceptions de page restent locales : le titre d’accueil utilise (clamp(2.875rem, 5.8vw, 5.5rem)), interligne (1.02) ; il devient (clamp(2.75rem, 7.4vw, 3.5rem)) à (800px), puis (clamp(2.75rem, 12vw, 3rem)) à (600px). Le titre du catalogue utilise (clamp(2.25rem, 3.4vw, 3rem)), puis (32px) sur téléphone. La fiche produit utilise (clamp(2.25rem, 3.6vw, 3.25rem)), puis (38px) à partir du seuil (800px) vers le bas. Ces tailles ne remplacent pas le titre partagé.
+Les exceptions de page restent locales : le titre d’accueil utilise le rôle `home-hero`, graisse (650), interligne (.96) et interlettrage (-.04em). Il devient (clamp(2.75rem, 9vw, 4.25rem)) sous (800px), puis (clamp(2.5rem, 12.4vw, 3.375rem)), interligne (.98), sous (600px). Son introduction est en graisse (500), interligne (1.5), limitée à (36ch), avec taille (18px), puis (17px) sous (1100px) et (16px) sous (600px). Le titre du catalogue utilise (clamp(2.25rem, 3.4vw, 3rem)), puis (32px) sur téléphone. La fiche produit utilise (clamp(2.25rem, 3.6vw, 3.25rem)), puis (38px) à partir du seuil (800px) vers le bas. Ces tailles ne remplacent pas le titre partagé.
 
 Les noms de carte passent à (16px) sur téléphone. Les prix utilisent des chiffres tabulaires ; les préfixes et réserves restent séparés du montant. Les légendes et notes partagées sont à (12px) ou (13px). Dans la colonne principale du rendez-vous, aides, champs obligatoires et notes de soumission sont à (14px), tandis que les erreurs restent à (13px).
 
@@ -247,7 +263,9 @@ Les compositions de l’accueil, ses proportions de photo et les listes de magas
 
 ## Elevation & Depth
 
-Le système reste plan : blanc continu, plages lavande ou grises et filets produisent la séparation. Les packshots ne reçoivent ni plateau ajouté ni ombre CSS. Le panneau de navigation superposé possède une ombre diffuse ; le dialogue mobile atténue le fond derrière lui.
+Hors hero, le système reste plan : blanc continu, plages lavande ou grises et filets produisent la séparation. Les packshots ne reçoivent ni plateau ajouté ni ombre CSS. Le panneau de navigation superposé possède une ombre diffuse ; le dialogue mobile atténue le fond derrière lui.
+
+Dans le hero, la profondeur vient du film et du poster. Les protections de lecture sont locales : dégradé du header sur (168px), protection radiale en bas à gauche et dégradé de bas de scène, remplacés par un dégradé vertical sous (800px). Ils ne constituent pas un filtre uniforme sur le film. Le titre porte une ombre de texte diffuse, limitée au hero ; les liens du header ont leur propre ombre de lisibilité. Les valeurs exactes figurent dans le sidecar.
 
 ### Shadow Vocabulary
 
@@ -292,9 +310,19 @@ L’erreur de saisie combine un contour d’encre (2px), un message nommé et un
 
 ### Navigation
 
-Le bandeau noir et le pied de page reprennent le fond du logo réel. La barre de bureau utilise le rôle `navigation`, des liens d’au moins (44px) et une destination courante jaune également soulignée. Le panneau des univers est un papier compact, groupé par l’espace, avec une ligne courante lavande et soulignée. Les liens du panneau ont une taille locale de (16px) et un survol gris. Le menu mobile est blanc, dans un dialogue latéral de largeur (min(92vw, 420px)), à hauteur (100dvh), défilable ; ses liens sont nommés et la destination courante est soulignée.
+Sur l’accueil seulement, l’en-tête est absolu et transparent au-dessus du film, dès le sommet. Sa barre garde une hauteur de (78px), puis (72px) sous (800px) et (68px) sous (600px). Le logo officiel blanc transparent `/media/brand/optic2000-white.svg` est affiché entier : largeur (150px), (132px) entre (801px–960px), (128px) sous (600px), (116px) sous (370px). La mention Tahiti garde un filet blanc translucide. Aucun rectangle noir n’est ajouté derrière ce SVG.
+
+Sur les autres routes, le bandeau noir et le pied de page reprennent le fond de leur logo réel. La barre de bureau utilise le rôle `navigation`, des liens d’au moins (44px) et une destination courante jaune également soulignée. Le panneau des univers est un papier compact, groupé par l’espace, avec une ligne courante lavande et soulignée. Les liens du panneau ont une taille locale de (16px) et un survol gris. Le menu mobile est blanc, dans un dialogue latéral de largeur (min(92vw, 420px)), à hauteur (100dvh), défilable ; ses liens sont nommés et la destination courante est soulignée.
+
+### Accueil immersif
+
+Le hero est un champ plein cadre depuis le sommet, contenant le film et le poster en couverture centrée (50% 50%), le titre blanc, l’introduction et les actions en bas à gauche. Sa hauteur minimale est (clamp(560px, 100svh, 1040px)), puis (max(560px, 94svh)) sous (800px) ; il peut grandir avec son texte. La colonne de titre est bornée à (760px). Les marges internes sont (128px 48px 64px), puis (120px 32px 56px) sous (1100px), (104px 20px 32px) sous (600px) et gouttières (16px) sous (370px). Les deux actions sont sur une ligne souple, puis en colonne sous (600px). L’action principale reste jaune et encre ; l’action texte hérite du blanc et souligne son libellé au survol. Le focus de cette scène est jaune.
+
+**The Lecture dans la scène Rule.** À l’accueil, composer navigation, titre et actions dans la scène filmique avec une protection locale de lecture. Garder l’éclat du film hors de ces zones ; ne pas transformer cette exception de hero en superposition sur les packshots ou les pages explicatives.
 
 ### Sélections de modèle et de variante
+
+Le nuancier est une découverte secondaire sur blanc immédiatement après le hero : trois modèles réels (Glory Glory, Baby Beach, The Bird), leurs coloris, prix et lien de fiche. La photographie garde son rapport (900 / 320), une largeur maximale de (760px) et object-fit: contain. Sous (600px), sa largeur atteint (128%) du champ avec marges (-14%) : seules ses marges blanches sortent du cadre. La section respire de (48px 32px), puis (44px 32px) sous (800px) et (40px 24px) sous (600px). Ce nuancier compact ne devient pas un second hero.
 
 Les trois noms du choix d’accueil partagent un filet horizontal ; une sélection épaissit le filet au-dessus du nom (3px) et passe le texte de secondaire à encre. Le choix est manuel. La première monture est immobile ; après un changement demandé, la photographie entre une fois, de (-32px) vers sa place, avec une opacité initiale de (.5), pendant (650ms) et l’easing d’arrivée du sidecar. Sous (600px), le déplacement devient (-16px). Le texte et la légende se mettent à jour sans entrée spatiale.
 
@@ -304,7 +332,7 @@ Les options de coloris associent une petite image entière à leur nom complet e
 
 Le bandeau de marques utilise une boucle linéaire de durée (nombre de marques × 4s). Il s’arrête au survol, au focus, hors champ et quand l’onglet est masqué. Au focus clavier, la copie décorative disparaît et la liste d’origine devient fixe et défilable, sans masquer le logo focalisé. Le mouvement réduit donne directement cette liste immobile.
 
-Le film décoratif occupe un passage séparé de la lecture, sans texte superposé, sans voile ni filtre. Le poster est présent dès le départ ; le film apparaît par une transition d’opacité de (.6s) seulement après une lecture effective. Le mouvement réduit, l’économie de données, le refus de lecture automatique et l’erreur gardent le poster. Hors champ ou onglet masqué, la lecture se met au repos. Aucune commande Pause/Lire n’est offerte.
+Le film décoratif est le fond du hero initial, derrière le titre et les actions, avec les protections locales décrites ci-dessus et sans filtre appliqué au média. Un seul lecteur utilise `/media/ambience/eyewear-loop.mp4` et le poster `/media/ambience/eyewear-poster.webp` ; ce film de banque n’est pas présenté comme un produit du catalogue ou un magasin tahitien. Le poster est présent dès le départ ; le film apparaît par une transition d’opacité de (.6s) seulement après une lecture effective. Le mouvement réduit, l’économie de données, le refus de lecture automatique et l’erreur gardent le poster. Hors champ ou onglet masqué, la lecture se met au repos. Aucune commande Pause/Lire n’est offerte.
 
 Les préférences de mouvement suppriment l’arrivée et la boucle, rendent le défilement instantané et réduisent les durées résiduelles à (.01ms). Les déplacements du panneau de navigation (220ms) et de la flèche d’index (4px) restent des comportements locaux ; ils ne constituent pas un effet d’entrée général.
 
@@ -316,7 +344,7 @@ Les préférences de mouvement suppriment l’arrivée et la boucle, rendent le 
 - Do — Préserver les proportions des montures, les logos complets et les photographies authentiques avec leur provenance.
 - Do — Garder les noms, les coloris et les valeurs sélectionnées lisibles ; redistribuer les contrôles avant de manquer de largeur.
 - Do — Conserver les libellés et les repères de sélection en plus de la couleur, avec un focus visible au clavier.
-- Do — Laisser les images produit se poser directement sur le blanc et garder leurs légendes hors de l’image.
+- Do — Laisser les images produit se poser directement sur le blanc et garder leurs légendes hors de l’image ; à l’accueil, conserver le texte dans la scène filmique avec protection locale.
 - Do — Maintenir des commandes tactiles d’au moins (44px) dans les parcours de catalogue et de fiche.
 - Do — Garder les états vide, invalide, chargement, erreur et média indisponible avec une issue compréhensible.
 - Do — Respecter les préférences de mouvement et les replis des médias ; conserver le choix manuel de la monture.
@@ -329,9 +357,9 @@ Les préférences de mouvement suppriment l’arrivée et la boucle, rendent le 
 - Don't — Entourer les packshots d’une double surface grise, d’un cadre décoratif ou d’une ombre de carte.
 - Don't — Étendre les seuils locaux des filtres à l’ensemble du site ou prendre une ellipse native pour un modèle de lisibilité.
 - Don't — Faire de la couleur le seul indicateur d’un choix, d’une erreur, d’un état ou d’une disponibilité.
-- Don't — Poser de texte sur le film, ajouter un voile pour le rendre lisible ou remettre une commande Pause/Lire à ces médias décoratifs.
+- Don't — Rétablir un bloc blanc de titre avant le film d’accueil, assombrir uniformément toute la scène ou ajouter une commande Pause/Lire à ces médias décoratifs.
 - Don't — Transformer l’arrivée bornée d’une monture en carrousel automatique, ni ajouter une entrée spatiale aux formulaires.
 - Don't — Employer les rampes synthétiques du sidecar comme de nouvelles couleurs du produit.
 - Don't — Déduire des images ou du style une promesse de stock, de prix actuel, de droits supplémentaires ou de réservation.
 
-**Non canonisé :** le rayon de carte déclaré mais inutilisé ne figure pas dans les tokens normatifs. Le cadrage serré d’un portrait d’équipe à une largeur intermédiaire, signalé comme finition locale non bloquante dans la revue, n’est pas une règle de recadrage. Aucun de ces points n’est réparé par ce relevé documentaire.
+**Non canonisé :** le rayon de carte déclaré mais inutilisé ne figure pas dans les tokens normatifs. Le cadrage serré d’un portrait d’équipe signalé dans une revue antérieure n’est pas promu en règle ; la revue finale ne retient aucun défaut matériel dans les échantillons inspectés. Les remarques historiques de taille de police ne constituent pas des tokens supplémentaires. Aucun de ces points n’est réparé par ce relevé documentaire.

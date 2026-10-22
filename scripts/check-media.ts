@@ -7,9 +7,9 @@ import marqueeMedia from '../src/data/marquee-media.json';
 const nextRequire = createRequire(resolve('node_modules/next/package.json'));
 const sharp = nextRequire('sharp') as (path: string) => { stats(): Promise<unknown>; metadata(): Promise<{ width: number; height: number; format: string }> };
 
-// Technical limits of the home film (S5/r2 brief): one local file of 24–40 s of continuous content, at most 5 MB, no audio,
+// Technical limits of the home film: S5/r4 curates two solar shots (12–40 s, replacing the S5/r2 24–40 s window), at most 5 MB, no audio,
 // H.264 with the index first (faststart); poster at most 150 KB. Sizes are decimal (1 MB = 1 000 000 bytes), the strictest reading.
-const limits = { filmBytes: 5_000_000, posterBytes: 150_000, minSeconds: 24, maxSeconds: 40, maxWidth: 1920, maxFps: 30, tolerance: .05 };
+const limits = { filmBytes: 5_000_000, posterBytes: 150_000, minSeconds: 12, maxSeconds: 40, maxWidth: 1920, maxFps: 30, tolerance: .05 };
 const manifestPath = 'docs/hero-media.json';
 
 // Minimal MP4 reader (ISO base media boxes): no dependency, no decoding. It reads the structure only.

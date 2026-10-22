@@ -39,7 +39,7 @@ const offset = (page: Page) => track(page).evaluate(element => new DOMMatrix(get
 test('Marquee: real logos move slowly with no pause control, stop on hover and on focus, focus shows the original links only', async ({ page }) => {
   await page.goto('/');
   const marquee = page.locator('.brand-marquee');
-  // S5/r3: the large hero pushes the strip below the first screen, and the row only moves while it is in view: scroll to it first.
+  // S5/r4: the immersive hero and secondary showcase keep the strip below the first screen, and the row only moves while it is in view: scroll to it first.
   await marquee.scrollIntoViewIfNeeded();
   await expect(marquee).toBeInViewport();
   const links = marquee.locator('.marquee-group:not(.marquee-clone) a');

@@ -19,6 +19,14 @@ export default function Home() {
   // Editorial selection of real logos across the universes; the directory keeps all 38 identities.
   const featuredBrands = ['maui-jim', 'ray-ban', 'oakley', 'gucci', 'persol', 'versace', 'demetz', 'vuarnet', 'michael-kors', 'julbo', 'vogue-eyewear', 'freshlook', 'celestron'].map(id => brands.find(b => b.id === id)!);
   return <>
+    {/* Hero: the real film fills the first screen from its very top, under the light home bar. Title, short text and
+        actions read first and sit low on the left, in the same picture. */}
+    <section className="home-hero" aria-labelledby="hero-title">
+      <div className="hero-content">
+        <div className="hero-heading"><h1 id="hero-title">Le soleil,<br />autrement.</h1><div className="hero-intro"><p>Des montures qui vous ressemblent. Vos opticiens à Tahiti pour les choisir.</p><div className="hero-actions"><ActionLink href="/solaires">Toutes les solaires</ActionLink><ActionLink href="/rendez-vous" variant="text">Préparer un rendez-vous</ActionLink></div></div></div>
+        <AmbientFilm />
+      </div>
+    </section>
     <HomeShowcase models={models.map(p => ({ name: p.name, slug: p.slug, image: p.images[0], price: p.minPrice, colorCount: p.attributes.find(a => a.key === 'attribute_pa_couleur')?.terms.length ?? 0 }))} />
     <BrandMarquee brands={featuredBrands.map(b => ({ id: b.id, name: b.name, logo: (marqueeMedia as Record<string, Media>)[b.id] }))} />
     {/* Editorial selection: Mamane at full scale on the left, the three others as compact ruled rows on the right
@@ -27,8 +35,6 @@ export default function Home() {
       <div className="section-heading"><h2 id="home-selection-title">À chaque regard,<br />sa monture.</h2><p>Des modèles Maui Jim à découvrir dans leurs vrais coloris.</p><ActionLink href="/solaires" variant="text">Explorer la collection</ActionLink></div>
       <div className="home-products">{selected.map((p, i) => <ProductCard key={p.id} product={p} sizes={i === 0 ? '(max-width: 800px) 46vw, (max-width: 1100px) 54vw, 720px' : '(max-width: 800px) 46vw, (max-width: 1100px) 20vw, 260px'} />)}</div>
     </section>
-    {/* Matter and optics: a measured panoramic passage between the selection and the universes, never in the hero. */}
-    <div className="home-film container"><AmbientFilm /></div>
     {/* The house beyond the sun: a large ruled index of the six universes with their one-line summary, beside the real team photo. */}
     <section className="home-universes" aria-labelledby="home-universes-title"><div className="container home-universes-inner">
       <div className="home-universes-body">
