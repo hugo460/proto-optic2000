@@ -1,5 +1,6 @@
 import assert from 'node:assert/strict';
 import { existsSync } from 'node:fs';
+import { inspect } from 'node:util';
 import { products, brands } from '../src/data';
 import { stores } from '../src/data/stores';
 import { teamArticles } from '../src/data/content';
@@ -8,8 +9,11 @@ import { appointmentReasons } from '../src/data/appointment-demo';
 
 // Live checks against a running `pnpm start`: canonical pages, every internal/external link, native alias redirects, real 404s.
 const base = process.env.OPTIC_BASE_URL ?? 'http://127.0.0.1:3011';
+// One attempt per request, with a finite deadline; the client's connection timeout is unchanged.
+const fetchPage = (url: string, options: RequestInit = {}) => fetch(url, { ...options, signal: AbortSignal.timeout(45_000) });
 const errors: string[] = [];
 const fail = (message: string) => errors.push(message);
+const describeFailure = (error: unknown) => error instanceof Error && error.cause ? `${error}\nCause: ${inspect(error.cause, { depth: 3 })}` : String(error);
 const check = (condition: unknown, message: string) => { if (!condition) fail(message); };
 
 // ---- Canonical pages ----------------------------------------------------------------------------------------------
@@ -50,7 +54,7 @@ const links = new Set<string>();
 const externals = new Set<string>();
 let cursor = 0;
 async function inspectPage(path: string) {
-  const response = await fetch(base + path);
+  const response = await fetchPage(base + path);
   check(response.status === 200, `${path}: HTTP ${response.status}`);
   check(response.headers.get('x-robots-tag')?.includes('noindex'), `${path}: missing noindex header`);
   const html = await response.text();
@@ -103,13 +107,13 @@ async function inspectPage(path: string) {
 async function worker() {
   while (cursor < renderedPaths.length) {
     const path = renderedPaths[cursor++];
-    try { await inspectPage(path); } catch (e) { fail(`${path}: ${e}`); }
+    try { await inspectPage(path); } catch (e) { fail(`${path}: ${describeFailure(e)}`); }
   }
 }
 
 // ---- Server-rendered public context -------------------------------------------------------------------------------
 async function contextChecks() {
-  const get = async (path: string) => textOf(await (await fetch(base + path)).text());
+  const get = async (path: string) => textOf(await (await fetchPage(base + path)).text());
   const plus = await get('/contact?produit=freshlook-colorblends&variante=1949&couleur=grey&sphere=2-00&magasin=taravao');
   check(/Couleur : Grey/.test(plus) && /Sphère : \+2\.00/.test(plus) && /2 900/.test(plus.replace(/[  ]/g, ' ')), 'contact +2.00 summary');
   check(/Optic 2000 Taravao/.test(plus) && /Horaires à confirmer auprès du magasin/.test(plus), 'contact Taravao hours reservation');
@@ -165,9 +169,10 @@ async function chain(path: string): Promise<{ hops: Hop[]; final: Hop }> {
   for (let step = 0; step < 6; step++) {
     assert(!seen.has(url), `redirect loop on ${path}: ${url}`);
     seen.add(url);
-    const response = await fetch(url, { redirect: 'manual' });
+    const response = await fetchPage(url, { redirect: 'manual' });
     const location = response.headers.get('location');
-    void response.body?.cancel();
+    // Drain the response so Undici can reuse its connection instead of opening a new TCP connection for every hop.
+    await response.arrayBuffer();
     if (response.status >= 300 && response.status < 400) {
       assert([307, 308].includes(response.status), `${path}: non-native redirect status ${response.status}`);
       assert(location, `${path}: redirect without Location`);
@@ -207,7 +212,7 @@ async function aliasChecks() {
         assert(samePath(landed, expected, new URLSearchParams(extra)), `${path}: landed on ${landed.pathname}${landed.search}${landed.hash}, expected ${destination}${extra ? ` + ${extra}` : ''}`);
         // Fragments never reach the server: they live in the Location header of the alias hop only.
         if (expected.hash) assert.equal(new URL(hops.at(-1)!.location!, base).hash, expected.hash, `${path}: fragment lost in Location`);
-      } catch (e) { fail(String(e)); }
+      } catch (e) { fail(describeFailure(e)); }
     }
   }
   // Female/male aliases keep their gender filter when other filters are accumulated.
@@ -216,7 +221,7 @@ async function aliasChecks() {
     const landed = new URL(final.url);
     assert.deepEqual([landed.pathname, landed.searchParams.get('genre'), landed.searchParams.get('budget'), landed.searchParams.get('tri')], ['/solaires', 'femme', '30000-40000', 'prix-desc']);
     redirectsChecked++;
-  } catch (e) { fail(String(e)); }
+  } catch (e) { fail(describeFailure(e)); }
   // The 83 recovered product slugs reach their equivalent product page, as published and with a trailing slash.
   let productRedirects = 0;
   for (const product of products) {
@@ -227,7 +232,7 @@ async function aliasChecks() {
         assert.equal(final.status, 200);
         assert.equal(new URL(final.url).pathname, `/produits/${product.slug}`);
         productRedirects++;
-      } catch (e) { fail(`/produit/${product.slug}${suffix}: ${e}`); }
+      } catch (e) { fail(`/produit/${product.slug}${suffix}: ${describeFailure(e)}`); }
     }
   }
   assert.equal(productRedirects, 166, 'every one of the 83 old product pages');
@@ -238,7 +243,7 @@ async function aliasChecks() {
     const landed = new URL(final.url);
     assert.deepEqual([landed.pathname, landed.searchParams.get('variante')], ['/produits/glory-glory', '1608']);
     redirectsChecked++;
-  } catch (e) { fail(String(e)); }
+  } catch (e) { fail(describeFailure(e)); }
 }
 
 // ---- Real 404s ---------------------------------------------------------------------------------------------------
@@ -258,18 +263,18 @@ async function notFoundChecks() {
       const { hops, final } = await chain(path);
       assert(hops.every(hop => hop.status === 308 && new URL(hop.location!, base).pathname === new URL(hop.url).pathname.replace(/\/$/, '')), `${path}: unexpected redirect ${JSON.stringify(hops)}`);
       assert.equal(final.status, 404, `${path}: expected a real 404, got ${final.status}`);
-      const response = await fetch(final.url);
+      const response = await fetchPage(final.url);
       const html = await response.text();
       assert.equal(response.status, 404, `${path}: the 404 is not stable`);
       assert(response.headers.get('x-robots-tag')?.includes('noindex'), `${path}: 404 without noindex`);
       assert(html.includes('Cette page nous') && html.includes('échappe'), `${path}: not the prototype 404 page`);
-    } catch (e) { fail(String(e)); }
+    } catch (e) { fail(describeFailure(e)); }
   }
 }
 
 async function main() {
   await Promise.all(Array.from({ length: 4 }, worker));
-  await contextChecks().catch(e => fail(`context checks: ${e}`));
+  await contextChecks().catch(e => fail(`context checks: ${describeFailure(e)}`));
   await aliasChecks();
   await notFoundChecks();
   const unused = [...externalAllowlist].filter(url => !externals.has(url));
@@ -277,4 +282,9 @@ async function main() {
   console.log(JSON.stringify({ base, checkedRoutes: renderedPaths.length, distinctLinks: links.size, externalLinks: [...externals], aliasesChecked: aliases.length, redirectsChecked, notFoundChecked: notFound.length, errors }, null, 2));
   if (errors.length) process.exitCode = 1;
 }
-main().catch(error => { console.error(error); process.exitCode = 1; });
+main().catch(error => {
+  // A strict coverage assertion must not hide the address and cause already collected by an earlier request.
+  console.error(JSON.stringify({ base, checkedRoutes: renderedPaths.length, redirectsChecked, errors }, null, 2));
+  console.error(describeFailure(error));
+  process.exitCode = 1;
+});

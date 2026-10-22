@@ -199,12 +199,27 @@ async function expectModel(page: Page, slug: string) {
 test('Showcase: each choice replays a bounded arrival of the photo only; text, price and link change at once, rapid choices end in sync', async ({ page }) => {
   await page.goto('/');
   await expectModel(page, 'glory-glory');
-  for (const slug of ['baby-beach', 'the-bird', 'glory-glory']) {
+  type Arrival = { name: string | null; elapsed: number; duration: number; iterations: number | undefined; fromTransform: string; toTransform: string; fromOpacity: string; toOpacity: string };
+  // Observe the real animation in its own browser task. A host round trip can return after its 650 ms have elapsed.
+  await page.locator('.showcase-stage').evaluate(stage => {
+    const arrivals: Arrival[] = [];
+    (window as Window & { __s4FrameArrivals?: Arrival[] }).__s4FrameArrivals = arrivals;
+    stage.addEventListener('animationstart', event => {
+      if (!(event instanceof AnimationEvent) || event.animationName !== 'frame-arrive' || !(event.target instanceof Element)) return;
+      const animation = event.target.getAnimations().find(item => item instanceof CSSAnimation && item.animationName === 'frame-arrive');
+      const frames = animation?.effect instanceof KeyframeEffect ? animation.effect.getKeyframes() : [];
+      const timing = animation?.effect?.getTiming();
+      arrivals.push({ name: stage.querySelector('.showcase-info h2')?.textContent ?? null, elapsed: event.elapsedTime, duration: Number(timing?.duration), iterations: timing?.iterations, fromTransform: String(frames[0]?.transform), toTransform: String(frames.at(-1)?.transform), fromOpacity: String(frames[0]?.opacity), toOpacity: String(frames.at(-1)?.opacity) });
+    });
+  });
+  for (const [choice, slug] of ['baby-beach', 'the-bird', 'glory-glory'].entries()) {
     await page.getByRole('button', { name: model(slug).name, exact: true }).click();
-    // Mid-flight: the photo moves, the text is already final.
-    const moving = await page.locator('.showcase-image').evaluate(element => ({ animations: element.getAnimations().map(a => a.playState), transform: getComputedStyle(element).transform }));
-    expect(moving.animations).toContain('running');
-    expect(moving.transform).not.toBe('none');
+    await expect.poll(() => page.evaluate(() => (window as Window & { __s4FrameArrivals?: Arrival[] }).__s4FrameArrivals?.length ?? 0)).toBe(choice + 1);
+    const arrival = await page.evaluate(index => (window as Window & { __s4FrameArrivals?: Arrival[] }).__s4FrameArrivals![index], choice);
+    expect(arrival).toMatchObject({ name: model(slug).name, elapsed: 0, duration: 650, iterations: 1, fromOpacity: '0.5', toOpacity: '1' });
+    expect(arrival.fromTransform).not.toBe('undefined');
+    expect(arrival.fromTransform).not.toBe('none');
+    expect(arrival.fromTransform).not.toBe(arrival.toTransform);
     await expect(page.locator('.showcase-info h2')).toHaveText(model(slug).name);
     await page.waitForTimeout(750);
     const rest = await page.locator('.showcase-image').evaluate(element => ({ running: element.getAnimations().filter(a => a.playState === 'running').length, transform: getComputedStyle(element).transform }));
