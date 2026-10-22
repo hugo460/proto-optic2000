@@ -15,6 +15,12 @@ export type ProductContextData = ReturnType<typeof readProductContext>;
 export function contactHref(context: ProductContextData, store?: Store) {
   return withQuery('/contact', visitParams({ ...context.relayed, store }));
 }
+// The appointment receives the store, the product and, for prostheses only, the matching reason.
+export function appointmentHref(context: ProductContextData, store?: Store) {
+  const params = visitParams({ selection: context.selection, store }, { subject: false });
+  if (context.relayed.subject === 'protheses') params.set('motif', 'protheses');
+  return withQuery('/rendez-vous', params);
+}
 export function ProductContext({ context }: { context: ProductContextData }) {
   const { selection } = context;
   const mamao = getStore(prosthesisStore)!;

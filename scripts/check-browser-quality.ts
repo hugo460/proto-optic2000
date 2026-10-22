@@ -22,6 +22,8 @@ async function main() {
     '/contact?magasin=taravao&produit=freshlook-colorblends&variante=1949&couleur=grey&sphere=2-00-2', '/mentions-legales', '/politique-de-confidentialite', '/cgv',
     '/produits/freshlook-colorblends?variante=1949&couleur=grey&sphere=2-00', '/produits/freshlook-colorblends?variante=774', '/produits/trublends-one-day-5-couleurs', '/produits/baby-beach?variante=1549',
     '/marques', '/marques/bosma', '/marques/versace', '/magasins', '/magasins/mamao',
+    // S4: the demonstration appointment, empty and with a public context.
+    '/rendez-vous', '/rendez-vous?magasin=taravao&motif=conseil-montures', '/rendez-vous?magasin=mamao&produit=glory-glory&variante=1608',
   ];
   await context.route(/optic2000tahiti\.com/, r => { remote.push(r.request().url()); return r.abort(); });
   page.on('pageerror', e => errors.push(e.message));
@@ -138,6 +140,58 @@ async function main() {
   await page.keyboard.press('Tab'); await page.keyboard.press('Escape');
   check(!(await page.locator('#universe-panel').isVisible()) && await universeButton.evaluate(el => el === document.activeElement), 'Escape closes the universes panel and returns the focus to its button');
 
+  // ---- S4: appointment keyboard order and focus rings at 360 px, every step reachable without overflow -----------------
+  await page.setViewportSize({ width: 360, height: 800 });
+  await page.goto(base + '/rendez-vous?magasin=taravao');
+  await page.waitForFunction(() => !document.querySelector<HTMLButtonElement>('.rdv-actions [type=submit]')?.disabled);
+  const rdvRing = () => page.evaluate(() => {
+    const element = document.activeElement as HTMLElement | null;
+    if (!element) return null;
+    const target = element.matches('input[type=radio]') ? element.closest('label')! : element;
+    const style = getComputedStyle(target);
+    return { id: element.id || (element.matches('[type=submit]') ? 'submit' : element.tagName.toLowerCase()), outlineStyle: style.outlineStyle, outlineWidth: parseFloat(style.outlineWidth) };
+  });
+  for (const id of ['rdv-store-taravao', 'rdv-reason-controle-vue', 'submit']) {
+    let reached = null as Awaited<ReturnType<typeof rdvRing>>;
+    for (let step = 0; step < 40; step++) { await page.keyboard.press('Tab'); reached = await rdvRing(); if (reached?.id === id) break; }
+    check(reached?.id === id, `Appointment: Tab never reached ${id}, in order`);
+    check(reached && reached.outlineStyle !== 'none' && reached.outlineWidth >= 2, `Appointment: no visible focus ring on ${id} (${JSON.stringify(reached)})`);
+    records.push({ name: 'appointment-focus-ring', ...reached });
+    // The reason is chosen with the keyboard, then Enter on the submit button opens the slot step.
+    if (id === 'rdv-reason-controle-vue') await page.keyboard.press('Space');
+  }
+  await page.keyboard.press('Enter');
+  await page.locator('.rdv-day').first().waitFor();
+  for (const stage of ['slot-step']) { const state = await health(); check(state.width <= state.viewport, `Appointment ${stage}: horizontal overflow ${state.width}/${state.viewport}`); records.push({ name: 'appointment-step', stage, ...state }); }
+
+  // ---- S4: motion with the default preference (the main context reduces motion) ---------------------------------------
+  const moving = await browser.newContext({ viewport: { width: 1440, height: 1000 } });
+  await moving.route(/optic2000tahiti\.com/, r => { remote.push(r.request().url()); return r.abort(); });
+  const motionPage = await moving.newPage();
+  motionPage.on('pageerror', e => errors.push(e.message));
+  await motionPage.goto(base + '/');
+  await motionPage.waitForTimeout(1000);
+  const shift = () => motionPage.locator('.marquee-track').evaluate(e => new DOMMatrix(getComputedStyle(e).transform).m41);
+  const a = await shift(); await motionPage.waitForTimeout(500); const b = await shift();
+  check(b < a, 'Marquee moves with the default motion preference');
+  await motionPage.getByRole('button', { name: 'Baby Beach', exact: true }).click();
+  const frames: { at: number; transform: string; opacity: string }[] = [];
+  for (const at of [40, 160, 320, 800]) {
+    await motionPage.waitForTimeout(at - (frames.at(-1)?.at ?? 0));
+    frames.push({ at, ...(await motionPage.locator('.showcase-image').evaluate(e => ({ transform: getComputedStyle(e).transform, opacity: getComputedStyle(e).opacity }))) });
+  }
+  const still = (transform: string) => ['none', 'matrix(1, 0, 0, 1, 0, 0)'].includes(transform);
+  check(!still(frames[0].transform) && still(frames.at(-1)!.transform), `Showcase arrival moves then rests: ${JSON.stringify(frames)}`);
+  records.push({ name: 'showcase-arrival-frames', frames });
+  // Keyboard focus (Tab), so the ring shown is the real :focus-visible one.
+  await motionPage.locator('.marquee-group a').nth(5).focus();
+  await motionPage.keyboard.press('Tab');
+  await motionPage.waitForTimeout(100);
+  const focusState = await motionPage.evaluate(() => { const element = document.activeElement as HTMLElement; const box = element.getBoundingClientRect(), frame = element.closest('.marquee-viewport')!.getBoundingClientRect(); return { inside: box.left >= frame.left - 1 && box.right <= frame.right + 1, outline: getComputedStyle(element).outlineStyle, transform: getComputedStyle(element.closest('.marquee-track')!).transform }; });
+  check(focusState.inside && focusState.outline !== 'none' && focusState.transform === 'none', `Marquee focus: still row, visible ring, logo inside: ${JSON.stringify(focusState)}`);
+  records.push({ name: 'marquee-focus', ...focusState });
+  await moving.close();
+
   // ---- S2: long unbroken input at 360 px, form then success -----------------------------------------------------------
   await page.setViewportSize({ width: 360, height: 800 });
   await page.goto(base + '/contact?magasin=mamao&sujet=autre');
@@ -204,6 +258,6 @@ async function main() {
   }
   await writeFile(join(root, 'browser-quality.json'), JSON.stringify({ timestamp: new Date().toISOString(), zoomMethod: 'Equivalent reflow: CSS viewport 720x500, DPR 2, output 1440x1000; not a manual browser zoom gesture, not a physical device and not an assistive-technology test.', findings, records, remote, errors }, null, 2));
   await browser.close(); assert.equal(remote.length, 0); assert.equal(errors.length, 0); assert.deepEqual(findings, []);
-  console.log(`${records.length} checks; 360 px and 720x500@2x reflow on S1 and S2 routes, keyboard and focus ring, Escape, long names, missing images, 801/1101/1280 boundaries; zero overflow/errors/WordPress requests.`);
+  console.log(`${records.length} checks; 360 px and 720x500@2x reflow on S1, S2 and S4 routes, keyboard and focus rings (contact, appointment, marquee), Escape, motion frames, long names, missing images, 801/1101/1280 boundaries; zero overflow/errors/WordPress requests.`);
 }
 main().catch(error => { console.error(error); process.exitCode = 1; });

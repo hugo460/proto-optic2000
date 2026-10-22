@@ -42,6 +42,20 @@
 | Node `24.x` déclaré dans `engines` | Même version majeure en local et à la construction Vercel ; aucune dépendance modifiée |
 | Aucune refonte | Monde, système et composants inchangés ; seules les copies d’hébergement et la matrice de captures évoluent |
 
+## Décisions de S4 (complément après le retour d’Omar)
+
+| Décision | Conséquence |
+| --- | --- |
+| S3 acceptée par le pilote ; Hugo tranche le 21/10/2026 : lunettes animées, nuancier conservé, RDV simulé | Pas de vidéo ni de nouvelle composition d’accueil ; monde, palette et polices inchangés |
+| Monture posée en 650 ms puis immobile | Transform/opacity CSS, image entière, sans faux 3D, boucle ni changement automatique ; mouvement réduit sans animation |
+| Bandeau de marques défilant contrôlable | 13 vrais logos choisis ; annuaire complet inchangé (38 identités) ; copie cachée aux technologies d’assistance et hors Tab, dont les liens visibles restent cliquables ; rangée immobile au focus et en mouvement réduit |
+| RDV simulé distinct du contact | Quatre étapes, créneaux fictifs séparés de `stores.ts`, aucune réservation ni e-mail ; « poser une question » reste la demande |
+| Motifs illustratifs | Contrôle de vue sans consultation médicale ni ophtalmologique promise ; prothèses à Mamao uniquement, vrai rendez-vous par téléphone |
+| Dates rejouables | Jour calculé en Pacific/Tahiti avec horloge injectable ; sept jours à partir du lendemain ; aucune date figée |
+| Navigation | Action jaune « Préparer un RDV » à la place de « Trouver mon magasin » (« Nos magasins » reste dans la navigation) ; entre 801 et 1100 px, « Les solaires », déjà dans « Nos univers », laisse sa place à l’action compacte « RDV » |
+| Recommencer | Garde le magasin, efface tout le reste ; un rechargement efface tout sauf le contexte public de l’URL |
+| Lisibilité | Légendes, réserves, prix secondaires et repères de marques passent de 10–11 px à 12 px sur téléphone et ordinateur |
+
 ### Extension de DESIGN.md : non, à ce stade
 
 Le rôle documenteur demande de ne pas écrire pour prouver qu’on est passé. S2 ne change ni le monde, ni la palette, ni les polices ; le nuancier et ses boutons, champs, cartes, focus et états sont réutilisés, et la revue visuelle finale constate une échelle cohérente. Les composants S2 (menu « Nos univers », formulaire et états, sommaire, grilles de logos) sont décrits dans [l’architecture](architecture.md) et testés. Les cinq tailles locales sont des valeurs de page, utilisées une ou deux fois chacune : les inscrire au système les rendrait réutilisables par défaut. Elles seront à promouvoir en tokens seulement si une autre surface les réutilise ou si la direction visuelle change. Le décalage de date préexistant entre `DESIGN.md` et son sidecar n’est pas réparé ici.
@@ -67,3 +81,5 @@ Recherche officielle standard du 21/10/2026 pour S2, aperçus inspectés :
 | Catégorie puis précision | [Mintlify](https://mobbin.com/screens/806c8140-cf45-4b34-ae8c-9c58a8337009) : catégorie, sujet, description | Magasin, objet, coordonnées, message, avec notre vocabulaire | Idem |
 
 Les comportements mobile/clavier, les états d’erreur et de succès et le nuancier d’accueil sont notre adaptation, vérifiés séparément ; ils ne sont pas une propriété démontrée par les captures Mobbin. Couleurs et polices d’interface ne constituent pas une charte officielle du client.
+
+La finition S4 garde l’action principale au niveau de l’étape : sur le RDV, le pied de page propose la demande en lien texte. Les calendriers précèdent les libellés ; les flèches de fin désignent une sortie. Sur le RDV sans contexte public, l’action de l’en-tête ramène le focus à l’étape courante sans modifier l’historique ; depuis un contexte prérempli, elle ouvre une nouvelle entrée générique.

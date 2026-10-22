@@ -1,8 +1,8 @@
 import { brands, getProduct } from '@/data';
 import { HomeShowcase } from '@/components/catalog/home-showcase';
 import { ProductCard } from '@/components/catalog/product-card';
+import { BrandMarquee } from '@/components/catalog/brand-marquee';
 import { ActionLink } from '@/components/ui/action-link';
-import { MediaImage } from '@/components/ui/media-image';
 import { StoreCard } from '@/components/stores/store-card';
 import { stores } from '@/data/stores';
 import Link from 'next/link';
@@ -11,10 +11,11 @@ import { Icon } from '@/components/ui/icon';
 export default function Home() {
   const models = ['glory-glory', 'baby-beach', 'the-bird'].map(slug => getProduct(slug)!);
   const selected = ['glory-glory', 'baby-beach', 'mamane', 'alulu'].map(slug => getProduct(slug)!);
-  const featuredBrands = ['maui-jim', 'ray-ban', 'oakley', 'gucci', 'longchamp'].map(id => brands.find(b => b.id === id)!);
+  // Editorial selection of real logos across the universes; the directory keeps all 38 identities.
+  const featuredBrands = ['maui-jim', 'ray-ban', 'oakley', 'gucci', 'persol', 'versace', 'demetz', 'vuarnet', 'michael-kors', 'julbo', 'vogue-eyewear', 'freshlook', 'celestron'].map(id => brands.find(b => b.id === id)!);
   return <>
     <HomeShowcase models={models.map(p => ({ name: p.name, slug: p.slug, image: p.images[0], price: p.minPrice, colorCount: p.attributes.find(a => a.key === 'attribute_pa_couleur')?.terms.length ?? 0 }))} />
-    <section className="brand-strip container" aria-label="Quelques-unes de nos marques">{featuredBrands.map(b => <Link href={`/marques/${b.id}`} key={b.id} aria-label={`Découvrir ${b.name}`}>{b.logo && <MediaImage media={b.logo} alt={b.name} sizes="(max-width: 600px) 28vw, 16vw" />}</Link>)}<ActionLink href="/marques" variant="text">Toutes les marques</ActionLink></section>
+    <BrandMarquee brands={featuredBrands.map(b => ({ id: b.id, name: b.name, logo: b.logo! }))} />
     <section className="section container"><div className="section-heading"><div><h2>À chaque regard,<br />sa monture.</h2><p>Des modèles Maui Jim à découvrir dans leurs vrais coloris.</p></div><ActionLink href="/solaires" variant="text">Explorer la collection</ActionLink></div><div className="product-grid home-products">{selected.map(p => <ProductCard key={p.id} product={p} />)}</div></section>
     <section className="section container home-universes" aria-labelledby="home-universes-title"><div className="section-heading"><div><h2 id="home-universes-title">Bien plus<br />que le soleil.</h2><p>Vue, lentilles, observation, basse vision, prothèses : nos opticiens vous accompagnent dans chaque univers.</p></div></div>
       <ul className="universe-index">{universes.map(link => <li key={link.href}><Link href={link.href}><strong>{link.label}</strong><span>{link.summary}</span><Icon name="arrow" /></Link></li>)}</ul>

@@ -4,6 +4,7 @@ import { products, brands } from '../src/data';
 import { stores } from '../src/data/stores';
 import { teamArticles } from '../src/data/content';
 import { contactSubjects } from '../src/lib/contact-context';
+import { appointmentReasons } from '../src/data/appointment-demo';
 
 // Live checks against a running `pnpm start`: canonical pages, every internal/external link, native alias redirects, real 404s.
 const base = process.env.OPTIC_BASE_URL ?? 'http://127.0.0.1:3011';
@@ -22,15 +23,21 @@ const contactPaths = [
   '/contact?produit=freshlook-colorblends&variante=1949&couleur=grey&sphere=0-00', '/contact?produit=trublends-one-day-5-couleurs',
   '/contact?sujet=promo&magasin=paris&produit=inconnu&variante=1949',
 ];
+// S4 demonstration appointment: preselected store/reason, product context, prosthesis rule, unknown values and step links.
+const appointmentPaths = [
+  '/rendez-vous?magasin=mamao', '/rendez-vous?magasin=taravao&motif=conseil-montures', '/rendez-vous?motif=protheses&magasin=taravao',
+  '/rendez-vous?magasin=paris&motif=promo&nom=Test', '/rendez-vous?etape=recapitulatif', '/rendez-vous?magasin=mamao&produit=glory-glory&variante=1608',
+];
 const storeContextPaths = ['/magasins?produit=freshlook-colorblends&variante=1949&couleur=grey&sphere=2-00', '/magasins/taravao?produit=freshlook-colorblends&variante=1949&couleur=grey&sphere=2-00-2'];
 const lensContextPaths = ['/produits/freshlook-colorblends?variante=1949&couleur=grey&sphere=2-00', '/produits/freshlook-colorblends?variante=774', '/produits/freshlook-1-day?couleur=grey&sphere=2-00'];
 const pagePaths = [
-  ...s1Paths, ...universePaths, ...legalPaths, '/contact', '/robots.txt',
+  ...s1Paths, ...universePaths, ...legalPaths, '/contact', '/rendez-vous', '/robots.txt',
   ...products.map(p => `/produits/${p.slug}`), ...brands.map(b => `/marques/${b.id}`), ...stores.map(s => `/magasins/${s.slug}`),
 ];
-const renderedPaths = [...pagePaths, ...contactPaths.slice(1), ...storeContextPaths, ...lensContextPaths];
+const renderedPaths = [...pagePaths, ...contactPaths.slice(1), ...appointmentPaths, ...storeContextPaths, ...lensContextPaths];
 const allowed = new Set(pagePaths);
 const subjectSlugs = new Set<string>(contactSubjects.map(s => s.slug));
+const reasonSlugs = new Set<string>(appointmentReasons.map(r => r.slug));
 const storeSlugs = new Set<string>(stores.map(s => s.slug));
 const productSlugs = new Set(products.map(p => p.slug));
 // External destinations: the three Google Maps places and the two press articles quoted on the old team page. No wildcard.
@@ -67,6 +74,7 @@ async function inspectPage(path: string) {
       for (const [key, value] of url.searchParams) {
         check(!personalKeys.test(key), `${path}: personal-data parameter in ${href}`);
         if (key === 'sujet') check(subjectSlugs.has(value), `${path}: unknown subject in ${href}`);
+        if (key === 'motif') check(reasonSlugs.has(value), `${path}: unknown appointment reason in ${href}`);
         if (key === 'magasin') check(storeSlugs.has(value), `${path}: unknown store in ${href}`);
         if (key === 'produit') check(productSlugs.has(value), `${path}: unknown product in ${href}`);
         if (key === 'retour') check(['/solaires', '/catalogue', '/lentilles'].includes(new URL(value, base).pathname), `${path}: unsafe return path in ${href}`);
@@ -133,6 +141,17 @@ async function contextChecks() {
   check(/Uniquement sur rendez-vous, à Mamao/.test(prostheses) && /Elle ne redonne pas la vision/.test(prostheses) && /DENCOTT/.test(prostheses), 'prosthesis page contract');
   const legal = await get('/mentions-legales');
   check(/ne sont ni l’hébergeur ni le créateur de ce prototype/.test(legal) && /SARL S2M/.test(legal), 'legal page keeps the old operator historical');
+  // Appointment: honest simulation, Mamao rule, unknown values never echoed, product summary validated on the server.
+  const appointment = await get('/rendez-vous?magasin=taravao');
+  check(/Les créneaux sont fictifs/.test(appointment) && /rien n’est réservé/.test(appointment) && /Optic 2000 Taravao/.test(appointment) && /Horaires à confirmer auprès du magasin/.test(appointment), 'appointment simulation and Taravao reservation');
+  const appointmentProsthesis = await get('/rendez-vous?motif=protheses&magasin=taravao');
+  check(/uniquement au magasin de Mamao/.test(appointmentProsthesis) && /Optic 2000 Mamao/.test(appointmentProsthesis), 'appointment prosthesis rule');
+  const appointmentUnknown = await get('/rendez-vous?magasin=paris&motif=promo&nom=Zq93Fictif');
+  check(/n’a pas été reconnue/.test(appointmentUnknown) && !/Zq93Fictif|paris|promo/.test(appointmentUnknown), 'appointment unknown values ignored and never echoed');
+  const appointmentStep = await get('/rendez-vous?etape=recapitulatif');
+  check(/étape suivante/.test(appointmentStep) && /Votre visite/.test(appointmentStep), 'appointment step links start at the first step');
+  const appointmentProduct = await get('/rendez-vous?magasin=mamao&produit=glory-glory&variante=1608');
+  check(/Glory Glory/.test(appointmentProduct) && /Noir brillant Manchester United/.test(appointmentProduct), 'appointment product summary');
   const cgv = await get('/cgv');
   check(/ne s’appliquent pas à ce prototype/.test(cgv), 'sales terms are not published as current');
 }
@@ -230,7 +249,7 @@ const notFound = [
   // Excluded account/cart/checkout pages, with and without a sub-path.
   '/mon-compte', '/mon-compte/commandes', '/panier', '/commander', '/commander/paiement',
   // No catch-all on the other aliases or the new routes.
-  '/boutique/produit-x', '/nos-magasins/inconnu', '/lentilles/inconnue', '/contact/x', '/services-et-garanties/x', '/protheses-occulaires/x',
+  '/boutique/produit-x', '/nos-magasins/inconnu', '/lentilles/inconnue', '/contact/x', '/rendez-vous/x', '/services-et-garanties/x', '/protheses-occulaires/x',
 ];
 async function notFoundChecks() {
   for (const path of notFound) {

@@ -15,9 +15,10 @@ export default function ProsthesesPage() {
       <a className="contact-line" href={`tel:${mamao.phone}`}><Icon name="phone" />Optic 2000 Mamao · +689 {mamao.phoneLabel}</a>
       <div className="appointment-actions">
         <Link className="action action-primary" href={contactHrefFor('protheses', mamao.slug)}>Préparer une demande<Icon name="arrow" /></Link>
+        <Link className="action action-secondary action-leading-icon" href={`/rendez-vous?magasin=${mamao.slug}&motif=protheses`}><Icon name="calendar" />Simuler un rendez-vous</Link>
         <Link className="action action-text" href={`/magasins/${mamao.slug}`}>Le magasin de Mamao<Icon name="arrow" /></Link>
       </div>
-      <p className="appointment-note">Démonstration : la demande préparée sur ce site ne réserve aucun rendez-vous et n’est pas envoyée.</p>
+      <p className="appointment-note">Démonstration : la demande et le rendez-vous préparés sur ce site ne réservent rien et ne sont pas envoyés. Le vrai rendez-vous se prend par téléphone.</p>
     </section>}>
       <p>À Optic 2000 Mamao, un opticien-oculariste réalise et adapte des prothèses oculaires sur mesure, en collaboration avec le laboratoire DENCOTT.</p>
     </EditorialHeader>

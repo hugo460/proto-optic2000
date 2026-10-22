@@ -1,7 +1,7 @@
 'use client';
 import Link from 'next/link';
 import Image from 'next/image';
-import { useEffect, useRef, useState, type FocusEvent } from 'react';
+import { useEffect, useRef, useState, type FocusEvent, type MouseEvent } from 'react';
 import { usePathname } from 'next/navigation';
 import { Icon } from '@/components/ui/icon';
 import { houseLinks, universes } from '@/data/navigation';
@@ -18,7 +18,19 @@ export function Header() {
   const dialog = useRef<HTMLDialogElement>(null);
   const trigger = useRef<HTMLButtonElement>(null);
   const [opened, setOpened] = useState(false);
+  const appointmentOnClose = useRef(false);
   const close = () => dialog.current?.close();
+  const focusAppointment = () => {
+    const title = document.getElementById('rdv-step-title');
+    title?.focus({ preventScroll: true });
+    title?.scrollIntoView({ block: 'start', behavior: 'instant' });
+  };
+  const revisitAppointment = (event: MouseEvent<HTMLAnchorElement>, fromMenu = false) => {
+    if (pathname !== '/rendez-vous' || location.search || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+    event.preventDefault();
+    if (fromMenu) appointmentOnClose.current = true;
+    else focusAppointment();
+  };
   // Desktop universes panel: a disclosure, not a modal. Escape returns focus to its button;
   // a click outside, leaving it with Tab or following a link closes it.
   const universeMenu = useRef<HTMLDivElement>(null);
@@ -53,16 +65,18 @@ export function Header() {
             </div>
           </div>
         </div>
-        {links.map(link => <Link key={link.href} href={link.href} aria-current={current(link.href)}>{link.label}</Link>)}
+        {/* « Les solaires » repeats an entry of the universes panel: it gives way to the appointment action between 801 and 1100 px. */}
+        {links.map(link => <Link key={link.href} href={link.href} aria-current={current(link.href)} className={link.href === '/solaires' ? 'nav-repeat' : undefined}>{link.label}</Link>)}
       </nav>
-      <Link href="/magasins" className="header-store"><Icon name="pin" /><span>Trouver mon magasin</span></Link>
+      <Link href="/rendez-vous" className="header-cta" aria-current={current('/rendez-vous')} onClick={revisitAppointment}><Icon name="calendar" /><span><span className="header-cta-long">Préparer un </span>RDV</span></Link>
       <button ref={trigger} className="menu-trigger" type="button" aria-expanded={opened} aria-controls="mobile-navigation" onClick={() => { dialog.current?.showModal(); setOpened(true); }}>Menu<Icon name="menu" /></button>
     </div>
-    <dialog ref={dialog} id="mobile-navigation" className="mobile-navigation" onClose={() => { setOpened(false); trigger.current?.focus(); }} onClick={event => { if (event.target === event.currentTarget) close(); }}>
+    <dialog ref={dialog} id="mobile-navigation" className="mobile-navigation" onClose={() => { setOpened(false); if (appointmentOnClose.current) { appointmentOnClose.current = false; focusAppointment(); } else trigger.current?.focus(); }} onClick={event => { if (event.target === event.currentTarget) close(); }}>
       <div className="mobile-navigation-inner">
         <div className="mobile-menu-heading"><span>Optic 2000 Tahiti</span><button type="button" className="icon-button" onClick={close} aria-label="Fermer le menu"><Icon name="close" /></button></div>
         <nav aria-label="Navigation mobile">
           <Link className="mobile-home" href="/" onClick={close} aria-current={pathname === '/' ? 'page' : undefined}>Accueil<Icon name="arrow" /></Link>
+          <Link className="mobile-cta" href="/rendez-vous" onClick={event => { revisitAppointment(event, true); close(); }} aria-current={current('/rendez-vous')}><Icon name="calendar" />Préparer un rendez-vous<Icon name="arrow" /></Link>
           {mobileGroups.map(group => <div className="mobile-group" key={group.title}><h2>{group.title}</h2>{group.links.map(link => <Link key={link.href} href={link.href} onClick={close} aria-current={current(link.href)}>{link.label}<Icon name="arrow" /></Link>)}</div>)}
         </nav>
         <p>Centre-ville, Mamao et Taravao.<br />Nos opticiens vous accueillent à Tahiti.</p>

@@ -6,12 +6,12 @@ export default function PrivacyPage() {
     <EditorialHeader title="Confidentialité.">
       <p>Ce que fait réellement ce prototype de présentation des informations que vous saisissez ou consultez.</p>
     </EditorialHeader>
-    <ReadingSection id="formulaire" title="Le formulaire de demande">
-      <p>Le nom, l’e-mail, le téléphone et le message saisis restent dans la page ouverte de votre navigateur. Ils servent uniquement à afficher le récapitulatif de la demande préparée.</p>
-      <p>Rien n’est envoyé au magasin, à l’hébergeur ni à un service extérieur, et rien n’est enregistré : un rechargement de la page ou « Préparer une autre demande » efface la saisie.</p>
+    <ReadingSection id="formulaire" title="La demande et le rendez-vous">
+      <p>La demande utilise le nom, l’e-mail, le téléphone facultatif et le message. Le rendez-vous de démonstration utilise seulement le nom, l’e-mail et le téléphone facultatif. Ces informations restent dans la page ouverte de votre navigateur et servent uniquement à afficher le récapitulatif préparé.</p>
+      <p>Rien n’est envoyé au magasin, à l’hébergeur ni à un service extérieur, et rien n’est enregistré : un rechargement de la page, « Préparer une autre demande » ou « Refaire la démonstration » efface la saisie. Les créneaux proposés sont fictifs : aucun rendez-vous n’est réservé.</p>
     </ReadingSection>
     <ReadingSection id="adresse" title="L’adresse des pages">
-      <p>Seuls des identifiants publics peuvent figurer dans l’adresse d’une page : produit, couleur, correction, magasin ou objet de la demande. Votre nom, votre e-mail, votre téléphone et votre message n’y figurent jamais.</p>
+      <p>Seuls des identifiants publics peuvent figurer dans l’adresse d’une page : produit, couleur, correction, magasin, objet de la demande, motif ou étape du rendez-vous. Votre nom, votre e-mail, votre téléphone, votre message et le créneau choisi n’y figurent jamais.</p>
     </ReadingSection>
     <ReadingSection id="hebergement" title="Les requêtes reçues par l’hébergeur">
       <p>Le prototype est hébergé par Vercel. Comme pour tout site publié, chaque page, image ou police demandée passe par ses serveurs, qui reçoivent les informations techniques de la requête : l’adresse IP, l’adresse publique de la page demandée et des données techniques du navigateur. Elles peuvent servir au fonctionnement et à la sécurité du service.</p>

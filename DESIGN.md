@@ -189,7 +189,7 @@ La palette met en relation un jaune franc, une famille lavande et des neutres de
 - **Texte inversé secondaire** (`inverse-muted`) : informations secondaires du pied de page ; même valeur source que le filet, rôle distinct.
 - **Noir d’en-tête** (`header-black`) : fond noir du bandeau de navigation, distinct de l’encre du pied de page.
 
-**The Plateau fidèle Rule.** Présenter les montures et les logos entiers avec object-fit: contain ; réserver object-fit: cover aux photographies de magasin.
+**The Plateau fidèle Rule.** Présenter les montures et les logos entiers, y compris dans le bandeau et au focus, avec object-fit: contain ; réserver object-fit: cover aux photographies de magasin.
 
 **The Action jaune Rule.** Associer le jaune aux actions principales et aux repères interactifs ; conserver les libellés et les états sémantiques pour que la couleur ne porte jamais seule le sens.
 
@@ -217,7 +217,7 @@ Le code n’emploie pas de rampe tonale complète. Les huit étapes OKLCH par co
 
 Les titres principaux de catalogue utilisent une taille locale (`clamp(2rem, 3.2vw, 3rem)`, puis 30px jusqu’à 600px). Les fiches produit utilisent `clamp(2.5rem, 4vw, 3.5rem)`, puis 38px jusqu’à 800px. L’accueil possède son titre propre ; sa grande taille et ses retours à la ligne restent dans le contrat d’accueil.
 
-Le texte suit un interligne aéré. Les introductions de sections sont contenues autour de (65–66ch), les notes de catalogue à (74ch) et les textes de marque à (58ch). Les prix et horaires utilisent des chiffres tabulaires ; les montants sont en XPF sans décimales. Les petites légendes existantes descendent à (10–11px) sur téléphone : ce sont des usages secondaires situés, pas une taille de lecture à généraliser.
+Le texte suit un interligne aéré. Les introductions de sections sont contenues autour de (65–66ch), les notes de catalogue à (74ch) et les textes de marque à (58ch). Les prix et horaires utilisent des chiffres tabulaires ; les montants sont en XPF sans décimales. Les légendes, prix, cartes et réserves touchés par S4 ne descendent plus sous (12px), y compris sur téléphone ; les aides et erreurs du rendez-vous sont à (14px). Le CSS livré ne contient plus de texte à (10–11px) : ne pas rouvrir cette limite.
 
 **The Deux voix Rule.** Réserver Sora aux titres et Manrope à la lecture, aux prix et aux commandes ; conserver les noms longs sans troncature.
 
@@ -248,26 +248,27 @@ Le système est plat : aucun `box-shadow` n’est livré. La profondeur est donn
 
 **The Plan de travail Rule.** Séparer les contenus par le ton du fond, les blancs et les filets ; ne pas ajouter une ombre pour transformer une carte plane en objet flottant.
 
-La réponse au survol des actions est une transition de fond et de couleur (`160ms ease`). La sélection d’un modèle dans le nuancier d’accueil remplace son contenu en (`260ms`, `cubic-bezier(.16, 1, .3, 1)`) avec une entrée d’opacité (0.65 → 1) et de déplacement vertical (7px → 0). Cette animation ne devient pas une entrée systématique de toutes les cartes. `prefers-reduced-motion: reduce` remplace le défilement doux par un défilement automatique et ramène animations/transitions à (`.01ms`, une itération).
+La réponse au survol des actions est une transition de fond et de couleur (`160ms ease`). Dans le nuancier d’accueil, seule la photographie de la monture arrive sur son plateau à chaque sélection et au chargement : durée `--duration-arrival` (650ms), courbe `--ease-arrival` (`cubic-bezier(.33, 1, .68, 1)`), photographie déjà visible (opacité .75 → 1) et translation (-56px, 16px) avec rotation (-4deg) jusqu’à la pose stable. Nom, prix, coloris et lien changent aussitôt ; aucun autoplay de modèle. C’est une signature de composition bornée à l’accueil, pas un préréglage d’entrée pour les cartes ou les formulaires. `--ease-out` (`cubic-bezier(.16, 1, .3, 1)`) reste déclarée mais n’est plus consommée par les styles livrés ; elle n’est pas une nouvelle prescription. `prefers-reduced-motion: reduce` remplace le défilement doux par un défilement automatique, ramène animations/transitions à (`.01ms`, une itération), laisse la photographie d’accueil à sa pose finale et transforme le bandeau de marques en rangée manuelle.
 
 ## Shapes
 
 Les grandes surfaces, photographies, cartes et plateaux sont rectangulaires et sans arrondi visible. Le rayon de contrôle du frontmatter est réservé aux actions, champs, puces et choix de variante. Les sélecteurs textuels et le déclencheur de filtres restent droits. Le rayon `--radius-card` déclaré dans le CSS n’est appliqué à aucun composant livré : il n’est pas canonisé.
 
-Les bordures ordinaires sont fines (1px). Les miniatures et variantes choisies passent à (2px d’encre) ; leur padding diminue d’un pixel pour garder leur taille. Les formes ne portent pas seules le choix : coche, nom et `aria-pressed` le confirment. Les icônes sont des SVG en ligne, habituellement (22px, trait 1.7, extrémités et jointures arrondies) ; les tailles locales de carte sont plus petites. Aucun caractère typographique ne sert de pictogramme.
+Les bordures ordinaires sont fines (1px). Les miniatures et variantes choisies passent à (2px d’encre) ; leur padding diminue d’un pixel pour garder leur taille. Les formes ne portent pas seules le choix : coche, nom et `aria-pressed` le confirment. Les icônes sont des SVG en ligne, habituellement (22px, trait 1.7, extrémités et jointures arrondies) ; les tailles locales de carte sont plus petites. La famille compte aussi calendrier, horloge, pause et lecture, pour le rendez-vous et le bandeau de marques. Aucun caractère typographique ne sert de pictogramme.
 
 ## Components
 
-Les exemples autonomes de `.impeccable/design.json` montrent dix composants réels. Ils développent le CSS natif, préfixent les classes par `ds-`, intègrent les icônes SVG et n’exigent aucun runtime React. Les couleurs restent liées aux variables de l’application, avec repli littéral ; les polices locales sont déclarées pour le rendu isolé. Les exemples utilisent les chemins publics du projet (`/fonts/` et `/media/`) : leur hôte doit servir ces assets pour afficher les mêmes polices et photographies. Ils documentent l’apparence et les états CSS ; le remplacement de variante et la recherche restent des comportements de l’application.
+Les exemples autonomes de `.impeccable/design.json` montrent onze composants réels. Ils développent le CSS natif, préfixent les classes par `ds-`, intègrent les icônes SVG et n’exigent aucun runtime React. Les couleurs restent liées aux variables de l’application, avec repli littéral ; les polices locales sont déclarées pour le rendu isolé. Les exemples utilisent les chemins publics du projet (`/fonts/` et `/media/`) : leur hôte doit servir ces assets pour afficher les mêmes polices et photographies. Ils documentent l’apparence et les états CSS ; le remplacement de variante et la recherche restent des comportements de l’application.
 
 ### Buttons
 
-Les actions sont franches, avec libellé lisible et icône directionnelle. Leur géométrie commune et les quatre variantes sont normatives dans le frontmatter. La hauteur minimale est (52px), l’écart texte/icône (20px), la bordure (1px) ; la variante texte conserve une hauteur minimale de (44px).
+Les actions sont franches, avec libellé lisible et icône cohérente avec leur action. Leur géométrie commune et les quatre variantes sont normatives dans le frontmatter. La hauteur minimale est (52px), l’écart texte/icône (20px), la bordure (1px) ; la variante texte conserve une hauteur minimale de (44px).
 
 - **Primaire** : jaune avec texte encre ; jaune plus sombre au survol.
 - **Sombre** : encre avec texte papier ; encre lavande au survol. Elle sert notamment à soumettre une recherche.
 - **Secondaire** : transparente, bordure encre ; plateau gris au survol. Elle fournit une sortie alternative sur les pages d’erreur.
 - **Texte** : sans fond ni bordure ; soulignement au survol.
+- **Icône en tête** : une primitive réutilisable place une icône (calendrier pour le rendez-vous) avant le libellé, groupé à gauche. La flèche finale indique une sortie ou la progression dans une tâche.
 
 Le focus clavier utilise un contour (3px, décalage 4px) : violet sur les zones claires, jaune dans l’en-tête et le pied de page. Le menu lavande rétablit le violet. Les boutons désactivés ont une opacité (0.55) et un curseur d’attente ; aucun nouveau style de statut métier ne doit en être déduit. Les adaptations mobiles restent locales : recherche soumise par icône jusqu’à 600px avec nom accessible conservé, action de contact produit pleine largeur (54px minimum).
 
@@ -276,6 +277,8 @@ Le focus clavier utilise un contour (3px, décalage 4px) : violet sur les zones 
 Les recherches sont sur papier, avec bordure filet, icône et rayon de contrôle. La hauteur minimale est (52px), ramenée à (48px) sur téléphone. Le focus englobe le groupe (`:focus-within`, contour 2px, décalage 1px) ; le curseur est violet et le placeholder secondaire reste opaque. Le survol n’ajoute pas de couleur distincte.
 
 Les `select` restent natifs : hauteur minimale (46px), puis (44px), libellés visibles au-dessus pour les filtres. Recherche, filtres et tri sont soumis explicitement. Un accordéon intitulé « Filtres et tri » remplace l’affichage permanent des filtres jusqu’à 800px ; son état est exposé par `aria-expanded` et `aria-controls`. Aucun résultat ne disparaît pendant la simple ouverture des filtres.
+
+Les choix radio du contact et du rendez-vous (magasin, motif, jour, heure) réemploient les cartes de choix existantes : filet, bordure d’encre de (2px) à la sélection avec padding compensé, plateau gris au survol, lavande douce sous le jour ou l’heure choisis, focus violet sur le contrôle natif masqué visuellement. Les aides et réserves du rendez-vous sont à (14px) ; les erreurs restent reliées au champ, avec icône et texte. La palette n’ajoute aucune couleur d’état. Le déroulé en quatre temps et sa colonne de contexte relèvent du contrat de surface du rendez-vous, pas d’un gabarit global.
 
 ### Chips
 
@@ -292,6 +295,12 @@ La carte marque protège le logo dans un plateau adapté : gris pour la majorit�
 La navigation principale est blanche sur noir ; la page courante et le survol deviennent jaunes, avec `aria-current="page"`. Le logo Optic 2000 conserve ses proportions et sa signature Tahiti reste séparée par un filet. La hauteur du bandeau est (96px), puis (80px) jusqu’à 800px et (74px) jusqu’à 600px. Jusqu’à 800px, un bouton « Menu » ouvre un `dialog` natif lavande ; sa largeur est `min(92vw, 460px)` et sa hauteur `100dvh`. Fermeture par commande dédiée, Échap natif ou fond prévu ; le focus revient au déclencheur à la fermeture.
 
 Les onglets de collection utilisent un filet inférieur de sélection (2px encre), `aria-current` et le compte. Sur téléphone, le lien annexe des autres marques s’efface de cette rangée ; les destinations restent disponibles dans la navigation générale. Un lien d’évitement devient visible au premier focus et rejoint le contenu principal.
+
+L’action jaune « Préparer un RDV » (calendrier en tête) ouvre le rendez-vous. Entre 801 et 1100px son libellé se réduit à « RDV » et « Les solaires », répété dans le panneau des univers, est masqué dans la barre ; la destination reste accessible par les univers. Sur le rendez-vous sans paramètre public, activer cette action conserve l’étape et le hash et redonne le focus ; depuis un contexte prérempli, l’action générique ouvre une nouvelle entrée sans présélection. Dans le menu mobile, si l’activation du RDV laisse l’utilisateur sur la page, le focus va au titre courant, sinon au déclencheur. Le pied de page reste rendu côté serveur avec un petit îlot client pour son action ; sur le rendez-vous, cette action devient un texte de contact plutôt qu’un second jaune.
+
+### Bandeau de marques
+
+Signature de composant, hors tokens globaux : les vrais logos défilent en boucle (52s pour 13 logos, soit 4s par logo) dans une piste masquée aux bords. Une commande pause/lecture et le lien d’annuaire restent fixes à côté. La piste se met en pause au vrai survol, au focus, hors champ et onglet masqué ; au focus clavier elle revient à la liste originale, immobile et défilable. Les clones sont cachés aux technologies d’assistance, hors tabulation, mais leurs liens restent utilisables au pointeur. Au mouvement réduit : rangée manuelle sans bouton de pause. La durée de 52s n’est pas un token.
 
 ### Gallery / Variants / Details
 
@@ -315,6 +324,8 @@ Une image indisponible est remplacée dans son plateau par un libellé explicite
 - Do — Associer chaque choix à un libellé, aria-pressed ou aria-current selon le cas, et une réponse visible.
 - Do — Laisser la grille, les noms longs, les prix XPF et les contrôles se réorganiser aux seuils documentés.
 - Do — Conserver les états vide, invalide, chargement, erreur et photo indisponible, avec une sortie utile.
+- Do — Garder légendes, prix, cartes et réserves à (12px) au minimum, et les aides et erreurs de rendez-vous à (14px).
+- Do — Réserver l’entrée de la photographie d’accueil à ce composant ; garder les formulaires sans entrée spatiale.
 
 ### Don't:
 
@@ -324,6 +335,6 @@ Une image indisponible est remplacée dans son plateau par un libellé explicite
 - Don't — Donner aux rampes synthétiques documentaires du sidecar le statut de couleurs livrées ; seuls les tokens du frontmatter font autorité.
 - Don't — Hériter du rayon de carte inutilisé, créer une variante visuelle de bouton non livrée ou annoncer un état métier absent du prototype.
 
-Périmètre non canonisé : rayon de carte inutilisé et variables d’espacement non consommées comme variables ; aucun de ces écarts n’est corrigé par cette extraction. Les petites légendes mobiles restent situées. Le document décrit les valeurs observées sans transformer ces limites en règles de futures surfaces.
+Périmètre non canonisé : rayon de carte inutilisé et variables d’espacement non consommées comme variables ; aucun de ces écarts n’est corrigé par cette extraction. Le document décrit les valeurs observées sans transformer ces limites en règles de futures surfaces. Aucune comp approuvée ni calibration humaine n’a été enregistrée pour S4.
 
-Sources d’extraction : `src/app/globals.css`, `src/app/layout.tsx`, les composants de `src/components/`, `PRODUCT.md`, `.impeccable/config.json` et les quatre contrats de `.impeccable/surfaces/`. Extraction de l’état S1 après correction du catalogue compact et des images mobiles ; aucune nouvelle décision de composition.
+Sources d’extraction : `src/app/globals.css`, `src/app/layout.tsx`, les composants de `src/components/`, `PRODUCT.md`, `.impeccable/config.json` et les contrats de `.impeccable/surfaces/`. État S1 mis à jour par une fusion étroite des éléments réutilisables livrés en S4 (marques, navigation, rendez-vous) ; pas de nouvelle identité.

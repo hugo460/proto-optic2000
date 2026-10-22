@@ -29,6 +29,7 @@ Prototype commercial destiné à être présenté par Omar. Le mail du 21 octobr
 ## Capabilities and Constraints
 
 - Hugo a confirmé le 21 octobre 2026 : **catalogue et contact magasin**, sans panier ni commande simulée.
+- Complément S4 demandé par Hugo le 21 octobre 2026 : marques défilantes contrôlables, présentation animée des montures dans le nuancier conservé, et **rendez-vous simulé** distinct du contact. Quatre temps : magasin/motif, jour/heure fictifs en heure de Tahiti, coordonnées, récapitulatif modifiable ; résultat sans réservation ni e-mail, puis recommencement. Aucun agenda ni prestation médicale confirmés.
 - Couvrir les univers existants : vue, soleil, lentilles et entretien, jumelles et télescopes, basse vision, prothèses oculaires, services et garanties, marques, magasins et contact. Les anciens chemins et écarts de reprise sont à inventorier.
 - Préserver tous les produits et variantes récupérés, leurs photos, noms, prix et attributs. Les marques présentes uniquement en magasin doivent être représentées sans faux produits en ligne.
 - Français, prix XPF sans décimales, contexte horaire Pacific/Tahiti. Les signes de correction des lentilles doivent rester exacts.

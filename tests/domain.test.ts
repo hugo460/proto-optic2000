@@ -8,6 +8,7 @@ import { changeSelection, lensOptions, readSelection, selectionLines, selectionP
 import { readVisitContext, validateContact, visitParams } from '../src/lib/contact-context';
 import { stores } from '../src/data/stores';
 import { legacyRedirects } from '../src/lib/legacy-redirects';
+import { millisecondsToTahitiMidnight, addDays, allowedView, chooseReason, dayLabel, demoDays, emptyDraft, firstIncompleteStep, readAppointmentContext, reconcileSlot, restartDraft, slotNotice, slotsFor, tahitiToday, timeLabel, validateStep } from '../src/lib/appointment';
 const glory = products.find(p => p.slug === 'glory-glory')!;
 test('Glory Glory keeps the five source prices and frame photographs', () => {
   const expected = [[774, 34600, 'HS833-12F'], [775, 34600, 'RS833-13D'], [1606, 34600, 'GS833-24S'], [1607, 34600, 'B833-11'], [1608, 38100, 'GS833-02UTD']] as const;
@@ -206,4 +207,91 @@ test('Legacy aliases: exact paths, filters kept, product pattern limited to the 
   assert.equal(pattern.source.match(/\|/g)!.length, 82, '83 alternatives, no wildcard');
   assert.equal(pattern.destination, '/produits/:slug');
   for (const excluded of ['/mon-compte', '/panier', '/commander', '/produit', '/produit/']) assert.equal(alias(excluded), undefined);
+});
+
+// ---- S4: demonstration appointment (fictitious slots, Pacific/Tahiti dates, injected clock) -------------------------
+const slugs = stores.map(s => s.slug);
+test('Tahiti day comes from the injected clock, not the machine time zone, across midnight and the new year', () => {
+  assert.equal(tahitiToday(new Date('2026-10-22T09:59:59Z')), '2026-10-21', 'still 23:59 on the 21st in Tahiti (UTC−10)');
+  assert.equal(tahitiToday(new Date('2026-10-22T10:00:00Z')), '2026-10-22');
+  assert.equal(millisecondsToTahitiMidnight(new Date('2026-10-22T09:59:59Z')), 1000);
+  assert.equal(millisecondsToTahitiMidnight(new Date('2026-10-22T10:00:00Z')), 86400000);
+  assert.equal(tahitiToday(new Date('2026-10-21T02:00:00Z')), '2026-10-20', 'already the 21st in UTC, still the 20th in Tahiti');
+  assert.deepEqual(demoDays('2026-12-28'), ['2026-12-29', '2026-12-30', '2026-12-31', '2027-01-01', '2027-01-02', '2027-01-03', '2027-01-04']);
+  assert.equal(addDays('2028-02-28', 1), '2028-02-29');
+  assert.equal(dayLabel('2027-01-01').full, 'vendredi 1er janvier 2027');
+  assert.equal(dayLabel('2026-10-22').full, 'jeudi 22 octobre 2026');
+  assert.deepEqual([timeLabel('09:30'), timeLabel('14:00')], ['9h30', '14h']);
+});
+test('Seven days from tomorrow: never today or a past day, always a day without demo slot, replayable at any date', () => {
+  for (const today of ['2026-10-21', '2027-03-15', '2030-08-04']) {
+    const days = demoDays(today);
+    assert.equal(days.length, 7);
+    assert(days.every(day => day > today));
+    for (const store of slugs) for (const reason of ['controle-vue', 'conseil-montures']) {
+      assert(days.some(day => slotsFor(store, reason, day).length === 0), `${store}/${reason}: one day without slot`);
+      assert(days.some(day => slotsFor(store, reason, day).length > 0), `${store}/${reason}: at least one slot`);
+    }
+  }
+  assert.deepEqual(slotsFor('taravao', 'conseil-montures', '2026-10-26'), [], 'Taravao has no demo slot on Monday');
+  assert.deepEqual(slotsFor('taravao', 'protheses', '2026-10-27'), [], 'prosthesis slots exist only at Mamao');
+  assert(slotsFor('mamao', 'protheses', '2026-10-27').length > 0);
+  assert.deepEqual(slotsFor('paris', 'conseil-montures', '2026-10-27'), []);
+  assert.deepEqual(slotsFor('mamao', 'promo', '2026-10-27'), []);
+});
+test('Appointment steps validate in order; a past or withdrawn slot is removed, never kept silently', () => {
+  const today = '2026-10-21';
+  const draft = { ...emptyDraft, store: 'centre-ville', reason: 'controle-vue', date: '2026-10-22', time: '10:30', name: 'Marie Fictive', email: 'demo@example.com', phone: '' };
+  assert.deepEqual(validateStep('recapitulatif', draft, slugs, today), {});
+  assert.equal(firstIncompleteStep(draft, slugs, today), 'recapitulatif');
+  assert.deepEqual(Object.keys(validateStep('visite', emptyDraft, slugs, today)), ['store', 'reason']);
+  assert.deepEqual(Object.keys(validateStep('visite', { ...draft, reason: 'protheses' }, slugs, today)), ['store'], 'prostheses only at Mamao');
+  assert.deepEqual(Object.keys(validateStep('creneau', { ...draft, date: '2026-10-21' }, slugs, today)), ['date'], 'today is not offered');
+  assert.deepEqual(Object.keys(validateStep('creneau', { ...draft, time: '09:30' }, slugs, today)), ['time'], 'a time offered for another reason only');
+  assert.deepEqual(Object.keys(validateStep('coordonnees', { ...draft, email: 'demo@', phone: 'abc' }, slugs, today)), ['email', 'phone']);
+  // Changing the reason keeps a still offered time and removes an incompatible one with an explanation.
+  assert.equal(reconcileSlot({ ...draft, reason: 'conseil-montures', time: '09:30' }, today).issue, undefined);
+  const moved = reconcileSlot({ ...draft, store: 'taravao' }, today);
+  assert.deepEqual([moved.issue, moved.draft.date, moved.draft.time], ['unavailable', '2026-10-22', '']);
+  assert.match(slotNotice(moved.issue!, moved.lost!), /jeudi 22 octobre 2026 à 10h30 n’existe pas/);
+  // The page stayed open past midnight: tomorrow became today and leaves the list.
+  const late = reconcileSlot(draft, tahitiToday(new Date('2026-10-22T10:00:00Z')));
+  assert.deepEqual([late.issue, late.draft.date, late.draft.time], ['past', '', '']);
+  assert.equal(firstIncompleteStep(late.draft, slugs, '2026-10-22'), 'creneau');
+});
+test('Steps cannot be skipped by a link or history, the result exists only after simulation, reset keeps the store', () => {
+  const today = '2026-10-21';
+  const visit = { ...emptyDraft, store: 'mamao', reason: 'conseil-montures' };
+  assert.equal(allowedView('recapitulatif', emptyDraft, slugs, today, false), 'visite');
+  assert.equal(allowedView('coordonnees', visit, slugs, today, false), 'creneau');
+  const complete = { ...visit, date: '2026-10-23', time: '10:00', name: 'Marie Fictive', email: 'demo@example.com', phone: '' };
+  assert.equal(allowedView('resultat', complete, slugs, today, false), 'recapitulatif', 'no result without simulation');
+  assert.equal(allowedView('resultat', complete, slugs, today, true), 'resultat');
+  assert.equal(allowedView('visite', complete, slugs, today, true), 'visite', 'going back is always possible');
+  assert.deepEqual(restartDraft(complete), { ...emptyDraft, store: 'mamao' });
+  const prosthesis = chooseReason({ ...emptyDraft, store: 'taravao' }, 'protheses');
+  assert.deepEqual([prosthesis.draft.store, prosthesis.movedToMamao], ['mamao', true]);
+  assert.equal(chooseReason({ ...emptyDraft, store: 'taravao' }, 'controle-vue').draft.store, 'taravao');
+});
+test('Appointment links carry public identifiers only; unknown, contradictory and step values are reported, never chosen', () => {
+  const source = { products, stores };
+  const read = (query: string) => readAppointmentContext(new URLSearchParams(query), source);
+  assert.deepEqual(read('magasin=taravao&motif=controle-vue'), { store: 'taravao', reason: 'controle-vue', selection: undefined, storeCorrected: false, ignored: false, skippedStep: false });
+  const unknown = read('magasin=paris&motif=promo&nom=Test');
+  assert.deepEqual([unknown.store, unknown.reason, unknown.ignored], [undefined, undefined, true]);
+  const prosthesis = read('magasin=taravao&motif=protheses');
+  assert.deepEqual([prosthesis.store, prosthesis.storeCorrected], ['mamao', true]);
+  assert.deepEqual([read('motif=protheses').store, read('motif=protheses').storeCorrected], ['mamao', false]);
+  const duplicate = read('magasin=taravao&magasin=mamao&motif=conseil-montures');
+  assert.deepEqual([duplicate.store, duplicate.ignored], [undefined, true]);
+  const repeated = readAppointmentContext({ magasin: ['taravao', 'mamao'], motif: ['controle-vue', 'conseil-montures'] }, source);
+  assert.deepEqual([repeated.store, repeated.reason, repeated.ignored], [undefined, undefined, true]);
+  assert.deepEqual([read('magasin=mamao&magasin=mamao').store, read('magasin=mamao&magasin=mamao').ignored], ['mamao', false]);
+  assert.equal(read('etape=recapitulatif').skippedStep, true);
+  assert.deepEqual([read('etape=visite').skippedStep, read('etape=visite').ignored], [false, false]);
+  assert.deepEqual([read('etape=inconnue').skippedStep, read('etape=inconnue').ignored], [false, true]);
+  const product = read('magasin=mamao&produit=glory-glory&variante=1608');
+  assert.deepEqual([product.selection?.variant?.id, product.ignored], [1608, false]);
+  assert.equal(read('produit=inconnu').ignored, true);
+  assert.equal(read('variante=1949').ignored, true, 'a variant without product is not trusted');
 });

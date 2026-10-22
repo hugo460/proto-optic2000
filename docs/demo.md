@@ -4,13 +4,19 @@ URL publique : [proto-optic2000.vercel.app](https://proto-optic2000.vercel.app)
 
 Prototype de présentation, non officiel, qui n’est pas destiné à être indexé. Il fonctionne sans compte et sans dépendance au WordPress historique ; images et polices sont servies par le site.
 
-Liens prêts à ouvrir : [Glory Glory](https://proto-optic2000.vercel.app/produits/glory-glory), [Colorblends Grey/+2.00](https://proto-optic2000.vercel.app/produits/freshlook-colorblends?variante=1949&couleur=grey&sphere=2-00), [Taravao avec Grey/−2.00](https://proto-optic2000.vercel.app/magasins/taravao?produit=freshlook-colorblends&variante=1949&couleur=grey&sphere=2-00-2), [Prothèses](https://proto-optic2000.vercel.app/protheses-oculaires), [demande à Mamao](https://proto-optic2000.vercel.app/contact?sujet=protheses&magasin=mamao).
+Liens prêts à ouvrir : [Rendez-vous](https://proto-optic2000.vercel.app/rendez-vous), [Rendez-vous à Taravao](https://proto-optic2000.vercel.app/rendez-vous?magasin=taravao), [Rendez-vous prothèses à Mamao](https://proto-optic2000.vercel.app/rendez-vous?magasin=mamao&motif=protheses), [Glory Glory](https://proto-optic2000.vercel.app/produits/glory-glory), [Colorblends Grey/+2.00](https://proto-optic2000.vercel.app/produits/freshlook-colorblends?variante=1949&couleur=grey&sphere=2-00), [Taravao avec Grey/−2.00](https://proto-optic2000.vercel.app/magasins/taravao?produit=freshlook-colorblends&variante=1949&couleur=grey&sphere=2-00-2), [Prothèses](https://proto-optic2000.vercel.app/protheses-oculaires), [demande à Mamao](https://proto-optic2000.vercel.app/contact?sujet=protheses&magasin=mamao).
 
 ## Avant de commencer
 
 - Ouvrir une fenêtre de navigation propre, à partir de la racine `/`. Rien n’est à effacer : le prototype ne stocke rien.
 - N’utiliser que des données fictives : `Marie Fictive`, `demo@example.com`, un téléphone et un message d’exemple. Aucun vrai document ni donnée médicale.
 - Ne pas activer les liens téléphone, e-mail et plan pendant la présentation : ils ouvrent les outils de l’appareil.
+
+## Parcours 0 — Accueil vivant
+
+1. À l’arrivée, la monture se pose sur le plateau blanc puis reste immobile. Choisir **Baby Beach**, puis **The Bird** : la photo rejoue son arrivée, nom, prix et lien changent tout de suite.
+2. Le bandeau de marques défile lentement : sur un appareil avec souris, le survoler l’arrête, **Pause** le fige, **Reprendre** le relance. Au clavier (Tab), la rangée s’immobilise et chaque logo reste entièrement visible. « Toutes les marques » reste fixe.
+3. Avec la préférence système « réduire les animations », la monture apparaît sans mouvement et les logos forment une rangée à faire défiler à la main, sans bouton de pause.
 
 ## Parcours 1 — Solaire : le prix suit la variante, puis le magasin
 
@@ -32,10 +38,23 @@ Liens prêts à ouvrir : [Glory Glory](https://proto-optic2000.vercel.app/produi
 2. « Préparer une demande » : le formulaire arrive avec l’objet « Prothèses oculaires » et Mamao (`/contact?sujet=protheses&magasin=mamao`).
 3. Renseigner les mêmes données fictives, choisir Taravao et préparer la demande : la validation explique que ce service n’existe qu’à Mamao. Revenir à Mamao, préparer, puis ouvrir la fiche du magasin.
 
+## Parcours 4 — Rendez-vous simulé
+
+Rejouable à toute date : les sept jours proposés commencent toujours au lendemain, en heure de Tahiti.
+
+1. Depuis l’accueil (« Préparer un rendez-vous »), l’en-tête (« Préparer un RDV ») ou la fiche **Taravao** (« Préparer un rendez-vous » : le magasin est déjà choisi).
+2. **Votre visite** : « Continuer » sans motif montre l’erreur reliée et y place le focus. Choisir « Conseil et essai de montures ». Les motifs sont illustratifs ; le contrôle de vue n’est pas une consultation médicale.
+3. **Votre créneau** : les créneaux sont **fictifs** et ne viennent pas des horaires de Taravao (à confirmer). Choisir un jour marqué « Aucun » (le dimanche, ou lundi/jeudi à Taravao) : « Aucun créneau de démonstration ce jour-là », puis le bouton vers le jour suivant. Choisir une heure.
+4. **Vos coordonnées** : `Marie Fictive`, d’abord `demo@` (erreur), puis `demo@example.com`, téléphone `+689 00 00 00 00` facultatif.
+5. **Récapitulatif** : « Modifier votre visite », passer à Centre-ville : si l’heure n’existe pas là, elle est retirée avec une explication et le créneau est à rechoisir ; « Revenir au récapitulatif ».
+6. « Simuler le rendez-vous » : **aucune réservation ni e-mail**, coordonnées réelles du magasin pour un vrai rendez-vous. Retour/Avant du navigateur passent d’une étape à l’autre ; une modification efface le résultat. Un rechargement repart à la première étape et efface la saisie.
+7. « Refaire la démonstration » garde le magasin et efface motif, créneau et coordonnées.
+8. Prothèses : [ce lien](https://proto-optic2000.vercel.app/rendez-vous?magasin=taravao&motif=protheses) corrige Taravao en Mamao et rappelle que le vrai rendez-vous se demande par téléphone.
+
 ## Limites à annoncer
 
 - Prix, stocks, horaires (dont Taravao), garanties, équipe et mentions historiques viennent des pages publiques de l’ancien site, relevées le 21/10/2026 ; ils restent à confirmer par l’enseigne.
-- Le formulaire est une simulation : aucun envoi au magasin, aucune réservation, aucun compte, panier ni paiement. La saisie reste dans la page et disparaît au rechargement.
+- Le formulaire et le rendez-vous sont des simulations : aucun envoi au magasin, aucune réservation, aucun compte, panier ni paiement. Les créneaux sont fictifs. La saisie reste dans la page et disparaît au rechargement.
 - L’hébergeur reçoit, comme pour tout site, les requêtes techniques de navigation ; jamais la saisie du formulaire (voir la page Confidentialité).
 - Le domaine historique, le site WordPress et ses comptes ou commandes ne sont pas touchés. Les CGV de 2022 ne s’appliquent pas.
 

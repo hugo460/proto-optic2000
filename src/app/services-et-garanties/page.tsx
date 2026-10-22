@@ -16,7 +16,7 @@ export default function ServicesPage() {
       <p>L’ancienne page « Nos offres » présentait trois visuels datés de 2022 : {historicalOffers.join(', ')}. Ces offres ne sont pas reprises : aucune n’est confirmée comme offre actuelle.</p>
       <p>Pour connaître les offres en cours, renseignez-vous auprès de votre magasin.</p>
     </ReadingSection>
-    <ContactPrompt subject="services" title="Une question sur un service ?">Devis, entretien, garantie : préparez votre demande pour le magasin de votre choix.</ContactPrompt>
+    <ContactPrompt subject="services" title="Une question sur un service ?" appointment={{ href: '/rendez-vous', lead: false }}>Devis, entretien, garantie : préparez votre demande pour le magasin de votre choix, ou une visite pour en parler sur place.</ContactPrompt>
     <SourceNote pages={['accueil', 'nos-offres']}>Textes réorganisés et orthographe corrigée, sans changement des conditions publiées.</SourceNote>
   </div>;
 }

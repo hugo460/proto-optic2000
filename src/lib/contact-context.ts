@@ -65,17 +65,24 @@ export interface ContactFields { store: string; subject: string; name: string; e
 export type ContactErrors = Partial<Record<keyof ContactFields, string>>;
 export const contactFieldOrder: (keyof ContactFields)[] = ['store', 'subject', 'name', 'email', 'phone', 'message'];
 export const messageLimits = { min: 10, max: 1000 } as const;
-export function validateContact(fields: ContactFields, storeSlugs: readonly string[]): ContactErrors {
-  const errors: ContactErrors = {};
-  if (!storeSlugs.includes(fields.store)) errors.store = 'Choisissez le magasin qui recevrait votre demande.';
-  else if (fields.subject === 'protheses' && fields.store !== prosthesisStore) errors.store = 'Les prothèses oculaires sont suivies uniquement au magasin de Mamao. Choisissez Mamao.';
-  if (!isSubject(fields.subject)) errors.subject = 'Choisissez l’objet de votre demande.';
+// Name, e-mail and optional phone: the same rules for the contact request and the demonstration appointment.
+export interface PersonFields { name: string; email: string; phone: string }
+export function validatePerson(fields: PersonFields): Partial<Record<keyof PersonFields, string>> {
+  const errors: Partial<Record<keyof PersonFields, string>> = {};
   if (fields.name.trim().length < 2) errors.name = 'Indiquez votre nom (2 caractères minimum).';
   const email = fields.email.trim();
   if (!email) errors.email = 'Indiquez votre adresse e-mail.';
   else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) errors.email = 'Vérifiez l’adresse e-mail, par exemple prenom@example.com.';
   const phone = fields.phone.trim();
   if (phone && (!/^\+?[\d\s.()-]+$/.test(phone) || phone.replace(/\D/g, '').length < 6 || phone.replace(/\D/g, '').length > 15)) errors.phone = 'Vérifiez le numéro : chiffres, espaces et « + » uniquement, ou laissez ce champ vide.';
+  return errors;
+}
+export function validateContact(fields: ContactFields, storeSlugs: readonly string[]): ContactErrors {
+  const errors: ContactErrors = {};
+  if (!storeSlugs.includes(fields.store)) errors.store = 'Choisissez le magasin qui recevrait votre demande.';
+  else if (fields.subject === 'protheses' && fields.store !== prosthesisStore) errors.store = 'Les prothèses oculaires sont suivies uniquement au magasin de Mamao. Choisissez Mamao.';
+  if (!isSubject(fields.subject)) errors.subject = 'Choisissez l’objet de votre demande.';
+  Object.assign(errors, validatePerson(fields));
   const message = fields.message.trim();
   if (!message) errors.message = 'Écrivez votre message.';
   else if (message.length < messageLimits.min) errors.message = `Précisez votre message (${messageLimits.min} caractères minimum).`;

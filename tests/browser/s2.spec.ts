@@ -175,7 +175,7 @@ test('Footer reaches every universe, the house pages and the three legal pages',
   const footer = page.getByRole('navigation', { name: 'Plan du site' });
   expect(await footer.getByRole('link').evaluateAll(links => links.map(link => link.getAttribute('href')))).toEqual([
     ...destinations.map(([href]) => href).filter(href => !['/services-et-garanties', '/qui-sommes-nous'].includes(href)),
-    '/services-et-garanties', '/qui-sommes-nous', '/marques', '/magasins', '/catalogue', '/contact',
+    '/services-et-garanties', '/qui-sommes-nous', '/marques', '/magasins', '/catalogue', '/contact', '/rendez-vous',
     '/mentions-legales', '/politique-de-confidentialite', '/cgv',
   ]);
   for (const [name, title, phrase] of [
@@ -202,7 +202,7 @@ for (const viewport of [{ width: 390, height: 600 }, { width: 360, height: 640 }
     await expect(dialog).toBeVisible();
     const nav = dialog.getByRole('navigation', { name: 'Navigation mobile' });
     expect(await nav.getByRole('link').evaluateAll(links => links.map(link => link.getAttribute('href')))).toEqual([
-      '/', '/lunettes-de-vue', '/solaires', '/lentilles', '/jumelles-et-telescopes', '/basse-vision', '/protheses-oculaires', '/services-et-garanties', '/qui-sommes-nous', '/marques', '/magasins', '/contact',
+      '/', '/rendez-vous', '/lunettes-de-vue', '/solaires', '/lentilles', '/jumelles-et-telescopes', '/basse-vision', '/protheses-oculaires', '/services-et-garanties', '/qui-sommes-nous', '/marques', '/magasins', '/contact',
     ]);
     const metrics = await dialog.evaluate(element => ({ scroll: element.scrollHeight, client: element.clientHeight, overflowY: getComputedStyle(element).overflowY, viewport: innerHeight }));
     expect(metrics.scroll, 'the menu is taller than the short screen').toBeGreaterThan(metrics.client);
@@ -239,7 +239,8 @@ test('Home shows the whole house beyond Maui Jim without hiding the first models
     await page.goto('/');
     await expect(h1(page)).toHaveText(/Le soleil\.\s*À votre façon\./);
     await expect(page.locator('.showcase-stage')).toBeInViewport();
-    if (viewport.width >= 1101) await expect(page.locator('.header-store')).toBeVisible();
+    // S4: the yellow header action prepares an appointment; « Nos magasins » keeps the store directory one click away.
+    if (viewport.width >= 1101) { await expect(page.locator('.header-cta')).toBeVisible(); await expect(page.getByRole('navigation', { name: 'Navigation principale' }).getByRole('link', { name: 'Nos magasins', exact: true })).toBeVisible(); }
     else await expect(page.getByRole('button', { name: 'Menu', exact: true }).or(page.getByRole('navigation', { name: 'Navigation principale' }))).toBeVisible();
     expect(await page.locator('.home-universes .universe-index a').evaluateAll(links => links.map(link => link.getAttribute('href')))).toEqual(destinations.slice(0, 6).map(([href]) => href));
     expect(await page.locator('.home-universes .universe-more a').evaluateAll(links => links.map(link => link.getAttribute('href')))).toEqual(['/services-et-garanties', '/qui-sommes-nous']);
@@ -1003,6 +1004,7 @@ const boundaryRoutes = [
   '/', '/solaires', '/catalogue', '/lunettes-de-vue', '/lentilles', '/jumelles-et-telescopes', '/basse-vision', '/protheses-oculaires', '/services-et-garanties', '/qui-sommes-nous',
   '/contact', '/contact?magasin=taravao&produit=freshlook-colorblends&variante=1949&couleur=grey&sphere=2-00-2', '/mentions-legales', '/politique-de-confidentialite', '/cgv',
   '/produits/freshlook-colorblends?variante=1949&couleur=grey&sphere=2-00', '/produits/trublends-one-day-5-couleurs', '/magasins', '/magasins/taravao', '/marques', '/marques/bosma',
+  '/rendez-vous', '/rendez-vous?magasin=taravao&motif=conseil-montures',
 ];
 for (const width of [801, 1101, 1280]) {
   test(`No horizontal overflow and a usable header at the ${width}px boundary`, async ({ page }) => {
@@ -1030,7 +1032,7 @@ for (const width of [801, 1101, 1280]) {
       expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
       const navBox = (await desktop.boundingBox())!;
       expect(navBox.x + navBox.width, 'the desktop navigation stays inside the screen').toBeLessThanOrEqual(width);
-      const rects = await page.evaluate(() => ['.brand-lockup', '.desktop-nav', '.header-store'].map(selector => { const box = document.querySelector(selector)?.getBoundingClientRect(); return box && box.width > 0 ? { selector, left: box.left, right: box.right } : null; }).filter((box): box is { selector: string; left: number; right: number } => !!box));
+      const rects = await page.evaluate(() => ['.brand-lockup', '.desktop-nav', '.header-cta'].map(selector => { const box = document.querySelector(selector)?.getBoundingClientRect(); return box && box.width > 0 ? { selector, left: box.left, right: box.right } : null; }).filter((box): box is { selector: string; left: number; right: number } => !!box));
       for (let index = 1; index < rects.length; index++) expect(rects[index - 1].right, `${rects[index - 1].selector} overlaps ${rects[index].selector}`).toBeLessThanOrEqual(rects[index].left + 1);
       await page.keyboard.press('Escape');
     } else {

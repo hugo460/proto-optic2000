@@ -12,6 +12,10 @@ const paths = {
   chevron: 'm6 9 6 6 6-6',
   external: 'M14 3h7v7m0-7L10 14M10 3H3v18h18v-7',
   check: 'm4 12 5 5L20 6',
+  calendar: 'M8 3v4m8-4v4M4 10h16M5 5h14a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1Z',
+  clock: 'M12 7v5l3 2m6-2a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z',
+  pause: 'M9 6v12m6-12v12',
+  play: 'M8 5.5v13l10.5-6.5L8 5.5Z',
 } as const;
 export function Icon({ name, className, style }: { name: keyof typeof paths; className?: string; style?: CSSProperties }) {
   return <svg className={className} style={style} width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d={paths[name]} /></svg>;

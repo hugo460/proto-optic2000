@@ -4,7 +4,9 @@ Lot S1 (accepté localement par le pilote le 21/10/2026 au commit `e3ee64e`, san
 
 Lot S2 (accepté localement par le pilote le 21/10/2026 au commit `49458ec`, sans validation commerciale du client) : tous les univers utiles (lunettes de vue, lentilles et entretien, jumelles et télescopes, basse vision, prothèses oculaires, services et garanties, équipe), sélection précise des lentilles, formulaire de contact local, trois pages légales, 25 anciennes pages traitées (redirections, regroupements ou exclusions motivées). Toujours sans panier, compte, commande, envoi ni rendez-vous réel.
 
-Version de présentation S3 : [ouvrir le prototype](https://proto-optic2000.vercel.app). Mentions adaptées à Vercel, matrice de recette complétée et [guide de démonstration](docs/demo.md). L’acceptation finale du chantier reste au pilote ; les informations commerciales restent à confirmer par l’enseigne.
+Version de présentation S3 : [ouvrir le prototype](https://proto-optic2000.vercel.app). Mentions adaptées à Vercel, matrice de recette complétée et [guide de démonstration](docs/demo.md). S3 a été acceptée par le pilote.
+
+Complément S4 (demandé par Hugo après le retour d’Omar du 21/10/2026) : bandeau de marques défilant avec pause/reprise, présentation animée des montures du nuancier, **rendez-vous simulé** en quatre étapes sur `/rendez-vous` (créneaux fictifs en heure de Tahiti, rien n’est réservé ni envoyé) et passe de finition des parcours. L’acceptation de S4 reste au pilote ; les informations commerciales restent à confirmer par l’enseigne.
 
 ## Lancer
 
@@ -39,7 +41,7 @@ OPTIC_BASE_URL=http://127.0.0.1:3018 OPTIC_PROOF_DIR=/chemin/hors-du-depot pnpm 
 OPTIC_BASE_URL=http://127.0.0.1:3018 OPTIC_PROOF_DIR=/chemin/hors-du-depot pnpm check:browser-quality
 ```
 
-`check:routes` contrôle toutes les pages canoniques, `robots.txt`, des états de requête, les liens internes, les redirections de l’ancien site et les vraies 404. `check:browser-quality` rejoue les routes à 360 px, 720×500 en 2×, au clavier et aux seuils 801/1101/1280 px. `check:data` vérifie les décomptes, la couverture des 25 pages sources et les citations de garanties. Les tests navigateur couvrent aussi les href de téléphone, e-mail et plan sans les activer, et échouent sur tout trafic hors origine locale (dont l’ancien domaine). Les tests navigateur utilisent Chromium via Playwright. Sur une machine sans navigateur de test : `pnpm exec playwright install chromium`. Le serveur doit tourner avant les quatre dernières commandes. Les captures et logs volumineux restent hors Git ; `.impeccable/review/` est ignoré.
+`check:routes` contrôle toutes les pages canoniques (dont `/rendez-vous` et ses liens publics), `robots.txt`, des états de requête, les liens internes, les redirections de l’ancien site et les vraies 404. `check:browser-quality` rejoue les routes à 360 px, 720×500 en 2×, au clavier (contact, rendez-vous, bandeau de marques), avec le mouvement par défaut et aux seuils 801/1101/1280 px. `capture:ui` ajoute les états du rendez-vous et des images horodatées de l’animation. `check:data` vérifie les décomptes, la couverture des 25 pages sources et les citations de garanties. Les tests navigateur couvrent aussi les href de téléphone, e-mail et plan sans les activer, et échouent sur tout trafic hors origine locale (dont l’ancien domaine). Les tests navigateur utilisent Chromium via Playwright. Sur une machine sans navigateur de test : `pnpm exec playwright install chromium`. Le serveur doit tourner avant les quatre dernières commandes. Les captures et logs volumineux restent hors Git ; `.impeccable/review/` est ignoré.
 
 ## Données et reprise
 
@@ -47,7 +49,7 @@ Le snapshot public réduit est inclus dans `src/data/source/`. `pnpm import:data
 
 Lire [le scénario](docs/demo.md), [l’architecture](docs/architecture.md), [l’inventaire](docs/content-inventory.md), [les décisions](docs/decisions.md) et [la reprise](docs/reprise.md). `PRODUCT.md` et `.impeccable/config.json` préexistaient au code ; ils sont conservés. `DESIGN.md` et son sidecar décrivent les tokens réellement livrés.
 
-Les prix, stocks, horaires, garanties et mentions légales historiques sont publics et datés ; le client ne les a pas validés. Taravao garde une seule réponse : horaires à confirmer. Les cinq fiches de lentilles proposent une sélection signée (voir [l’architecture](docs/architecture.md)) ; les prix restent « à confirmer en magasin ». Le formulaire de contact est une simulation en mémoire locale : aucun envoi, rendez-vous, stockage ou donnée saisie dans l’URL. Les pages sont `noindex` ; les images et polices sont embarquées ; les tests échouent si le site historique est sollicité.
+Les prix, stocks, horaires, garanties et mentions légales historiques sont publics et datés ; le client ne les a pas validés. Taravao garde une seule réponse : horaires à confirmer. Les cinq fiches de lentilles proposent une sélection signée (voir [l’architecture](docs/architecture.md)) ; les prix restent « à confirmer en magasin ». Le formulaire de contact et le rendez-vous sont des simulations en mémoire locale : aucun envoi, réservation, stockage ou donnée saisie dans l’URL. Les créneaux du rendez-vous sont fictifs (`src/data/appointment-demo.ts`), sans lien avec l’agenda ni les horaires des magasins. Les pages sont `noindex` ; les images et polices sont embarquées ; les tests échouent si le site historique est sollicité.
 
 Les pages légales désignent devlab (réalisation) et Vercel (hébergement) sans inventer d’éditeur officiel ; OVH et JK restent attribués à l’ancien site. La confidentialité distingue la saisie, qui ne quitte pas le navigateur, des requêtes techniques reçues par l’hébergeur. `noindex`, l’en-tête `X-Robots-Tag` et `Disallow: /` sont conservés.
 

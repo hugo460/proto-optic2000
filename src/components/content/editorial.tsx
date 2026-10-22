@@ -27,14 +27,17 @@ export function ReadingSection({ id, title, children, media }: { id: string; tit
   </section>;
 }
 
-export function ContactPrompt({ subject, store, title, children, secondary }: { subject: SubjectSlug; store?: string; title: string; children: ReactNode; secondary?: { href: string; label: string } }) {
+// A question (contact) and a visit (appointment) are two distinct actions; `appointment.lead` makes the visit primary.
+export function ContactPrompt({ subject, store, title, children, secondary, appointment }: { subject: SubjectSlug; store?: string; title: string; children: ReactNode; secondary?: { href: string; label: string }; appointment?: { href: string; lead: boolean } }) {
   const other = secondary ?? { href: '/magasins', label: 'Nos trois magasins' };
+  const request = <Link className={`action ${appointment?.lead ? 'action-secondary' : 'action-primary'}`} href={contactHrefFor(subject, store)}>Préparer une demande<Icon name="arrow" /></Link>;
+  const visit = appointment && <Link className={`action action-leading-icon ${appointment.lead ? 'action-primary' : 'action-secondary'}`} href={appointment.href}><Icon name="calendar" />Préparer un rendez-vous</Link>;
   return <aside className="contact-prompt" aria-labelledby={`contact-${subject}`}>
     <div><h2 id={`contact-${subject}`}>{title}</h2><p>{children}</p></div>
     <div className="contact-prompt-actions">
-      <Link className="action action-primary" href={contactHrefFor(subject, store)}>Préparer une demande<Icon name="arrow" /></Link>
+      {appointment?.lead ? <>{visit}{request}</> : <>{request}{visit}</>}
       <Link className="action action-text" href={other.href}>{other.label}<Icon name="arrow" /></Link>
-      <p>Démonstration : la demande est mise en forme sur ce site, rien n’est envoyé ni réservé.</p>
+      <p>{appointment ? 'Démonstration : demande et rendez-vous sont préparés sur ce site, rien n’est envoyé ni réservé.' : 'Démonstration : la demande est mise en forme sur ce site, rien n’est envoyé ni réservé.'}</p>
     </div>
   </aside>;
 }

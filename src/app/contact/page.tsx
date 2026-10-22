@@ -24,7 +24,7 @@ export default async function ContactPage({ searchParams }: { searchParams: Prom
   const back = summary ? { href: summary.href, label: 'Retour à votre sélection' } : context.store ? { href: `/magasins/${context.store.slug}${contextQuery ? `?${contextQuery}` : ''}`, label: `Retour au magasin ${context.store.name}` } : { href: '/magasins', label: 'Nos magasins' };
   return <div className="container contact-page">
     <Link className="back-link" href={back.href}><Icon name="back" />{back.label}</Link>
-    <div className="page-heading contact-heading"><h1>Préparer votre demande.</h1><p>Choisissez le magasin, précisez l’objet et laissez vos coordonnées : la demande est mise en forme ici, pour la démonstration.</p></div>
+    <div className="page-heading contact-heading"><h1>Préparer votre demande.</h1><p>Choisissez le magasin, précisez l’objet et laissez vos coordonnées : la demande est mise en forme ici, pour la démonstration. Pour choisir un jour de visite, <Link className="underlined" href="/rendez-vous">préparez plutôt un rendez-vous</Link>.</p></div>
     <p className="contact-simulation"><strong>Démonstration.</strong> Aucun message n’est envoyé et aucun rendez-vous n’est réservé. Pour joindre réellement un magasin, utilisez son téléphone ou son e-mail.</p>
     {context.rejected.length > 0 && <p className="notice">Une partie du lien n’a pas été reconnue : elle a été ignorée. Le formulaire reste utilisable.</p>}
     {context.storeFromSubject && context.subject === 'protheses' && <p className="notice">Les prothèses oculaires sont suivies uniquement au magasin de Mamao : il est choisi pour cette demande. Le rendez-vous se demande par téléphone.</p>}

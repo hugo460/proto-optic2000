@@ -234,6 +234,101 @@ for (const [name, route] of [['mentions-desktop', '/mentions-legales'], ['confid
   await snap(name, true);
 }
 
+// ---- S4 matrix: the demonstration appointment, real controls only, at the three main sizes -------------------------------
+const rdvReady = () => page.waitForFunction(() => !document.querySelector<HTMLButtonElement>('.rdv-actions [type=submit]')?.disabled);
+const rdvNext = () => page.locator('.rdv-actions [type=submit]').click();
+for (const { key, width, height } of sizes) {
+  await go('/rendez-vous?magasin=taravao', width, height);
+  await rdvReady();
+  await snap(`rdv-initial-${key}`, true);
+  await rdvNext();
+  await page.locator('#rdv-reason-error').waitFor();
+  assert.equal(await focusedId(), 'rdv-reason-controle-vue', 'the first appointment error takes the focus');
+  await snap(`rdv-visit-error-${key}`, true);
+  await page.locator('label:has(#rdv-reason-conseil-montures)').click();
+  await rdvNext();
+  await page.locator('.rdv-day').first().waitFor();
+  // A day without any demo slot, then the next open day and a time.
+  await page.locator('.rdv-day[data-empty]').first().click();
+  await page.locator('.rdv-empty').waitFor();
+  await snap(`rdv-no-slot-${key}`, true);
+  await page.locator('.rdv-day:not([data-empty])').first().click();
+  await page.locator('.rdv-time').first().click();
+  await page.locator('.rdv-chosen').waitFor();
+  await snap(`rdv-slot-${key}`, true);
+  await rdvNext();
+  await page.getByLabel('Nom', { exact: true }).fill('Marie Fictive');
+  await page.getByLabel('E-mail', { exact: true }).fill('demo@');
+  await rdvNext();
+  await page.locator('#rdv-email-error').waitFor();
+  assert.equal(await focusedId(), 'rdv-email');
+  await snap(`rdv-contact-error-${key}`, true);
+  await page.getByLabel('E-mail', { exact: true }).fill('demo@example.com');
+  await rdvNext();
+  await page.locator('.rdv-summary').waitFor();
+  await snap(`rdv-recap-${key}`, true);
+  await page.getByRole('button', { name: 'Simuler le rendez-vous' }).click();
+  await page.getByRole('heading', { name: 'Rendez-vous préparé pour la démonstration.' }).waitFor();
+  assert.equal(await focusedId(), 'rdv-step-title');
+  await snap(`rdv-result-${key}`, true);
+}
+// Prosthesis link corrected to Mamao, and the store page entry with its preselection.
+await go('/rendez-vous?motif=protheses&magasin=taravao', 390, 844);
+await rdvReady();
+await snap('rdv-prosthesis-mobile', true);
+await go('/magasins/mamao', 1440, 1000);
+await snap('store-mamao-rdv-desktop', true);
+// Navigation with the appointment action at the 801 and 1101 px boundaries.
+for (const width of [801, 1101]) { await go('/', width, 800); await snap(`nav-${width}`, false); }
+
+// ---- S4 motion: default motion preference, timestamped frames (captures elsewhere use reduced motion) --------------------
+const motion = await browser.newContext({ viewport: { width: 1440, height: 1000 } });
+await motion.route(/optic2000tahiti\.com/, route => { forbidden.push(route.request().url()); return route.abort(); });
+const motionRequests: { method: string; url: string; body: boolean }[] = [];
+motion.on('request', request => motionRequests.push({ method: request.method(), url: request.url(), body: request.postData() !== null }));
+motion.on('console', message => { if (message.type() === 'error') errors.push(`motion console: ${message.text()}`); });
+const motionPage = await motion.newPage();
+motionPage.on('pageerror', error => errors.push(`pageerror: ${error.message}`));
+await motionPage.goto(base + '/');
+await motionPage.evaluate(async () => { await document.fonts.ready; await Promise.all([...document.images].map(async image => { image.loading = 'eager'; try { await image.decode(); } catch { /* recorded by the other captures */ } })); });
+await motionPage.waitForTimeout(1200);
+const motionFrames: { name: string; ms: number; transform: string; marquee: number }[] = [];
+const frame = async (name: string, ms: number) => {
+  const state = await motionPage.evaluate(() => ({ transform: getComputedStyle(document.querySelector('.showcase-image')!).transform, marquee: new DOMMatrix(getComputedStyle(document.querySelector('.marquee-track')!).transform).m41 }));
+  await motionPage.screenshot({ path: join(out, `${name}.png`), clip: { x: 0, y: 340, width: 1440, height: 560 } });
+  motionFrames.push({ name, ms, ...state });
+};
+await frame('motion-rest-before', 0);
+await motionPage.getByRole('button', { name: 'Baby Beach', exact: true }).click();
+const clicked = Date.now();
+await motionPage.waitForTimeout(90); await frame('motion-arrival-early', Date.now() - clicked);
+await motionPage.waitForTimeout(150); await frame('motion-arrival-mid', Date.now() - clicked);
+await motionPage.waitForTimeout(700); await frame('motion-arrival-rest', Date.now() - clicked);
+const still = (transform: string) => ['none', 'matrix(1, 0, 0, 1, 0, 0)'].includes(transform);
+assert(!still(motionFrames[1].transform) && still(motionFrames[3].transform), 'the frame moves on arrival, then rests');
+assert(motionFrames[3].marquee < motionFrames[0].marquee, 'the marquee moves with the default motion preference');
+await motionPage.locator('.marquee-group a').nth(5).focus();
+await motionPage.keyboard.press('Tab');
+await motionPage.waitForTimeout(150);
+await motionPage.screenshot({ path: join(out, 'marquee-focus-desktop.png'), clip: { x: 0, y: 740, width: 1440, height: 160 } });
+// Normal-motion first views and the complete marquee controls at the two smaller representative sizes.
+const responsiveMotion: { name: string; width: number; height: number; transform: string; marquee: number }[] = [];
+for (const size of [{ name: 'mobile', width: 390, height: 844 }, { name: 'tablet', width: 768, height: 1024 }]) {
+  await motionPage.setViewportSize({ width: size.width, height: size.height });
+  await motionPage.goto(base + '/');
+  await prepare(motionPage);
+  await motionPage.waitForTimeout(1000);
+  await motionPage.screenshot({ path: join(out, `motion-home-${size.name}.png`) });
+  await motionPage.locator('.marquee-controls').scrollIntoViewIfNeeded();
+  await motionPage.screenshot({ path: join(out, `motion-marquee-${size.name}.png`) });
+  const state = await motionPage.evaluate(() => ({ transform: getComputedStyle(document.querySelector('.showcase-image')!).transform, marquee: new DOMMatrix(getComputedStyle(document.querySelector('.marquee-track')!).transform).m41 }));
+  responsiveMotion.push({ ...size, ...state });
+}
+const unexpectedMotionRequests = motionRequests.filter(request => request.method !== 'GET' || request.body || new URL(request.url).origin !== origin);
+assert.equal(unexpectedMotionRequests.length, 0, 'motion captures also require local GET requests without bodies');
+await motion.close();
+await writeFile(join(root, 'motion-frames.json'), JSON.stringify({ timestamp: new Date().toISOString(), note: 'Computed transforms read at the capture moment; no frame-rate or performance metric is measured.', motionRequests, motionFrames, responsiveMotion }, null, 2));
+
 const leaks = typed.flatMap(value => allUrls.filter(url => { try { return decodeURIComponent(url.replace(/\+/g, ' ')).includes(value); } catch { return url.includes(value); } }).map(url => `${value} in ${url}`));
 const problems = records.filter(r => r.broken.length || r.fallbackCount || r.pageWidth > r.width || r.scrollY !== 0 || r.skipLinkOnScreen || r.fonts.status !== 'loaded' || r.network.nonGet.length || r.network.withBody.length || r.network.offOrigin.length || (r.firstRowBottom !== null && r.firstRowBottom > r.height) || (r.firstLensTop !== null && r.firstLensTop > r.height - 200)).map(r => r.name);
 await writeFile(join(root, 'capture-manifest.json'), JSON.stringify({ timestamp: new Date().toISOString(), base, code, captureCount: records.length, records, forbidden, errors, hosts: [...hosts], typedLeaks: leaks, problems }, null, 2));

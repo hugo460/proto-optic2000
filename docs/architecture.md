@@ -10,12 +10,13 @@ TypeScript 6.0.3 respecte la plage prise en charge par typescript-eslint. ESLint
 
 - `src/app/` : routes, metadata noindex, layout, chargement, erreurs et 404. Pages serveur par défaut. Les [params et searchParams](https://nextjs.org/docs/app/api-reference/file-conventions/page) sont asynchrones.
 - `src/components/ui/` : image locale avec repli, liens d’action, pictogrammes SVG.
-- `layout/` : navigation et pied de page. Le menu mobile utilise `dialog`, son focus natif et Escape.
+- `layout/` : navigation et pied de page. Le menu mobile utilise `dialog`, son focus natif et Escape. Seule l’action du pied de page est un petit îlot lié au chemin courant : sur le RDV, elle mène au contact en lien texte, sans répéter le CTA principal de l’étape.
 - `catalog/` : cartes serveur, filtres GET, sélecteur d’accueil et expérience produit.
 - `stores/` : cartes, lecture du contexte produit et récapitulatif de sélection.
 - `src/data/` : types, produits, variantes, marques, médias et magasins ; `content.ts` (pages éditoriales), `navigation.ts` (univers, pages de la maison, légaux, sans import du catalogue pour ne pas l’embarquer dans l’en-tête client) et `lens-facts.ts` (caractéristiques des lentilles). Les JSON générés proviennent du snapshot public réduit.
 - `src/lib/` : XPF sans décimales, filtres/tri, URL de retour autorisées, sélection des variantes et regroupement des vues ; `lens-selection.ts` (options signées), `contact-context.ts` (contexte public et validation) et `legacy-redirects.ts` (anciens chemins).
 - `contact/` : formulaire en îlot client. `content/` : gabarits éditoriaux partagés. `catalog/lens-picker.tsx` : sélecteur couleur/sphère.
+- S4 : `appointment/` (parcours de rendez-vous en îlot client, progression, récapitulatif et colonne magasin), `catalog/brand-marquee.tsx` (bandeau de marques), `src/data/appointment-demo.ts` (motifs et créneaux **fictifs**) et `src/lib/appointment.ts` (fonctions pures : dates, créneaux, validation, invalidation, contexte public).
 - `scripts/` : transformation, contrôles et captures reproductibles ; `tests/` : comportements métier et parcours Chromium.
 
 ## Flux
@@ -44,6 +45,22 @@ Les slugs connus sont déclarés par `generateStaticParams`, avec `dynamicParams
 `contact-context.ts` transmet seulement des identifiants publics : `produit`, `variante`, `couleur`, `sphere`, `sujet`, `magasin`. Le sujet est celui de l’URL, sinon déduit de la famille du produit (`lentilles` ou `soleil`). Les valeurs inconnues sont ignorées et listées pour une notice. Le sujet `protheses` impose Mamao : un autre magasin est remplacé, et la validation refuse la combinaison. Les liens vers le magasin et la fiche produit conservent sélection et sujet courants ; les retours explicitement filtrés restent prioritaires, et une carte de lentille revient par défaut vers `/lentilles`.
 
 Le formulaire garde ses champs dans l’état React local. Rien n’est envoyé, enregistré (ni `localStorage` ni cookie) ni écrit dans l’URL ou un journal : seuls `magasin` et `sujet` sont synchronisés par `replaceState`. Validation à la soumission, focus sur le premier champ en erreur, erreurs corrigées au fil de la saisie, puis récapitulatif de succès qui annonce qu’aucun message ni rendez-vous n’existe. « Préparer une autre demande » ne vide que nom, e-mail, téléphone, message et erreurs ; magasin, objet et la sélection jointe restent. Il n’agit sur aucun stockage.
+
+## Rendez-vous de démonstration (S4)
+
+`/rendez-vous` est une page serveur qui lit le contexte public (`magasin`, `motif`, `produit` et sa sélection ; `etape` ne saute aucune étape ; une valeur suivante est signalée, une valeur inconnue ou toute autre clé est ignorée avec une notice, sans rien choisir ni réafficher) puis passe à l’îlot client des données minimales : coordonnées des trois magasins, résumé léger du produit validé, date du jour à Tahiti. L’îlot n’importe ni `data/index.ts` ni `stores.ts`.
+
+- **Données** : `appointment-demo.ts` est séparé de `stores.ts` et sans import de données. Trois motifs illustratifs (contrôle de vue, conseil et essai de montures, prothèses oculaires à Mamao seulement) et une semaine type de créneaux par magasin. Aucun créneau le dimanche (donc un jour sans créneau dans toute fenêtre de sept jours), ni lundi et jeudi à Taravao. Ces créneaux ne sont pas déduits des horaires publiés ; Taravao garde « horaires à confirmer ».
+- **Dates** : `tahitiToday(now)` calcule le jour en `Pacific/Tahiti` par `Intl`, indépendamment du fuseau de la machine ou du visiteur ; les sept jours proposés commencent au lendemain. Libellés français écrits en dur pour un rendu identique serveur/navigateur. À minuit Tahiti (minuterie nettoyée et reprogrammée même si l’horloge système recule), au retour de visibilité et à chaque passage d’étape ou simulation, l’îlot relit l’horloge : un jour devenu aujourd’hui ou passé est retiré avec une notice. Les paramètres répétés contradictoires sont ignorés avec notice ; un nouveau contexte public validé réinitialise le flow. Le focus rejoint instantanément le titre utile, sans défilement animé de la page.
+- **Étapes** : visite → créneau → coordonnées → récapitulatif, puis résultat. `allowedView` borne toute demande (lien, Retour/Avant, modification) à la première étape incomplète ; le résultat n’existe qu’après simulation et disparaît à la moindre modification. Changer magasin, motif ou jour retire un créneau devenu incompatible (`reconcileSlot`) et l’explique. Choisir les prothèses déplace la visite à Mamao ; un autre magasin avec ce motif est refusé à la validation.
+- **Historique** : `history.pushState` n’écrit que des ancres publiques (`#creneau`, `#coordonnees`, `#recapitulatif`, `#resultat`) ; aucune saisie dans l’URL ni dans `history.state`. Un chargement direct ou un rechargement sur une ancre repart à la première étape, avec une notice.
+- **Validation** : nom, e-mail et téléphone facultatif reprennent `validatePerson`, extrait de `contact-context.ts` et commun aux deux formulaires ; la validation du contact n’est pas appelée avec de fausses valeurs. Focus sur le titre de chaque étape et sur le premier champ en erreur.
+- **Recommencer** garde le magasin et efface motif, jour, heure, coordonnées, erreurs et résultat. Aucun stockage, cookie, requête ou journal.
+
+## Mouvement (S4)
+
+- **Nuancier** : seule la photographie est remontée par clé de modèle ; elle se pose en 650 ms (`frame-arrive`, translation de 56 px et rotation de 4° en 2D, sortie amortie) puis reste immobile. Nom, prix, coloris et lien changent immédiatement ; un nouveau choix interrompt l’arrivée en cours. Les deux autres photos sont préchargées après hydratation (`preload` de React DOM). Mouvement réduit : aucune animation.
+- **Bandeau de marques** : la piste contient la liste originale de liens puis une copie `aria-hidden`, sans ID, avec liens hors tabulation utilisables au pointeur, qui ferme la boucle (déplacement de 50 % de la piste). Pause au survol sur les appareils qui le permettent, par le bouton « Pause / Reprendre », hors champ (`IntersectionObserver`) et quand l’onglet est masqué (`visibilitychange`), écouteurs nettoyés au démontage. Au focus clavier, la copie disparaît et la liste originale devient une rangée immobile défilable ; le logo focalisé est ramené dans le champ. Mouvement réduit : rangée manuelle, sans copie ni bouton.
 
 ## Anciens chemins
 

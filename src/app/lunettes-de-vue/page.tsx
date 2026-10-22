@@ -23,7 +23,7 @@ export default function OpticalPage() {
       <p>Nos opticiens vous accompagnent pour trouver une monture adaptée à votre style et à votre vue.</p>
       <p>Lors de votre passage, ils réalisent gratuitement un ou plusieurs devis sur les équipements qui vous conviennent. Garanties, entretien et adaptation sont détaillés, avec leurs conditions, dans <Link className="underlined" href="/services-et-garanties">Services et garanties</Link>.</p>
     </ReadingSection>
-    <ContactPrompt subject="vue" title="Une monture à essayer ?">Préparez votre demande pour le magasin de votre choix, ou appelez-le directement.</ContactPrompt>
+    <ContactPrompt subject="vue" title="Une monture à essayer ?" appointment={{ href: '/rendez-vous?motif=conseil-montures', lead: true }}>Préparez une visite d’essai dans le magasin de votre choix, posez d’abord une question, ou appelez-le directement.</ContactPrompt>
     <SourceNote pages={['lunettes-de-vue', 'accueil']}>Les forfaits de 2022 de l’ancienne page ne sont pas repris comme offres actuelles.</SourceNote>
   </div>;
 }
