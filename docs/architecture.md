@@ -16,6 +16,7 @@ TypeScript 6.0.3 respecte la plage prise en charge par typescript-eslint. ESLint
 - `src/data/` : types, produits, variantes, marques, médias et magasins ; `content.ts` (pages éditoriales), `navigation.ts` (univers, pages de la maison, légaux, sans import du catalogue pour ne pas l’embarquer dans l’en-tête client) et `lens-facts.ts` (caractéristiques des lentilles). Les JSON générés proviennent du snapshot public réduit.
 - `src/lib/` : XPF sans décimales, filtres/tri, URL de retour autorisées, sélection des variantes et regroupement des vues ; `lens-selection.ts` (options signées), `contact-context.ts` (contexte public et validation) et `legacy-redirects.ts` (anciens chemins).
 - `contact/` : formulaire en îlot client. `content/` : gabarits éditoriaux partagés. `catalog/lens-picker.tsx` : sélecteur couleur/sphère.
+- S5 : `catalog/hero-video.tsx` (film d’ambiance de l’accueil : préférences, lecture, commande) utilisé par `catalog/home-showcase.tsx`.
 - S4 : `appointment/` (parcours de rendez-vous en îlot client, progression, récapitulatif et colonne magasin), `catalog/brand-marquee.tsx` (bandeau de marques), `src/data/appointment-demo.ts` (motifs et créneaux **fictifs**) et `src/lib/appointment.ts` (fonctions pures : dates, créneaux, validation, invalidation, contexte public).
 - `scripts/` : transformation, contrôles et captures reproductibles ; `tests/` : comportements métier et parcours Chromium.
 
@@ -59,8 +60,15 @@ Le formulaire garde ses champs dans l’état React local. Rien n’est envoyé,
 
 ## Mouvement (S4)
 
-- **Nuancier** : seule la photographie est remontée par clé de modèle ; elle se pose en 650 ms (`frame-arrive`, translation de 56 px et rotation de 4° en 2D, sortie amortie) puis reste immobile. Nom, prix, coloris et lien changent immédiatement ; un nouveau choix interrompt l’arrivée en cours. Les deux autres photos sont préchargées après hydratation (`preload` de React DOM). Mouvement réduit : aucune animation.
+- **Nuancier** : seule la photographie est remontée par clé de modèle ; elle se pose en 650 ms (`frame-arrive`, translation de 56 px et rotation de 4° en 2D en S4, ramenées en S5 à 20 px et 2,5° pour rester dans la marge du cadre, sortie amortie) puis reste immobile. Nom, prix, coloris et lien changent immédiatement ; un nouveau choix interrompt l’arrivée en cours. Les deux autres photos sont préchargées après hydratation (`preload` de React DOM). Mouvement réduit : aucune animation.
 - **Bandeau de marques** : la piste contient la liste originale de liens puis une copie `aria-hidden`, sans ID, avec liens hors tabulation utilisables au pointeur, qui ferme la boucle (déplacement de 50 % de la piste). Pause au survol sur les appareils qui le permettent, par le bouton « Pause / Reprendre », hors champ (`IntersectionObserver`) et quand l’onglet est masqué (`visibilitychange`), écouteurs nettoyés au démontage. Au focus clavier, la copie disparaît et la liste originale devient une rangée immobile défilable ; le logo focalisé est ramené dans le champ. Mouvement réduit : rangée manuelle, sans copie ni bouton.
+
+## Accueil composé et film d’ambiance (S5)
+
+- **Composition** : titre, proposition et actions à gauche ; cadre opaque à droite (photo, fiche, lien du modèle, trois choix). Empilé jusqu’à 800 px dans l’ordre du DOM. `sizes` des photos du cadre : `calc(100vw - 72px)` jusqu’à 600 px, `52vw` jusqu’à 800 px, `38vw` jusqu’à 1100 px, puis `430px` ; la photo affichée reste préchargée, les deux autres en priorité basse après hydratation.
+- **Préférences** : `useSyncExternalStore` lit `prefers-reduced-motion` et `navigator.connection.saveData` et s’abonne à leurs changements ; l’instantané serveur vaut « inconnu ». Le HTML serveur contient donc un `<video>` sans source et le poster en fond CSS. La source (`preload="none"`) n’est posée qu’en l’absence des deux préférences ; elle est retirée (`removeAttribute('src')` puis `load()`, ce qui interrompt le transfert) dès que l’une apparaît, au démontage et après une erreur.
+- **Lecture** : l’état affiché vient des événements du média (`playing`, `pause`, `ended`, `error`). `play()` n’est appelé que si le hero est dans le champ (`IntersectionObserver`) et l’onglet visible ; un jeton écarte les promesses dépassées. `AbortError` (lecture interrompue par une pause ou une nouvelle source) est ignorée ; `NotAllowedError` laisse le poster et propose « Lire la vidéo » ; toute autre erreur bascule sur le poster. La pause du visiteur est mémorisée dans une référence et prime sur toute reprise automatique.
+- **Couches** : le hero isole son empilement ; poster, film et voile lavande sont en `z-index: -1` derrière le contenu, sans opacité sur celui-ci. Aucune dépendance, aucun lecteur tiers, aucun stockage ; les fichiers viennent de `public/media/ambience/`.
 
 ## Anciens chemins
 
@@ -70,7 +78,7 @@ Le formulaire garde ses champs dans l’état React local. Rien n’est envoyé,
 
 `src/data/stores.ts` centralise tous les récapitulatifs, coordonnées et réserves. Les CID Google Maps sont les entiers exacts des identifiants de lieux inclus dans les cartes de la source. L’action « Plan et itinéraire » mène à la fiche Google du lieu exact, où l’utilisateur peut choisir son itinéraire. Pas de géolocalisation ni de carte embarquée.
 
-Next optimise les images locales via son propre endpoint. Les fontes variables Sora et Manrope, obtenues du [répertoire officiel Google Fonts](https://github.com/google/fonts), sont servies localement par `next/font/local`, avec les licences OFL incluses. Pas d’analytics, cookies métier, API, paiement ou collecte de document médical. Hébergement : Vercel, production, racine du dépôt, Node `24.x`, sans secret ni service métier distant ; les en-têtes `X-Robots-Tag` et les redirections viennent de `next.config.ts`. La configuration de construction `ENABLE_EXPERIMENTAL_COREPACK=1` fait utiliser le `packageManager` du dépôt (`pnpm@11.5.2`).
+Next optimise les images locales via son propre endpoint. Les fontes variables Sora et Manrope, obtenues du [répertoire officiel Google Fonts](https://github.com/google/fonts), sont servies localement par `next/font/local`, avec les licences OFL incluses. Le film d’ambiance et son poster sont des fichiers statiques du prototype : aucune requête vers la banque d’images d’origine. Pas d’analytics, cookies métier, API, paiement ou collecte de document médical. Hébergement : Vercel, production, racine du dépôt, Node `24.x`, sans secret ni service métier distant ; les en-têtes `X-Robots-Tag` et les redirections viennent de `next.config.ts`. La configuration de construction `ENABLE_EXPERIMENTAL_COREPACK=1` fait utiliser le `packageManager` du dépôt (`pnpm@11.5.2`).
 
 ## Pages S2 et système visuel
 

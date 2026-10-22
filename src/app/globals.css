@@ -91,29 +91,44 @@ p { text-wrap: pretty; }
 .mobile-navigation p { margin-top: 32px; color: var(--color-lavender-ink); }
 .mobile-group { margin-top: 26px; }
 .mobile-group h2 { font-family: var(--font-body), sans-serif; font-size: 13px; font-weight: 750; letter-spacing: 0; line-height: 1.6; color: var(--color-lavender-ink); padding-bottom: 6px; border-bottom: 1px solid var(--color-lavender-ink); }
-.home-hero { background: var(--color-lavender); padding-block: 42px 12px; overflow-x: clip; }
-.hero-heading { display: flex; justify-content: space-between; gap: 32px; align-items: flex-end; margin-bottom: 32px; }
-.hero-heading h1 { font-size: clamp(3rem, 6.5vw, 5.75rem); line-height: 1.04; letter-spacing: -.04em; }
-.hero-intro { width: 380px; padding-bottom: 3px; color: var(--color-lavender-ink); }
-.hero-intro p { font-size: 18px; line-height: 1.6; margin-bottom: 12px; }
-.hero-intro .action { color: var(--color-ink); }
-.showcase-stage { overflow: clip; background: var(--color-paper); display: grid; grid-template-columns: minmax(0, 1.7fr) minmax(280px, 1fr); align-items: center; padding: 28px 36px; gap: 32px; }
+.home-hero { position: relative; isolation: isolate; background: var(--color-lavender); padding-block: 56px 48px; overflow-x: clip; }
+/* Ambience: poster and film, desaturated under a lavender veil, painted behind content that stays fully opaque. */
+.hero-ambience { position: absolute; inset: 0; z-index: -1; overflow: hidden; pointer-events: none; }
+.hero-ambience-media { position: absolute; inset: 0; background-position: center 62%; background-size: cover; background-repeat: no-repeat; filter: grayscale(1); }
+.hero-ambience video { display: block; width: 100%; height: 100%; object-fit: cover; object-position: center 62%; opacity: 0; transition: opacity .6s ease; }
+.hero-ambience video[data-shown] { opacity: 1; }
+.hero-ambience::after { content: ''; position: absolute; inset: 0; background: linear-gradient(90deg, rgb(171 165 210 / 88%) 0 48%, rgb(171 165 210 / 72%)); }
+.hero-layout { display: grid; grid-template-columns: minmax(0, 1fr) clamp(440px, 33vw, 476px); align-items: center; column-gap: 64px; }
+.hero-heading { padding-bottom: 12px; }
+.hero-heading h1 { font-size: clamp(2.75rem, 5vw, 4.75rem); line-height: 1.04; letter-spacing: -.04em; }
+.hero-intro { margin-top: 28px; }
+.hero-intro p { font-size: 18px; line-height: 1.6; }
+.hero-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 32px; margin-top: 28px; }
+.hero-video-toggle { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 0 16px 0 12px; border: 1px solid var(--color-ink); background: var(--color-lavender); font-size: 14px; font-weight: 750; transition: background var(--duration-fast) ease; }
+.hero-video-toggle:hover { background: var(--color-lavender-soft); }
+.hero-video-toggle svg { width: 18px; height: 18px; }
+/* Offered only once the film really plays or awaits a manual start; its slot stays reserved so nothing moves. */
+.hero-video-toggle[hidden] { display: inline-flex; visibility: hidden; }
+/* The frame: opaque paper, one ink rule; photo, short sheet, then the three choices as its bottom strip. */
+.showcase-stage { --arrive-x: -20px; --arrive-y: 8px; overflow: clip; background: var(--color-paper); border: 1px solid var(--color-ink); padding: 24px 24px 0; }
 .showcase-image { min-width: 0; transform-origin: 55% 75%; animation: frame-arrive var(--duration-arrival) var(--ease-arrival) both; }
 .showcase-image :is(img, .image-fallback) { width: 100%; height: 265px; object-fit: contain; }
-.showcase-info h2 { font-size: 32px; margin-bottom: 8px; }
-.showcase-info > p { font-size: 14px; color: var(--color-muted); }
-.showcase-info .showcase-price { color: var(--color-ink); margin-top: 16px; margin-bottom: 22px; font-size: 18px; }
-.showcase-info .action { width: 100%; max-width: 300px; }
-.showcase-bottom { display: flex; align-items: center; justify-content: space-between; gap: 20px; padding-block: 8px; }
-.model-selector { display: flex; gap: 5px; }
-.model-selector button { position: relative; background: transparent; border: 0; border-radius: 0; min-height: 58px; padding: 12px 22px; color: var(--color-lavender-ink); font-weight: 650; font-size: 15px; }
-.model-selector button::after { content: ''; position: absolute; bottom: 3px; left: 22px; right: 22px; height: 2px; background: transparent; }
-.model-selector button[aria-pressed=true] { color: var(--color-ink); font-weight: 850; }
+.showcase-info { display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; padding-block: 12px 16px; }
+.showcase-info > div { min-width: 0; }
+.showcase-info h2 { font-size: 26px; margin-bottom: 4px; }
+.showcase-info p { font-size: 14px; color: var(--color-muted); }
+.showcase-info .showcase-price { color: var(--color-ink); margin-top: 6px; font-size: 16px; font-weight: 750; font-variant-numeric: tabular-nums; }
+.showcase-info .action { flex-shrink: 0; font-size: 14px; gap: 12px; }
+.model-selector { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); margin-inline: -24px; border-top: 1px solid var(--color-line); }
+.model-selector button { position: relative; min-height: 52px; padding: 12px 8px; background: transparent; border: 0; border-radius: 0; color: var(--color-muted); font-weight: 650; font-size: 14px; transition: background var(--duration-fast) ease; }
+.model-selector button + button { border-left: 1px solid var(--color-line); }
+.model-selector button::after { content: ''; position: absolute; bottom: 8px; left: 20px; right: 20px; height: 2px; background: transparent; }
+.model-selector button[aria-pressed=true] { color: var(--color-ink); font-weight: 800; }
 .model-selector button[aria-pressed=true]::after { background: var(--color-ink); }
-.model-selector button:hover { background: rgb(255 255 255 / 18%); }
-.showcase-bottom > .action { font-size: 14px; }
-/* The frame comes to rest on the white plateau: a short 2D glide and tilt that settles, then stays still. */
-@keyframes frame-arrive { from { opacity: .75; transform: translate3d(-56px, 16px, 0) rotate(-4deg); } 40% { opacity: 1; } to { opacity: 1; transform: none; } }
+.model-selector button:hover { background: var(--color-surface); }
+.model-selector button:focus-visible { outline-offset: -4px; }
+/* The frame comes to rest on the white plateau: a short 2D glide and tilt, kept inside the frame's padding, then still. */
+@keyframes frame-arrive { from { opacity: .75; transform: translate3d(var(--arrive-x), var(--arrive-y), 0) rotate(-2.5deg); } 40% { opacity: 1; } to { opacity: 1; transform: none; } }
 .brand-marquee { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 32px; padding-block: 24px; border-bottom: 1px solid var(--color-line); }
 .marquee-viewport { min-width: 0; overflow: hidden; mask-image: linear-gradient(90deg, transparent, #000 48px, #000 calc(100% - 48px), transparent); }
 .marquee-track { display: flex; width: max-content; animation: marquee-loop calc(var(--marquee-count) * 4s) linear infinite; }
@@ -385,7 +400,6 @@ textarea { font: inherit; color: inherit; caret-color: var(--color-focus); borde
 .contact-recap-message { white-space: pre-wrap; }
 .contact-success-actions { display: flex; flex-wrap: wrap; gap: 12px 20px; align-items: center; }
 .contact-success-actions .action-text { background: transparent; }
-@media (min-width: 1600px) { .hero-heading h1 { font-size: 92px; } }
 @media (max-width: 1100px) {
   .container, .header-inner { padding-inline: 32px; }
   .header-inner { gap: 20px; }
@@ -394,10 +408,19 @@ textarea { font: inherit; color: inherit; caret-color: var(--color-focus); borde
   .header-cta { padding: 12px 14px; gap: 8px; }
   .header-cta-long { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
   .desktop-nav .nav-repeat { display: none; }
-  .hero-intro { width: 320px; }
+  .home-hero { padding-block: 48px 40px; }
+  .hero-layout { grid-template-columns: minmax(0, 1fr) clamp(340px, 38vw, 420px); column-gap: 40px; }
+  .hero-heading h1 { font-size: clamp(2.25rem, 4.6vw, 3.25rem); }
+  .hero-intro { margin-top: 20px; }
   .hero-intro p { font-size: 16px; }
-  .showcase-stage { padding-inline: 24px; gap: 20px; }
-  .showcase-info h2 { font-size: 28px; }
+  .hero-actions { margin-top: 20px; gap: 4px 24px; }
+  .showcase-stage { padding: 20px 20px 0; }
+  .showcase-image :is(img, .image-fallback) { height: 200px; }
+  .showcase-info { flex-wrap: wrap; align-items: flex-start; gap: 0 16px; }
+  .showcase-info h2 { font-size: 24px; }
+  .model-selector { margin-inline: -20px; }
+  .model-selector button { font-size: 13px; }
+  .model-selector button::after { left: 12px; right: 12px; }
   .brand-marquee { gap: 24px; }
   .product-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 36px 20px; }
   .home-products { grid-template-columns: repeat(4, minmax(0, 1fr)); }
@@ -414,15 +437,14 @@ textarea { font: inherit; color: inherit; caret-color: var(--color-focus); borde
   .header-inner { height: 80px; }
   .desktop-nav, .header-cta { display: none; }
   .menu-trigger { display: inline-flex; align-items: center; justify-content: space-between; gap: 12px; margin-left: auto; background: transparent; border: 0; color: var(--color-paper); padding: 12px 0 12px 12px; font-size: 14px; }
-  .hero-heading { display: block; }
-  .hero-heading h1 { font-size: 64px; }
-  .hero-intro { width: auto; margin-top: 24px; display: flex; align-items: center; justify-content: space-between; gap: 16px; }
-  .hero-intro p { margin: 0; }
-  .showcase-stage { grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); }
-  .showcase-image :is(img, .image-fallback) { height: 230px; }
-  .showcase-info .action { font-size: 13px; padding-inline: 14px; gap: 12px; }
-  .model-selector button { padding-inline: 14px; font-size: 13px; }
-  .model-selector button::after { left: 14px; right: 14px; }
+  /* Stacked: copy and actions (with the film control), then the frame, its photo beside the sheet. */
+  .hero-ambience::after { background: linear-gradient(180deg, rgb(171 165 210 / 88%) 0 40%, rgb(171 165 210 / 84%)); }
+  .hero-layout { grid-template-columns: minmax(0, 1fr); row-gap: 28px; }
+  .hero-heading { padding-bottom: 0; }
+  .hero-heading h1 { font-size: 56px; }
+  .showcase-live { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); align-items: center; gap: 24px; }
+  .showcase-image :is(img, .image-fallback) { height: 180px; }
+  .showcase-info { padding-block: 0; }
   .section { padding-block: 64px; }
   .home-products { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .home-products .product-card-image :is(img, .image-fallback) { height: 185px; }
@@ -471,25 +493,29 @@ textarea { font: inherit; color: inherit; caret-color: var(--color-focus); borde
   .brand-lockup :is(img, .image-fallback) { width: 145px; }
   .brand-lockup > span { font-size: 12px; padding-left: 8px; margin-top: 8px; }
   .menu-trigger { font-size: 12px; gap: 8px; }
-  .home-hero { padding-top: 28px; padding-bottom: 12px; }
-  .hero-heading { margin-bottom: 20px; }
-  .hero-heading h1 { font-size: clamp(2.6rem, 11.8vw, 3.4rem); line-height: 1.08; }
-  .hero-intro { display: block; margin-top: 20px; }
-  .hero-intro p { font-size: 14px; line-height: 1.6; }
-  .hero-intro .action { font-size: 12px; min-height: 40px; padding-block: 8px; }
-  .showcase-stage { grid-template-columns: 1fr; padding: 16px; gap: 10px; }
-  .showcase-image :is(img, .image-fallback) { height: 138px; }
-  .showcase-info { display: grid; grid-template-columns: minmax(0, 1fr) 142px; column-gap: 10px; align-items: center; }
-  .showcase-info h2 { font-size: 23px; margin-bottom: 4px; }
-  .showcase-info > p { font-size: 12px; }
-  .showcase-info .showcase-price { font-size: 12px; margin: 8px 0 0; }
-  .showcase-info .action { grid-column: 2; grid-row: 1 / 4; padding: 12px; font-size: 12px; gap: 8px; }
+  .home-hero { padding-block: 24px 16px; }
+  .hero-layout { row-gap: 16px; }
+  .hero-heading h1 { font-size: clamp(2.5rem, 11vw, 3.25rem); line-height: 1.06; }
+  .hero-intro { margin-top: 16px; }
+  .hero-intro p { font-size: 15px; }
+  .hero-actions { margin-top: 12px; gap: 0 20px; }
+  .hero-actions .action { font-size: 14px; }
+  .hero-actions .action-primary { gap: 16px; padding-inline: 18px; }
+  /* Phone: the control shrinks to its icon at the end of the appointment row; its full name stays for assistive tech. */
+  .hero-video-toggle { width: 44px; margin-left: auto; padding: 0; justify-content: center; }
+  .hero-video-label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+  .showcase-stage { --arrive-x: -12px; --arrive-y: 6px; padding: 16px 16px 0; }
+  .showcase-live { display: block; }
+  .showcase-image :is(img, .image-fallback) { height: 150px; }
+  .showcase-info { flex-wrap: nowrap; align-items: flex-end; gap: 12px; padding-block: 6px 10px; }
+  .showcase-info h2 { font-size: 22px; margin-bottom: 2px; }
+  .showcase-info p { font-size: 13px; }
+  .showcase-info .showcase-price { font-size: 14px; margin-top: 4px; }
+  .showcase-info .action { font-size: 13px; gap: 8px; }
   .showcase-info .action svg { width: 18px; height: 18px; }
-  .showcase-bottom { display: block; padding-top: 4px; }
-  .model-selector { justify-content: space-between; gap: 0; }
-  .model-selector button { padding: 12px 8px; font-size: 12px; min-height: 54px; }
-  .model-selector button::after { left: 8px; right: 8px; }
-  .showcase-bottom > .action { display: flex; justify-content: space-between; font-size: 13px; min-height: 42px; }
+  .model-selector { margin-inline: -16px; }
+  .model-selector button { min-height: 46px; padding-inline: 4px; }
+  .model-selector button::after { left: 10px; right: 10px; bottom: 7px; }
   .brand-marquee { grid-template-columns: minmax(0, 1fr); gap: 8px; padding-block: 16px 12px; }
   .marquee-group > * { width: 104px; margin-right: 32px; }
   .marquee-group a { height: 60px; }
@@ -618,8 +644,10 @@ textarea { font: inherit; color: inherit; caret-color: var(--color-focus); borde
 @media (max-width: 370px) {
   .container, .header-inner { padding-inline: 16px; }
   .brand-lockup :is(img, .image-fallback) { width: 135px; }
-  .showcase-info { grid-template-columns: minmax(0, 1fr) 132px; }
-  .showcase-info h2 { font-size: 21px; }
+  .showcase-image :is(img, .image-fallback) { height: 128px; }
+  .showcase-info { display: block; }
+  .showcase-info h2 { font-size: 20px; }
+  .showcase-info .action { width: 100%; justify-content: space-between; gap: 6px; }
   .model-selector button { font-size: 12px; }
 }
 @media (max-width: 800px) {

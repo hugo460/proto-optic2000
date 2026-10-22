@@ -1,0 +1,22 @@
+{
+  "sourcePage": "https://www.pexels.com/video/close-up-video-of-sunglasses-5241167/",
+  "sourceUrl": "https://videos.pexels.com/video-files/5241167/5241167-hd_1920_1080_25fps.mp4",
+  "author": "Kaboompics (compte karola-g)",
+  "license": "https://www.pexels.com/license/",
+  "checkedOn": "2026-10-21 (Pacific/Tahiti)",
+  "sourceSha256": "e1221de96b84fcfdd38b81b756c5ddaf5c70aa48c7e3f49b62af1f5374cac343",
+  "transformations": "Extrait 0,50–4,50 s, 1280×720, 25 fps, aller puis retour inversé (8 s), H.264 libx264 CRF 27 preset slow, yuv420p, faststart, aucun audio. Poster première image du fichier livré, WebP qualité 78.",
+  "usage": "Ambiance décorative uniquement ; aucun lien affirmé avec les produits du catalogue, les magasins ou une approbation des marques. Inscription GUESS visible sur la branche dans la source, branches à bandes rouge/vert ; aucune identification commerciale ajoutée à la page.",
+  "files": [
+    {
+      "path": "public/media/ambience/eyewear-loop.mp4",
+      "bytes": 772612,
+      "sha256": "610a78b164a28578c8abbe04d623ad4f992bdc2933765fb1de8554369d69e636"
+    },
+    {
+      "path": "public/media/ambience/eyewear-poster.webp",
+      "bytes": 35432,
+      "sha256": "3805c4ff838f27103fdb66699fe03a549695f1164fd6a617909b14748ab75a93"
+    }
+  ]
+}

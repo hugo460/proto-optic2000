@@ -26,4 +26,10 @@ Accueil et nuancier de trois modèles ; marques/gammes complètes ; recherche, f
 - Passe de finition : hiérarchie de l’en-tête entre 801 et 1100 px, légendes et réserves lisibles, pictogrammes calendrier/horloge/pause/lecture dans la famille existante.
 - Reste hors prototype : agenda connecté, confirmation de prestations, horaires de Taravao, envoi de rendez-vous. L’acceptation de S4 revient au pilote.
 
+## S5 — accueil recomposé
+
+- Hero plus léger : titre et actions à gauche, nuancier compact encadré à droite (empilé sur téléphone), une seule action jaune vers les solaires.
+- Film d’ambiance local de gros plans de lunettes, sans visage, sous la lavande ; poster en mouvement réduit, économie de données ou échec ; commande pause/lecture distincte de celle des marques.
+- Reste ouvert : avis du client sur le rendu. L’acceptation de S5 revient au pilote.
+
 La migration CMS/Kauehi, le domaine client, les comptes historiques, les ordonnances, le paiement et les stocks synchronisés ne sont pas construits dans ce prototype.

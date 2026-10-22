@@ -245,7 +245,7 @@
       {
         "name": "ease-arrival",
         "value": "cubic-bezier(.33, 1, .68, 1)",
-        "purpose": "Courbe d’arrivée de la photographie d’accueil : opacité .75 → 1, translate(-56px, 16px) et rotate(-4deg) vers la pose stable ; aucun autoplay de modèle."
+        "purpose": "Courbe d’arrivée de la photographie d’accueil : opacité .75 → 1, translate(-20px, 8px) (-12px, 6px sur téléphone) et rotate(-2.5deg) vers la pose stable, dans la marge du cadre ; aucun autoplay de modèle."
       },
       {
         "name": "ease-out",
@@ -258,9 +258,14 @@
         "purpose": "Boucle du bandeau de marques pour 13 logos (4s par logo) ; durée propre au composant, pas un token global."
       },
       {
+        "name": "hero-film",
+        "value": "8s loop",
+        "purpose": "Film d’ambiance muet de l’accueil, désaturé sous un voile lavande ; pause hors champ, onglet masqué ou par sa commande ; propre au hero, pas un token global."
+      },
+      {
         "name": "reduced-motion",
         "value": ".01ms",
-        "purpose": "Animations et transitions réduites, une itération ; défilement automatique, photographie d’accueil stable, bandeau de marques en rangée manuelle."
+        "purpose": "Animations et transitions réduites, une itération ; défilement automatique, photographie d’accueil stable, film d’accueil non chargé (poster seul), bandeau de marques en rangée manuelle."
       }
     ],
     "breakpoints": [
@@ -279,10 +284,6 @@
       {
         "name": "compact",
         "value": "1100px"
-      },
-      {
-        "name": "wide",
-        "value": "1600px"
       }
     ]
   },
@@ -389,7 +390,7 @@
     "rules": [
       {
         "name": "The Plateau fidèle Rule",
-        "body": "Présenter les montures et les logos entiers avec object-fit: contain ; réserver object-fit: cover aux photographies de magasin.",
+        "body": "Présenter les montures et les logos entiers avec object-fit: contain ; réserver object-fit: cover aux photographies de magasin et au film décoratif d’ambiance de l’accueil.",
         "section": "colors"
       },
       {

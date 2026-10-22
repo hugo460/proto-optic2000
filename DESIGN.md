@@ -189,7 +189,7 @@ La palette met en relation un jaune franc, une famille lavande et des neutres de
 - **Texte inversé secondaire** (`inverse-muted`) : informations secondaires du pied de page ; même valeur source que le filet, rôle distinct.
 - **Noir d’en-tête** (`header-black`) : fond noir du bandeau de navigation, distinct de l’encre du pied de page.
 
-**The Plateau fidèle Rule.** Présenter les montures et les logos entiers, y compris dans le bandeau et au focus, avec object-fit: contain ; réserver object-fit: cover aux photographies de magasin.
+**The Plateau fidèle Rule.** Présenter les montures et les logos entiers, y compris dans le bandeau et au focus, avec object-fit: contain ; réserver object-fit: cover aux photographies de magasin et au film décoratif d’ambiance de l’accueil.
 
 **The Action jaune Rule.** Associer le jaune aux actions principales et aux repères interactifs ; conserver les libellés et les états sémantiques pour que la couleur ne porte jamais seule le sens.
 
@@ -234,7 +234,6 @@ Les pas du frontmatter correspondent à l’échelle déclarée en CSS et à des
 | Jusqu’à 800px | Navigation remplacée par le menu. Filtres et tri en accordéon, fermés initialement, avec champs sur 2 colonnes lorsqu’ils sont ouverts. Produits de l’accueil sur 2 colonnes ; catalogue toujours sur 3. Magasins en une liste, chaque carte photo/texte sur 2 colonnes. |
 | Jusqu’à 600px | Catalogue et marques sur 2 colonnes ; produit (16px d’écart horizontal, 32px vertical). Image de carte et fallback à (122px) de haut, avec (6px) d’espacement intérieur du plateau. Fiches produit empilées : galerie puis informations. Cartes magasin empilées ; présentation de marque avec logo avant le texte. |
 | Jusqu’à 370px | Gouttières encore resserrées et ajustements de la seule composition d’accueil. |
-| À partir de 1600px | Plafond local du grand titre d’accueil ; aucune nouvelle grille du système. |
 
 Les introductions du catalogue sont compactes : espacement haut/bas (32px / 20px), ramené à (24px / 16px) sur téléphone. Les pages de marque et de magasins gardent une introduction plus ample. Une section générale utilise un espacement vertical de (88px), puis (64px) jusqu’à 800px et (52px) jusqu’à 600px.
 
@@ -248,13 +247,13 @@ Le système est plat : aucun `box-shadow` n’est livré. La profondeur est donn
 
 **The Plan de travail Rule.** Séparer les contenus par le ton du fond, les blancs et les filets ; ne pas ajouter une ombre pour transformer une carte plane en objet flottant.
 
-La réponse au survol des actions est une transition de fond et de couleur (`160ms ease`). Dans le nuancier d’accueil, seule la photographie de la monture arrive sur son plateau à chaque sélection et au chargement : durée `--duration-arrival` (650ms), courbe `--ease-arrival` (`cubic-bezier(.33, 1, .68, 1)`), photographie déjà visible (opacité .75 → 1) et translation (-56px, 16px) avec rotation (-4deg) jusqu’à la pose stable. Nom, prix, coloris et lien changent aussitôt ; aucun autoplay de modèle. C’est une signature de composition bornée à l’accueil, pas un préréglage d’entrée pour les cartes ou les formulaires. `--ease-out` (`cubic-bezier(.16, 1, .3, 1)`) reste déclarée mais n’est plus consommée par les styles livrés ; elle n’est pas une nouvelle prescription. `prefers-reduced-motion: reduce` remplace le défilement doux par un défilement automatique, ramène animations/transitions à (`.01ms`, une itération), laisse la photographie d’accueil à sa pose finale et transforme le bandeau de marques en rangée manuelle.
+La réponse au survol des actions est une transition de fond et de couleur (`160ms ease`). Dans le nuancier d’accueil, seule la photographie de la monture arrive sur son plateau à chaque sélection et au chargement : durée `--duration-arrival` (650ms), courbe `--ease-arrival` (`cubic-bezier(.33, 1, .68, 1)`), photographie déjà visible (opacité .75 → 1) et translation (-20px, 8px), (-12px, 6px) sur téléphone, avec rotation (-2.5deg) jusqu’à la pose stable, sans coupe visible des montures sélectionnées ; seul le blanc périphérique de la boîte peut dépasser et être masqué. Nom, prix, coloris et lien changent aussitôt ; aucun autoplay de modèle. C’est une signature de composition bornée à l’accueil, pas un préréglage d’entrée pour les cartes ou les formulaires. `--ease-out` (`cubic-bezier(.16, 1, .3, 1)`) reste déclarée mais n’est plus consommée par les styles livrés ; elle n’est pas une nouvelle prescription. `prefers-reduced-motion: reduce` remplace le défilement doux par un défilement automatique, ramène animations/transitions à (`.01ms`, une itération), laisse la photographie d’accueil à sa pose finale, ne charge pas le film d’ambiance (poster seul) et transforme le bandeau de marques en rangée manuelle.
 
 ## Shapes
 
 Les grandes surfaces, photographies, cartes et plateaux sont rectangulaires et sans arrondi visible. Le rayon de contrôle du frontmatter est réservé aux actions, champs, puces et choix de variante. Les sélecteurs textuels et le déclencheur de filtres restent droits. Le rayon `--radius-card` déclaré dans le CSS n’est appliqué à aucun composant livré : il n’est pas canonisé.
 
-Les bordures ordinaires sont fines (1px). Les miniatures et variantes choisies passent à (2px d’encre) ; leur padding diminue d’un pixel pour garder leur taille. Les formes ne portent pas seules le choix : coche, nom et `aria-pressed` le confirment. Les icônes sont des SVG en ligne, habituellement (22px, trait 1.7, extrémités et jointures arrondies) ; les tailles locales de carte sont plus petites. La famille compte aussi calendrier, horloge, pause et lecture, pour le rendez-vous et le bandeau de marques. Aucun caractère typographique ne sert de pictogramme.
+Les bordures ordinaires sont fines (1px). Les miniatures et variantes choisies passent à (2px d’encre) ; leur padding diminue d’un pixel pour garder leur taille. Les formes ne portent pas seules le choix : coche, nom et `aria-pressed` le confirment. Les icônes sont des SVG en ligne, habituellement (22px, trait 1.7, extrémités et jointures arrondies) ; les tailles locales de carte sont plus petites. La famille compte aussi calendrier, horloge, pause et lecture, pour le rendez-vous, le bandeau de marques et le film d’accueil. Aucun caractère typographique ne sert de pictogramme.
 
 ## Components
 
@@ -302,6 +301,10 @@ L’action jaune « Préparer un RDV » (calendrier en tête) ouvre le rendez-vo
 
 Signature de composant, hors tokens globaux : les vrais logos défilent en boucle (52s pour 13 logos, soit 4s par logo) dans une piste masquée aux bords. Une commande pause/lecture et le lien d’annuaire restent fixes à côté. La piste se met en pause au vrai survol, au focus, hors champ et onglet masqué ; au focus clavier elle revient à la liste originale, immobile et défilable. Les clones sont cachés aux technologies d’assistance, hors tabulation, mais leurs liens restent utilisables au pointeur. Au mouvement réduit : rangée manuelle sans bouton de pause. La durée de 52s n’est pas un token.
 
+### Film d’ambiance de l’accueil
+
+Signature de composant, hors tokens globaux, limitée au hero d’accueil (S5). Un film muet de gros plans de lunettes, sans visage, désaturé (`grayscale`) sous un voile lavande `rgb(171 165 210 / 88% → 72%)` horizontal, `88% → 84%` vertical jusqu’à 800px ; le contenu reste à opacité pleine au-dessus. Le poster est toujours dessous. La commande reprend la forme du bouton du bandeau (filet d’encre, 44px, icône pause/lecture) avec un fond lavande opaque ; elle devient une icône seule de 44px jusqu’à 600px, avec le même nom accessible. Mouvement réduit, économie de données ou échec du média : poster seul, sans commande. Contraste mesuré sur des images réelles du film derrière le texte (encre ≥ 5,6:1, focus ≥ 3,1:1) ; à revérifier si le film ou le voile change.
+
 ### Gallery / Variants / Details
 
 La galerie présente une image principale et des miniatures tactiles, chacune nommée « Voir la vue… » et marquée par `aria-pressed`. Les miniatures mesurent (86 × 62px), puis (68 × 50px) sur téléphone. La variante se choisit dans un groupe nommé : vraie miniature, libellé complet et coche SVG. L’option choisie change sa bordure et son poids sans saut de dimensions ; le survol utilise le plateau gris. Le changement réinitialise la vue et actualise le prix, la photo, le contexte magasin et le paramètre `variante` de l’URL.
@@ -335,6 +338,6 @@ Une image indisponible est remplacée dans son plateau par un libellé explicite
 - Don't — Donner aux rampes synthétiques documentaires du sidecar le statut de couleurs livrées ; seuls les tokens du frontmatter font autorité.
 - Don't — Hériter du rayon de carte inutilisé, créer une variante visuelle de bouton non livrée ou annoncer un état métier absent du prototype.
 
-Périmètre non canonisé : rayon de carte inutilisé et variables d’espacement non consommées comme variables ; aucun de ces écarts n’est corrigé par cette extraction. Le document décrit les valeurs observées sans transformer ces limites en règles de futures surfaces. Aucune comp approuvée ni calibration humaine n’a été enregistrée pour S4.
+Périmètre non canonisé : rayon de carte inutilisé et variables d’espacement non consommées comme variables ; aucun de ces écarts n’est corrigé par cette extraction. Le document décrit les valeurs observées sans transformer ces limites en règles de futures surfaces. Aucune comp approuvée ni calibration humaine n’a été enregistrée pour S4 ni pour S5.
 
-Sources d’extraction : `src/app/globals.css`, `src/app/layout.tsx`, les composants de `src/components/`, `PRODUCT.md`, `.impeccable/config.json` et les contrats de `.impeccable/surfaces/`. État S1 mis à jour par une fusion étroite des éléments réutilisables livrés en S4 (marques, navigation, rendez-vous) ; pas de nouvelle identité.
+Sources d’extraction : `src/app/globals.css`, `src/app/layout.tsx`, les composants de `src/components/`, `PRODUCT.md`, `.impeccable/config.json` et les contrats de `.impeccable/surfaces/`. État S1 mis à jour par une fusion étroite des éléments réutilisables livrés en S4 (marques, navigation, rendez-vous) et du film d’accueil de S5 ; pas de nouvelle identité.

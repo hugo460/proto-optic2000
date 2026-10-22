@@ -46,7 +46,7 @@
 
 | Décision | Conséquence |
 | --- | --- |
-| S3 acceptée par le pilote ; Hugo tranche le 21/10/2026 : lunettes animées, nuancier conservé, RDV simulé | Pas de vidéo ni de nouvelle composition d’accueil ; monde, palette et polices inchangés |
+| S3 acceptée par le pilote ; Hugo tranche le 21/10/2026 : lunettes animées, nuancier conservé, RDV simulé | Pas de vidéo ni de nouvelle composition d’accueil (remplacé en S5, voir ci-dessous) ; monde, palette et polices inchangés |
 | Monture posée en 650 ms puis immobile | Transform/opacity CSS, image entière, sans faux 3D, boucle ni changement automatique ; mouvement réduit sans animation |
 | Bandeau de marques défilant contrôlable | 13 vrais logos choisis ; annuaire complet inchangé (38 identités) ; copie cachée aux technologies d’assistance et hors Tab, dont les liens visibles restent cliquables ; rangée immobile au focus et en mouvement réduit |
 | RDV simulé distinct du contact | Quatre étapes, créneaux fictifs séparés de `stores.ts`, aucune réservation ni e-mail ; « poser une question » reste la demande |
@@ -55,6 +55,19 @@
 | Navigation | Action jaune « Préparer un RDV » à la place de « Trouver mon magasin » (« Nos magasins » reste dans la navigation) ; entre 801 et 1100 px, « Les solaires », déjà dans « Nos univers », laisse sa place à l’action compacte « RDV » |
 | Recommencer | Garde le magasin, efface tout le reste ; un rechargement efface tout sauf le contexte public de l’URL |
 | Lisibilité | Légendes, réserves, prix secondaires et repères de marques passent de 10–11 px à 12 px sur téléphone et ordinateur |
+
+## Décisions de S5 (accueil recomposé)
+
+| Décision | Conséquence |
+| --- | --- |
+| Hugo, 21/10/2026 : plateau trop présent ; le garder plus petit, encadré, avec une vidéo discrète derrière, même couleur | La clause « aucune vidéo » de S4 est remplacée ; palette, polices, trois modèles et sélection manuelle inchangés |
+| Gros plans de lunettes et matières, sans visage (réponse structurée de Hugo) | Plan de banque d’images localisé ; provenance et licence dans l’inventaire des contenus ; aucune attribution au catalogue ou à un magasin |
+| Texte à gauche, cadre opaque à droite (440–476 px) | Une seule action jaune (« Toutes les solaires ») ; RDV en action texte ; « Découvrir ce modèle » en action texte dans le cadre |
+| Film désaturé sous voile lavande | Les bandes colorées et marques visibles dans le plan ne concurrencent pas la monture ; contenu à opacité pleine ; contraste mesuré sur des images réelles du film |
+| Poster jusqu’à connaître les préférences | Aucun transfert vidéo en mouvement réduit ou économie de données ; poster si refus d’autoplay, fichier absent ou illisible |
+| Commande dans la ligne des actions | Ordre du DOM = ordre visuel ; icône seule (44 px) sur téléphone, nom complet conservé ; le début du bandeau de marques reste visible à 360×800 et 390×844 |
+| Boîte photo de 265 px au-dessus de 1100 px | Espace blanc conservé autour des photos très allongées ; cadre compact en largeur, photographie et repli de même hauteur. L’assertion historique S4 demeure inchangée |
+| Aucune dépendance | Élément `<video>` natif, état React, aucun lecteur tiers ni bibliothèque d’animation |
 
 ### Extension de DESIGN.md : non, à ce stade
 

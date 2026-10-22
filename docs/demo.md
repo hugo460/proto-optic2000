@@ -14,9 +14,9 @@ Liens prêts à ouvrir : [Rendez-vous](https://proto-optic2000.vercel.app/rendez
 
 ## Parcours 0 — Accueil vivant
 
-1. À l’arrivée, la monture se pose sur le plateau blanc puis reste immobile. Choisir **Baby Beach**, puis **The Bird** : la photo rejoue son arrivée, nom, prix et lien changent tout de suite.
+1. À l’arrivée, un film discret de gros plans de lunettes passe derrière la lavande ; dans le cadre blanc, la monture se pose puis reste immobile. Choisir **Baby Beach**, puis **The Bird** : la photo rejoue son arrivée, nom, prix et lien changent tout de suite. **Pause vidéo** fige le film (sur téléphone, l’icône pause au bout de la ligne « Préparer un rendez-vous ») ; **Lire la vidéo** le relance.
 2. Le bandeau de marques défile lentement : sur un appareil avec souris, le survoler l’arrête, **Pause** le fige, **Reprendre** le relance. Au clavier (Tab), la rangée s’immobilise et chaque logo reste entièrement visible. « Toutes les marques » reste fixe.
-3. Avec la préférence système « réduire les animations », la monture apparaît sans mouvement et les logos forment une rangée à faire défiler à la main, sans bouton de pause.
+3. Avec la préférence système « réduire les animations », le fond reste une image fixe, sans commande vidéo ; la monture apparaît sans mouvement et les logos forment une rangée à faire défiler à la main, sans bouton de pause. L’économie de données seule empêche le téléchargement du film, sans modifier les animations CSS de la monture ou des marques.
 
 ## Parcours 1 — Solaire : le prix suit la variante, puis le magasin
 
@@ -55,6 +55,7 @@ Rejouable à toute date : les sept jours proposés commencent toujours au lendem
 
 - Prix, stocks, horaires (dont Taravao), garanties, équipe et mentions historiques viennent des pages publiques de l’ancien site, relevées le 21/10/2026 ; ils restent à confirmer par l’enseigne.
 - Le formulaire et le rendez-vous sont des simulations : aucun envoi au magasin, aucune réservation, aucun compte, panier ni paiement. Les créneaux sont fictifs. La saisie reste dans la page et disparaît au rechargement.
+- Le film d’accueil est un plan d’ambiance issu d’une banque d’images : il ne montre ni un magasin ni une monture du catalogue.
 - L’hébergeur reçoit, comme pour tout site, les requêtes techniques de navigation ; jamais la saisie du formulaire (voir la page Confidentialité).
 - Le domaine historique, le site WordPress et ses comptes ou commandes ne sont pas touchés. Les CGV de 2022 ne s’appliquent pas.
 

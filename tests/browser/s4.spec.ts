@@ -55,6 +55,8 @@ test('Marquee: real logos move slowly, pause and resume, pause on hover, focus s
   await page.waitForTimeout(400);
   expect(await offset(page)).toBeLessThan(first);
   await page.getByRole('button', { name: 'Pause du défilement des marques' }).click();
+  await expect(track(page)).toHaveCSS('animation-play-state', 'paused');
+  await track(page).evaluate(async element => { await Promise.all(element.getAnimations().map(animation => animation.ready)); });
   const still = await offset(page);
   await page.waitForTimeout(400);
   expect(await offset(page)).toBe(still);
@@ -63,6 +65,8 @@ test('Marquee: real logos move slowly, pause and resume, pause on hover, focus s
   expect(await offset(page)).toBeLessThan(still);
   // Hover pauses.
   await page.locator('.marquee-viewport').hover();
+  await expect(track(page)).toHaveCSS('animation-play-state', 'paused');
+  await track(page).evaluate(async element => { await Promise.all(element.getAnimations().map(animation => animation.ready)); });
   const hovered = await offset(page);
   await page.waitForTimeout(400);
   expect(await offset(page)).toBe(hovered);
