@@ -1,4 +1,4 @@
-# Décisions de S1, S2 et S3
+# Décisions du prototype (S1 à S5/r2)
 
 | Décision | Conséquence |
 | --- | --- |
@@ -48,7 +48,7 @@
 | --- | --- |
 | S3 acceptée par le pilote ; Hugo tranche le 21/10/2026 : lunettes animées, nuancier conservé, RDV simulé | Pas de vidéo ni de nouvelle composition d’accueil (remplacé en S5, voir ci-dessous) ; monde, palette et polices inchangés |
 | Monture posée en 650 ms puis immobile | Transform/opacity CSS, image entière, sans faux 3D, boucle ni changement automatique ; mouvement réduit sans animation |
-| Bandeau de marques défilant contrôlable | 13 vrais logos choisis ; annuaire complet inchangé (38 identités) ; copie cachée aux technologies d’assistance et hors Tab, dont les liens visibles restent cliquables ; rangée immobile au focus et en mouvement réduit |
+| Bandeau de marques défilant (avec pause/reprise en S4, retirée en S5/r2) | 13 vrais logos choisis ; annuaire complet inchangé (38 identités) ; copie cachée aux technologies d’assistance et hors Tab, dont les liens visibles restent cliquables ; rangée immobile au focus et en mouvement réduit |
 | RDV simulé distinct du contact | Quatre étapes, créneaux fictifs séparés de `stores.ts`, aucune réservation ni e-mail ; « poser une question » reste la demande |
 | Motifs illustratifs | Contrôle de vue sans consultation médicale ni ophtalmologique promise ; prothèses à Mamao uniquement, vrai rendez-vous par téléphone |
 | Dates rejouables | Jour calculé en Pacific/Tahiti avec horloge injectable ; sept jours à partir du lendemain ; aucune date figée |
@@ -56,22 +56,33 @@
 | Recommencer | Garde le magasin, efface tout le reste ; un rechargement efface tout sauf le contexte public de l’URL |
 | Lisibilité | Légendes, réserves, prix secondaires et repères de marques passent de 10–11 px à 12 px sur téléphone et ordinateur |
 
-## Décisions de S5 (accueil recomposé)
+## Décisions de S5 (accueil recomposé), puis remplacées par S5/r2
+
+S5/r1 a été demandé par Hugo le 21/10/2026 (plateau plus petit et encadré, film discret derrière, gros plans de lunettes et matières sans visage) puis **rejeté** par Hugo malgré des tests verts. Ses prescriptions suivantes sont **remplacées** et ne s’appliquent plus : cadre opaque à filet d’encre de 1 px (440–476 px) avec fiche et bande de trois choix à filets ; film désaturé sous voile lavande ; film de 8 s composé de 4 s suivies de 4 s inversées ; commande Pause/Lire du film et commande Pause du bandeau ; menu « Nos univers » lavande plein écran à filets. Restent valables de S5 : le choix « sans visage », le film local et décoratif sans lien affirmé avec le catalogue ou les magasins, le poster seul en mouvement réduit, économie de données ou échec, et l’absence de dépendance.
+
+## Décisions de S5/r2 (accueil, navigation et pied de page recomposés)
 
 | Décision | Conséquence |
 | --- | --- |
-| Hugo, 21/10/2026 : plateau trop présent ; le garder plus petit, encadré, avec une vidéo discrète derrière, même couleur | La clause « aucune vidéo » de S4 est remplacée ; palette, polices, trois modèles et sélection manuelle inchangés |
-| Gros plans de lunettes et matières, sans visage (réponse structurée de Hugo) | Plan de banque d’images localisé ; provenance et licence dans l’inventaire des contenus ; aucune attribution au catalogue ou à un magasin |
-| Texte à gauche, cadre opaque à droite (440–476 px) | Une seule action jaune (« Toutes les solaires ») ; RDV en action texte ; « Découvrir ce modèle » en action texte dans le cadre |
-| Film désaturé sous voile lavande | Les bandes colorées et marques visibles dans le plan ne concurrencent pas la monture ; contenu à opacité pleine ; contraste mesuré sur des images réelles du film |
-| Poster jusqu’à connaître les préférences | Aucun transfert vidéo en mouvement réduit ou économie de données ; poster si refus d’autoplay, fichier absent ou illisible |
-| Commande dans la ligne des actions | Ordre du DOM = ordre visuel ; icône seule (44 px) sur téléphone, nom complet conservé ; le début du bandeau de marques reste visible à 360×800 et 390×844 |
-| Boîte photo de 265 px au-dessus de 1100 px | Espace blanc conservé autour des photos très allongées ; cadre compact en largeur, photographie et repli de même hauteur. L’assertion historique S4 demeure inchangée |
-| Aucune dépendance | Élément `<video>` natif, état React, aucun lecteur tiers ni bibliothèque d’animation |
+| Hugo, 21/10/2026 : rendu S5/r1 jugé vieillot (bordures noires, grand cadre de lunettes, Pause, boucle reconnaissable) ; il veut donner envie à Optic 2000 de changer de site | Reprise en deux sessions : S5/r2 (accueil, film, menus, marques, pied de page, règles communes) est livrée ; S6/r1 est prévue seulement après le brief du pilote, détails non figés |
+| Identité conservée | Logo réel, noir, lavande, jaune, Sora, Manrope ; seed historique `ec9ae70fdd93869f` inchangé. Recomposition éditoriale directement en code, ni décomposition en maquettes ni nouvelle identité |
+| Hero en deux parts | Texte 45 % / film 55 % au-dessus de 1100 px, 50 / 50 de 801 à 1100 px, bande de film puis texte jusqu’à 800 px. Texte aligné sur la colonne du conteneur ; jamais de texte sur le film, donc ni voile ni filtre à simuler |
+| Actions du hero | Une action jaune « Toutes les solaires » et le lien « Préparer un rendez-vous » ; en colonne jusqu’à 1280 px, en ligne avec retour à la ligne au-dessus |
+| Nuancier secondaire | Plus de carte ni d’onglets : trois boutons nommés `aria-pressed` (44 px) et la monture seule sur un petit plateau blanc sans cadre ni panneau (208 × 104 px, 184 × 96, 136 × 82, 136 × 76, 116 × 68 selon la largeur). Arrivée de 520 ms puis repos, aucune sélection automatique |
+| Sélection produits sous le hero | Mamane, Alulu, Pehu, Liquid Sunshine : distincte des trois modèles du nuancier (un doublon entre ces deux séries avait été relevé par la revue) |
+| Film de 24,32 s | Trois plans Pexels distincts à vitesse native (5241102 de 0 à 8,40 s ; 5241104 de 2 à 10,24 s ; 5241100 de 0 à 9,12 s), sans visage, sans inversion, répétition ajoutée ni ralenti ; fondus de .48 s et raccord circulaire. 1920 × 1080, 25 i/s, H.264 High, yuv420p, faststart, muet, 4 895 212 octets (sous les 5 Mo visés) ; poster de 42 206 octets. Seul l’auteur de 5241104 (Kaboompics) est confirmé ; aucune attribution à un magasin ou au catalogue |
+| Aucune commande Pause/Lire | Film : condition seule (champ, onglet visible, préférences, économie de données) ; refus d’autoplay ou erreur = poster sans démarrage manuel. Marques : survol, focus, champ, onglet masqué ; mouvement réduit = rangée manuelle de la liste originale |
+| Bandeau de marques | 13 logos dérivés des logos existants, ne retirant que le canevas extérieur vide ; originaux de 760 images intacts. Cellules entières (3, 4, 5, 6 selon la largeur), « Toutes les marques » dans sa colonne. La boucle reste de 52 s |
+| En-tête et menus | Barre noire de 84 px (76 / 74). Panneau de papier ancré sous la barre (≤ 820 px) : univers sur deux colonnes, enseigne sur une, libellés de 17 px, sans descriptif ni filets ; les `summary` restent dans les données. De 801 à 960 px seulement, « Les solaires » quitte la barre (il reste dans les univers). Menu mobile : dialogue blanc nommé « Menu », défilable, action RDV visible, retour de focus et reprise du RDV inchangés |
+| Pied de page compact | Identité et actions sur une ligne, magasins à côté du plan du site, mention du prototype ; sur le rendez-vous l’action devient « Préparer une demande » en lien texte (état du RDV conservé) |
+| Contrôles | `check:media` mesure durée, codec, faststart, poids, empreintes, manifeste, 760 images et 13 dérivés : contrôle technique, ni certificat artistique ni des droits. `check:contrast` mesure 17 paires dérivées de la feuille de style en plus des paires historiques ; aucun texte n’étant sur le film, le composite est celui de la lavande pure |
+| Revue visuelle indépendante (Claude Opus, contexte neuf) | Six constats corrigés, puis un verdict a jugé les six résolus tout en notant deux régressions (R1 texte hors colonne ; R2 marques tassées de 1101 à 1280 px) ; le dernier verdict, ciblé sur R1 et R2, les juge résolues. Pas une acceptation globale ni du client ; visionnage outillé réel de 55 s dont deux raccords à vitesse normale, captures toutes les 2 s, sans vision continue du mouvement du relecteur. Détecteur passé une fois : 109 avis, 0 primaire, informatif |
+| Tests adaptés | Les scénarios qui exigeaient les boutons Pause sont réécrits pour le nouveau comportement demandé (aucune commande) ; des scénarios de responsive et de navigation sont ajoutés sans retirer d’assertion métier. Le nombre « 72 scénarios identiques » n’est plus promis |
+| Publication | Même projet Vercel `proto-optic2000`, export propre du commit de `main` poussé, sources comparées ; cible et URL publique inchangées (voir la reprise) ; aucune publication n’est affirmée par ce document avant d’avoir eu lieu |
 
 ### Extension de DESIGN.md : non, à ce stade
 
-Le rôle documenteur demande de ne pas écrire pour prouver qu’on est passé. S2 ne change ni le monde, ni la palette, ni les polices ; le nuancier et ses boutons, champs, cartes, focus et états sont réutilisés, et la revue visuelle finale constate une échelle cohérente. Les composants S2 (menu « Nos univers », formulaire et états, sommaire, grilles de logos) sont décrits dans [l’architecture](architecture.md) et testés. Les cinq tailles locales sont des valeurs de page, utilisées une ou deux fois chacune : les inscrire au système les rendrait réutilisables par défaut. Elles seront à promouvoir en tokens seulement si une autre surface les réutilise ou si la direction visuelle change. Le décalage de date préexistant entre `DESIGN.md` et son sidecar n’est pas réparé ici.
+Le rôle documenteur demande de ne pas écrire pour prouver qu’on est passé. (Cette section date de S2 ; `DESIGN.md` et son sidecar ont été actualisés ensuite pour S5/r2, qui change réellement le système d’accueil et de navigation.) S2 ne change ni le monde, ni la palette, ni les polices ; le nuancier et ses boutons, champs, cartes, focus et états sont réutilisés, et la revue visuelle finale constate une échelle cohérente. Les composants S2 (menu « Nos univers », formulaire et états, sommaire, grilles de logos) sont décrits dans [l’architecture](architecture.md) et testés. Les cinq tailles locales sont des valeurs de page, utilisées une ou deux fois chacune : les inscrire au système les rendrait réutilisables par défaut. Elles seront à promouvoir en tokens seulement si une autre surface les réutilise ou si la direction visuelle change. Le décalage de date préexistant entre `DESIGN.md` et son sidecar n’est pas réparé ici.
 
 Le lien FreshLook/Alcon est corroboré par la [présentation officielle Alcon](https://www.myalcon.com/car/contact-lenses/colors/). Les autres rattachements non établis sont indiqués à confirmer. DENCOTT est un laboratoire partenaire de service pour la reprise des prothèses (page livrée en S2), pas une marque du catalogue.
 

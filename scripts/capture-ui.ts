@@ -2,11 +2,16 @@ import assert from 'node:assert/strict';
 import { execFileSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
 import { chromium, type Page } from '@playwright/test';
-import { mkdir, copyFile, readFile, writeFile } from 'node:fs/promises';
+import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import { join, relative, resolve } from 'node:path';
+import { products } from '../src/data';
 
 // Captures of the real prototype, driven by real user actions (clicks, typing, keyboard). Nothing is simulated in the DOM.
 // Before EVERY capture: reduced motion, fonts ready, images eager and decoded, scroll back to the top, one stabilisation frame.
+// S5/r2: every PNG goes to OPTIC_PROOF_DIR (outside Git); nothing is written under the repository (the former .impeccable/review
+// copies are gone). The captures use reduced motion, so the film is never loaded: they show the poster, the layout and the menus,
+// never the film itself, whose playback is judged by watching it. Technical measures recorded with a capture (photo whole, texts
+// not clipped, panel inside the screen) are listed in `checks`; a non-empty list makes the run fail.
 // The manifest ties each PNG to its route, viewport, dimensions, broken images, overflow, errors, network and date, and to the
 // exact code that was served (HEAD plus a digest of every source file, tracked or not).
 async function codeManifest() {
@@ -18,6 +23,7 @@ async function codeManifest() {
   return { head: git('rev-parse', 'HEAD'), dirtyPaths: git('status', '--porcelain').split('\n').filter(Boolean).length, fileCount: files.length, digest, files };
 }
 
+let activeBrowser: Awaited<ReturnType<typeof chromium.launch>> | undefined;
 async function main() {
 const root = process.env.OPTIC_PROOF_DIR;
 if (!root) throw new Error('Set OPTIC_PROOF_DIR to an evidence folder outside Git.');
@@ -26,9 +32,9 @@ const base = process.env.OPTIC_BASE_URL ?? 'http://127.0.0.1:3011';
 const origin = new URL(base).origin;
 const out = join(root, 'captures');
 await mkdir(out, { recursive: true });
-await mkdir('.impeccable/review', { recursive: true });
 const code = await codeManifest();
 const browser = await chromium.launch();
+  activeBrowser = browser;
 const context = await browser.newContext({ reducedMotion: 'reduce' });
 const forbidden: string[] = [];
 const errors: string[] = [];
@@ -44,13 +50,29 @@ const page = await context.newPage();
 page.on('pageerror', error => errors.push(`pageerror: ${error.message}`));
 
 // ---- capture primitive ---------------------------------------------------------------------------------------------
+// Every finite animation or transition still running on the page (the desktop panel arrives with a 6 px translate, the showcase photo
+// with a short arrival; finished ones that keep their fill do not count) must be over before anything is measured or captured: two frames are not enough, a capture that cancels them would
+// show a state that was never at rest. Infinite animations (the marquee) are left alone. Bounded: a stuck animation fails the run.
+async function settle(target: Page) {
+  const pending = await target.evaluate(async () => {
+    const deadline = performance.now() + 4000;
+    for (let round = 0; round < 6; round++) {
+      const running = document.getAnimations().filter(animation => animation.playState === 'running' && animation.effect && Number.isFinite(animation.effect.getComputedTiming().endTime as number));
+      if (!running.length || performance.now() > deadline) break;
+      await Promise.race([Promise.all(running.map(animation => animation.finished.catch(() => undefined))), new Promise(done => setTimeout(done, Math.max(0, deadline - performance.now())))]);
+    }
+    await new Promise<void>(resolveFrame => requestAnimationFrame(() => requestAnimationFrame(() => resolveFrame())));
+    return document.getAnimations().filter(animation => animation.playState === 'running' && animation.effect && Number.isFinite(animation.effect.getComputedTiming().endTime as number)).map(animation => `${animation.constructor.name} ${(animation as CSSTransition).transitionProperty ?? (animation as CSSAnimation).animationName ?? ''}`);
+  });
+  assert.deepEqual(pending, [], 'finite animations still running before the measure');
+}
 async function prepare(target: Page) {
   await target.evaluate(async () => {
     await document.fonts.ready;
     await Promise.all([...document.images].map(async image => { image.loading = 'eager'; try { await image.decode(); } catch { /* failure is recorded below */ } }));
     window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
-    await new Promise<void>(resolveFrame => requestAnimationFrame(() => requestAnimationFrame(() => resolveFrame())));
   });
+  await settle(target);
 }
 const measure = () => ({
   url: location.pathname + location.search + location.hash, title: document.title,
@@ -70,25 +92,69 @@ const measure = () => ({
   })(),
   firstLensTop: document.querySelector('.lens-products .product-card')?.getBoundingClientRect().top ?? null,
 });
-interface Capture extends ReturnType<typeof measure> { name: string; width: number; height: number; fullPage: boolean; date: string; png: { width: number; height: number }; network: { requests: number; nonGet: string[]; withBody: string[]; offOrigin: string[] }; errorsSinceLast: string[] }
+interface Capture extends ReturnType<typeof measure> { checks: string[]; name: string; width: number; height: number; fullPage: boolean; date: string; png: { width: number; height: number }; network: { requests: number; nonGet: string[]; withBody: string[]; offOrigin: string[] }; errorsSinceLast: string[] }
 const records: Capture[] = [];
 let errorMark = 0;
-async function snap(name: string, fullPage: boolean) {
+async function snap(name: string, fullPage: boolean, checks: string[] = []) {
   await prepare(page);
   const measurements = await page.evaluate(measure);
   const buffer = await page.screenshot({ path: join(out, `${name}.png`), fullPage, animations: 'disabled' });
   const viewport = page.viewportSize()!;
   const network = { requests: requests.length, nonGet: requests.filter(r => r.method !== 'GET').map(r => `${r.method} ${r.url}`), withBody: requests.filter(r => r.body).map(r => r.url), offOrigin: requests.filter(r => /^https?:/.test(r.url) && new URL(r.url).origin !== origin).map(r => r.url) };
   requests = [];
-  records.push({ name, width: viewport.width, height: viewport.height, fullPage, date: new Date().toISOString(), png: { width: buffer.readUInt32BE(16), height: buffer.readUInt32BE(20) }, ...measurements, network, errorsSinceLast: errors.slice(errorMark) });
+  records.push({ name, checks, width: viewport.width, height: viewport.height, fullPage, date: new Date().toISOString(), png: { width: buffer.readUInt32BE(16), height: buffer.readUInt32BE(20) }, ...measurements, network, errorsSinceLast: errors.slice(errorMark) });
   errorMark = errors.length;
-  console.log(`${name}: ${measurements.pageWidth}/${viewport.width}px, ${measurements.broken.length} broken, ${measurements.fallbackCount} fallbacks, ${buffer.readUInt32BE(16)}×${buffer.readUInt32BE(20)}`);
+  console.log(`${name}: ${measurements.pageWidth}/${viewport.width}px, ${measurements.broken.length} broken, ${measurements.fallbackCount} fallbacks, ${buffer.readUInt32BE(16)}×${buffer.readUInt32BE(20)}${checks.length ? `, CHECKS: ${checks.join('; ')}` : ''}`);
 }
 async function go(path: string, width: number, height: number) {
   await page.setViewportSize({ width, height });
   await page.goto(base + path);
   await page.locator('h1').first().waitFor();
 }
+// Whole photo of the model shown (loaded, true proportions, contained inside its plateau), texts of the showcase not clipped.
+async function showcaseChecks(slug: string) {
+  const media = products.find(item => item.slug === slug)!.images[0];
+  await settle(page);
+  const state = await page.evaluate(() => {
+    const image = document.querySelector<HTMLImageElement>('.showcase-image img');
+    const plateau = document.querySelector('.showcase-plateau')?.getBoundingClientRect();
+    if (!image || !plateau) return null;
+    const box = image.getBoundingClientRect();
+    return {
+      loaded: image.complete && image.naturalWidth > 0, naturalWidth: image.naturalWidth, naturalHeight: image.naturalHeight, fit: getComputedStyle(image).objectFit, width: box.width,
+      inside: box.left >= plateau.left - .5 && box.right <= plateau.right + .5 && box.top >= plateau.top - .5 && box.bottom <= plateau.bottom + .5,
+      clipped: [...document.querySelectorAll('.showcase-info :is(h2, p, a)')].filter(node => node.scrollWidth > node.clientWidth + 1).map(node => node.textContent?.trim() ?? ''),
+      pressed: [...document.querySelectorAll('.model-selector button[aria-pressed="true"]')].map(node => node.textContent?.trim()),
+      controls: [...document.querySelectorAll('.home-hero button, .brand-marquee button')].map(node => node.textContent?.trim() ?? '').filter(text => /pause|lire|lecture|défilement/i.test(`${text}`)),
+    };
+  });
+  const checks: string[] = [];
+  if (!state) return [`${slug}: no photo or plateau found`];
+  if (!state.loaded) checks.push(`${slug}: photo not loaded`);
+  // The natural size is scaled by the srcset density and rounded by the browser: the height expected from the natural width and the
+  // source ratio may differ by the rounding of at most one natural pixel.
+  if (Math.abs(state.naturalHeight - state.naturalWidth * media.height / media.width) > 1) checks.push(`${slug}: proportions ${state.naturalWidth}×${state.naturalHeight} for a ${media.width}×${media.height} source`);
+  if (!['contain', 'scale-down'].includes(state.fit)) checks.push(`${slug}: object-fit ${state.fit} may crop the frame`);
+  if (!state.inside) checks.push(`${slug}: photo leaves its plateau`);
+  if (state.width < 80) checks.push(`${slug}: photo only ${Math.round(state.width)} px wide`);
+  if (state.clipped.length) checks.push(`${slug}: clipped text ${state.clipped.join(', ')}`);
+  if (state.pressed.length !== 1) checks.push(`${slug}: ${state.pressed.length} pressed choices`);
+  if (state.controls.length) checks.push(`media control found: ${state.controls.join(', ')}`);
+  return checks;
+}
+// Menu panels: every link readable and inside the screen (long names such as « Jumelles et télescopes », « Prothèses oculaires »).
+const menuChecks = (selector: string) => page.evaluate(scope => {
+  const root = document.querySelector(scope);
+  if (!root) return [`${scope} not found`];
+  const bad: string[] = [];
+  for (const link of root.querySelectorAll('a')) {
+    const box = link.getBoundingClientRect();
+    if (link.scrollWidth > link.clientWidth + 1) bad.push(`clipped: ${link.textContent?.trim()}`);
+    if (box.left < 0 || box.right > innerWidth) bad.push(`outside the screen: ${link.textContent?.trim()}`);
+  }
+  if (root.scrollWidth > root.clientWidth + 1) bad.push('horizontal scroll inside the menu');
+  return bad;
+}, selector);
 const hydrated = () => page.waitForFunction(() => { const button = document.querySelector<HTMLButtonElement>('.contact-submit button'); return !!button && !button.disabled; });
 const focusedId = () => page.evaluate(() => document.activeElement?.id ?? '');
 
@@ -106,9 +172,17 @@ const scenarios = [
 for (const [name, route, width, height, fullPage] of scenarios) {
   await go(route, width, height);
   await snap(name, fullPage);
-  if (name === 'home-desktop') await copyFile(join(out, `${name}.png`), '.impeccable/review/desktop.png');
-  if (name === 'home-mobile') await copyFile(join(out, `${name}.png`), '.impeccable/review/mobile.png');
-  if (name === 'home-tablet') await copyFile(join(out, `${name}.png`), '.impeccable/review/tablet.png');
+}
+
+// ---- S5/r2: the home at the six review sizes, first screen for each of the three models, then the whole page ---------------
+for (const [width, height] of [[360, 800], [390, 844], [768, 1024], [1024, 768], [1280, 800], [1440, 900]] as const) {
+  await go('/', width, height);
+  for (const [index, slug] of ['glory-glory', 'baby-beach', 'the-bird'].entries()) {
+    if (index) await page.getByRole('button', { name: products.find(item => item.slug === slug)!.name, exact: true }).click();
+    await snap(`home-${width}-first-${slug}`, false, await showcaseChecks(slug));
+  }
+  await page.getByRole('button', { name: products.find(item => item.slug === 'glory-glory')!.name, exact: true }).click();
+  await snap(`home-${width}-full`, true, await showcaseChecks('glory-glory'));
 }
 
 // ---- S2 matrix: the same six states at the three main sizes --------------------------------------------------------
@@ -281,6 +355,29 @@ await snap('store-mamao-rdv-desktop', true);
 // Navigation with the appointment action at the 801 and 1101 px boundaries.
 for (const width of [801, 1101]) { await go('/', width, 800); await snap(`nav-${width}`, false); }
 
+// ---- S5/r2: the desktop panel open at 801 / 1100 / 1101 and at the large screens (3024 px and its 1512 px CSS equivalent), the mobile
+// menu at 360 / 390 / 768 and its end on a short screen. Real clicks only.
+for (const [width, height] of [[801, 900], [1100, 900], [1101, 900], [1512, 982], [3024, 1964]] as const) {
+  await go('/', width, height);
+  await snap(`menu-${width}-closed`, false);
+  await page.getByRole('button', { name: 'Nos univers' }).click();
+  await page.locator('#universe-panel').waitFor({ state: 'visible' });
+  await settle(page);
+  const checks = await menuChecks('#universe-panel');
+  const anchor = await page.evaluate(() => Math.abs(document.querySelector('#universe-panel')!.getBoundingClientRect().top - document.querySelector('.site-header')!.getBoundingClientRect().bottom));
+  if (anchor > 3) checks.push(`panel ${Math.round(anchor)} px away from the bar`);
+  await snap(`menu-${width}-open`, false, checks);
+  await page.keyboard.press('Escape');
+}
+for (const [width, height] of [[360, 740], [390, 844], [768, 1024]] as const) {
+  await go('/', width, height);
+  await page.getByRole('button', { name: 'Menu', exact: true }).click();
+  await page.getByRole('dialog', { name: /menu/i }).waitFor();
+  await settle(page);
+  await snap(`menu-${width}-mobile-open`, false, await menuChecks('#mobile-navigation'));
+  await page.keyboard.press('Escape');
+}
+
 // ---- S4 motion: default motion preference, timestamped frames (captures elsewhere use reduced motion) --------------------
 const motion = await browser.newContext({ viewport: { width: 1440, height: 1000 } });
 await motion.route(/optic2000tahiti\.com/, route => { forbidden.push(route.request().url()); return route.abort(); });
@@ -319,7 +416,7 @@ for (const size of [{ name: 'mobile', width: 390, height: 844 }, { name: 'tablet
   await prepare(motionPage);
   await motionPage.waitForTimeout(1000);
   await motionPage.screenshot({ path: join(out, `motion-home-${size.name}.png`) });
-  await motionPage.locator('.marquee-controls').scrollIntoViewIfNeeded();
+  await motionPage.locator('.brand-marquee').scrollIntoViewIfNeeded();
   await motionPage.screenshot({ path: join(out, `motion-marquee-${size.name}.png`) });
   const state = await motionPage.evaluate(() => ({ transform: getComputedStyle(document.querySelector('.showcase-image')!).transform, marquee: new DOMMatrix(getComputedStyle(document.querySelector('.marquee-track')!).transform).m41 }));
   responsiveMotion.push({ ...size, ...state });
@@ -330,10 +427,10 @@ await motion.close();
 await writeFile(join(root, 'motion-frames.json'), JSON.stringify({ timestamp: new Date().toISOString(), note: 'Computed transforms read at the capture moment; no frame-rate or performance metric is measured.', motionRequests, motionFrames, responsiveMotion }, null, 2));
 
 const leaks = typed.flatMap(value => allUrls.filter(url => { try { return decodeURIComponent(url.replace(/\+/g, ' ')).includes(value); } catch { return url.includes(value); } }).map(url => `${value} in ${url}`));
-const problems = records.filter(r => r.broken.length || r.fallbackCount || r.pageWidth > r.width || r.scrollY !== 0 || r.skipLinkOnScreen || r.fonts.status !== 'loaded' || r.network.nonGet.length || r.network.withBody.length || r.network.offOrigin.length || (r.firstRowBottom !== null && r.firstRowBottom > r.height) || (r.firstLensTop !== null && r.firstLensTop > r.height - 200)).map(r => r.name);
+const problems = records.filter(r => r.broken.length || r.fallbackCount || r.pageWidth > r.width || r.scrollY !== 0 || r.skipLinkOnScreen || r.fonts.status !== 'loaded' || r.network.nonGet.length || r.network.withBody.length || r.checks.length || r.network.offOrigin.length || (r.firstRowBottom !== null && r.firstRowBottom > r.height) || (r.firstLensTop !== null && r.firstLensTop > r.height - 200)).map(r => r.name);
 await writeFile(join(root, 'capture-manifest.json'), JSON.stringify({ timestamp: new Date().toISOString(), base, code, captureCount: records.length, records, forbidden, errors, hosts: [...hosts], typedLeaks: leaks, problems }, null, 2));
 await browser.close();
 console.log(`${records.length} captures; problems: ${problems.length ? problems.join(', ') : 'none'}; errors: ${errors.length}; former-domain requests: ${forbidden.length}; typed values in URLs: ${leaks.length}`);
 if (forbidden.length || errors.length || problems.length || leaks.length) process.exitCode = 1;
 }
-main().catch(error => { console.error(error); process.exitCode = 1; });
+main().catch(async error => { console.error(error); process.exitCode = 1; await activeBrowser?.close(); });

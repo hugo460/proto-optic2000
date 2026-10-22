@@ -14,9 +14,11 @@ Liens prêts à ouvrir : [Rendez-vous](https://proto-optic2000.vercel.app/rendez
 
 ## Parcours 0 — Accueil vivant
 
-1. À l’arrivée, un film discret de gros plans de lunettes passe derrière la lavande ; dans le cadre blanc, la monture se pose puis reste immobile. Choisir **Baby Beach**, puis **The Bird** : la photo rejoue son arrivée, nom, prix et lien changent tout de suite. **Pause vidéo** fige le film (sur téléphone, l’icône pause au bout de la ligne « Préparer un rendez-vous ») ; **Lire la vidéo** le relance.
-2. Le bandeau de marques défile lentement : sur un appareil avec souris, le survoler l’arrête, **Pause** le fige, **Reprendre** le relance. Au clavier (Tab), la rangée s’immobilise et chaque logo reste entièrement visible. « Toutes les marques » reste fixe.
-3. Avec la préférence système « réduire les animations », le fond reste une image fixe, sans commande vidéo ; la monture apparaît sans mouvement et les logos forment une rangée à faire défiler à la main, sans bouton de pause. L’économie de données seule empêche le téléchargement du film, sans modifier les animations CSS de la monture ou des marques.
+1. À l’arrivée, le texte et les actions sont sur un champ lavande calme ; à côté (au-dessus sur téléphone), un film de gros plans de lunettes et de matières passe dans sa propre part. Sous les actions, choisir **Baby Beach**, puis **The Bird** : la monture, seule sur son petit plateau blanc, rejoue sa courte arrivée ; nom, prix et lien changent tout de suite. Il n’existe aucun bouton Pause/Lire : le film se joue seul quand le navigateur l’autorise et s’arrête hors de l’écran, quand l’onglet est masqué, ou si le visiteur a demandé moins d’animation ou l’économie de données.
+2. Ouvrir **Nos univers** dans la barre : un panneau clair, ancré sous l’en-tête, liste les six univers sur deux colonnes et les deux pages de l’enseigne ; Échap, un clic à côté ou une sortie au clavier le referment. Sur téléphone, **Menu** ouvre un dialogue blanc défilable avec l’action « Préparer un RDV » visible.
+3. Le bandeau de marques défile lentement, sans bouton : sur un appareil avec souris, le survoler l’arrête ; au clavier (Tab), la rangée s’immobilise et chaque logo reste entièrement visible. « Toutes les marques » reste fixe, dans sa colonne.
+4. En dessous : une sélection de quatre Maui Jim (Mamane, Alulu, Pehu, Liquid Sunshine), l’index des six univers autour de la photo de l’équipe, puis les trois magasins. Le pied de page est compact : identité et actions, magasins avec plan du site.
+5. Avec la préférence système « réduire les animations », le fond reste une image fixe ; la monture apparaît sans mouvement et les logos forment une rangée à faire défiler à la main. L’économie de données seule empêche le téléchargement du film, sans modifier les animations CSS de la monture ou des marques.
 
 ## Parcours 1 — Solaire : le prix suit la variante, puis le magasin
 
@@ -55,7 +57,7 @@ Rejouable à toute date : les sept jours proposés commencent toujours au lendem
 
 - Prix, stocks, horaires (dont Taravao), garanties, équipe et mentions historiques viennent des pages publiques de l’ancien site, relevées le 21/10/2026 ; ils restent à confirmer par l’enseigne.
 - Le formulaire et le rendez-vous sont des simulations : aucun envoi au magasin, aucune réservation, aucun compte, panier ni paiement. Les créneaux sont fictifs. La saisie reste dans la page et disparaît au rechargement.
-- Le film d’accueil est un plan d’ambiance issu d’une banque d’images : il ne montre ni un magasin ni une monture du catalogue.
+- Le film d’accueil est une ambiance de lunettes tirée de trois plans d’une banque d’images (Pexels) : il ne montre ni un magasin ni une monture du catalogue ; il n’a pas de commande de lecture.
 - L’hébergeur reçoit, comme pour tout site, les requêtes techniques de navigation ; jamais la saisie du formulaire (voir la page Confidentialité).
 - Le domaine historique, le site WordPress et ses comptes ou commandes ne sont pas touchés. Les CGV de 2022 ne s’appliquent pas.
 

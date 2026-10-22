@@ -36,7 +36,7 @@ const storage = (page: Page) => page.evaluate(() => ({ local: { ...localStorage 
 // =====================================================================================================================
 const track = (page: Page) => page.locator('.marquee-track');
 const offset = (page: Page) => track(page).evaluate(element => new DOMMatrix(getComputedStyle(element).transform).m41);
-test('Marquee: real logos move slowly, pause and resume, pause on hover, focus shows the original links only', async ({ page }) => {
+test('Marquee: real logos move slowly with no pause control, stop on hover and on focus, focus shows the original links only', async ({ page }) => {
   await page.goto('/');
   const marquee = page.locator('.brand-marquee');
   const links = marquee.locator('.marquee-group:not(.marquee-clone) a');
@@ -50,19 +50,12 @@ test('Marquee: real logos move slowly, pause and resume, pause on hover, focus s
   expect(await clone.locator('a[tabindex="-1"]').count()).toBe(count);
   expect(await clone.locator('img').evaluateAll(images => images.every(image => image.getAttribute('alt') === ''))).toBe(true);
   await expect(page.getByRole('link', { name: 'Toutes les marques' })).toHaveAttribute('href', '/marques');
-  // Moving, then paused by the button (same position), then moving again.
+  // Moving, with no control of any kind to stop it (S5/r2 removed the Pause button, hidden or not).
   const first = await offset(page);
   await page.waitForTimeout(400);
   expect(await offset(page)).toBeLessThan(first);
-  await page.getByRole('button', { name: 'Pause du défilement des marques' }).click();
-  await expect(track(page)).toHaveCSS('animation-play-state', 'paused');
-  await track(page).evaluate(async element => { await Promise.all(element.getAnimations().map(animation => animation.ready)); });
-  const still = await offset(page);
-  await page.waitForTimeout(400);
-  expect(await offset(page)).toBe(still);
-  await page.getByRole('button', { name: 'Reprendre le défilement des marques' }).click();
-  await page.waitForTimeout(400);
-  expect(await offset(page)).toBeLessThan(still);
+  await expect(page.getByRole('button', { name: /pause|reprendre|défilement/i })).toHaveCount(0);
+  expect(await marquee.locator('button, [role="button"], [role="switch"], input, [class*="control"], [class*="toggle"], [class*="pause"]').count()).toBe(0);
   // Hover pauses.
   await page.locator('.marquee-viewport').hover();
   await expect(track(page)).toHaveCSS('animation-play-state', 'paused');
@@ -90,8 +83,7 @@ test('Marquee: real logos move slowly, pause and resume, pause on hover, focus s
     visited.push(state.href!);
   }
   expect(new Set(visited).size).toBe(count);
-  await page.keyboard.press('Tab');
-  await expect(page.getByRole('button', { name: /défilement des marques/ })).toBeFocused();
+  // Nothing sits between the last logo and the directory link.
   await page.keyboard.press('Tab');
   await expect(page.getByRole('link', { name: 'Toutes les marques' })).toBeFocused();
   await page.getByRole('link', { name: 'Toutes les marques' }).click();
@@ -134,29 +126,46 @@ test('Marquee stops off screen and in a hidden tab, then resumes; no page overfl
 
 test.describe('Touch marquee', () => {
   test.use({ hasTouch: true, isMobile: true, viewport: { width: 390, height: 844 } });
-  test('Tapping a gap between logos does not leave a sticky hover pause', async ({ page, watch }) => {
+  test('Tapping the strip background does not leave a sticky hover pause and no control is offered', async ({ page, watch }) => {
     await page.goto('/');
-    await page.locator('.marquee-viewport').scrollIntoViewIfNeeded();
-    await track(page).evaluate(element => { element.getAnimations()[0].currentTime = 0; });
-    const box = (await page.locator('.marquee-viewport').boundingBox())!;
-    await page.touchscreen.tap(box.x + 120, box.y + 10);
+    const marquee = page.locator('.brand-marquee');
+    await marquee.scrollIntoViewIfNeeded();
+    await expect(marquee).not.toHaveAttribute('data-away', 'true');
+    // Chromium expands a touch into nearby links: the 16 px inter-logo gap can activate a brand even when elementFromPoint
+    // returns its background. Use the real empty area below the logos, inside the strip and clear of every link hit target.
+    const background = await marquee.evaluate(element => {
+      const rect = element.getBoundingClientRect();
+      const x = rect.left + 24, y = rect.bottom - 5;
+      const hit = document.elementFromPoint(x, y);
+      const clearOfLinks = [...element.querySelectorAll('a')].every(link => {
+        const box = link.getBoundingClientRect();
+        const dx = Math.max(box.left - x, 0, x - box.right), dy = Math.max(box.top - y, 0, y - box.bottom);
+        return Math.hypot(dx, dy) > 32;
+      });
+      return { x, y, clearOfLinks, inStrip: !!hit?.closest('.brand-marquee'), onLink: !!hit?.closest('a'), inViewport: y > 0 && y < innerHeight };
+    });
+    expect(background.inStrip && !background.onLink && background.inViewport && background.clearOfLinks, 'the real strip background is in view, outside expanded touch targets').toBe(true);
+    const before = await offset(page);
+    await page.touchscreen.tap(background.x, background.y);
     await expect(page).toHaveURL(`${watch.origin}/`);
     expect(await page.evaluate(() => matchMedia('(hover: hover)').matches)).toBe(false);
     expect(await track(page).evaluate(element => getComputedStyle(element).animationPlayState)).toBe('running');
-    await page.getByRole('button', { name: 'Pause du défilement des marques' }).tap();
-    expect(await track(page).evaluate(element => getComputedStyle(element).animationPlayState)).toBe('paused');
-    await page.getByRole('button', { name: 'Reprendre le défilement des marques' }).tap();
+    await expect(page.getByRole('button', { name: /pause|reprendre|défilement/i })).toHaveCount(0);
+    // A synthesized pointer hover on this touch context must also respect the (hover: hover) guard.
+    await page.locator('.marquee-viewport').hover();
+    expect(await track(page).evaluate(element => getComputedStyle(element).animationPlayState)).toBe('running');
+    await expect.poll(() => offset(page), { message: 'the row keeps moving after the background tap' }).toBeLessThan(before - 4);
     expect(await track(page).evaluate(element => getComputedStyle(element).animationPlayState)).toBe('running');
   });
 });
 
-test('Reduced motion: still, manually scrollable row of the original logos, no useless pause button, still frame', async ({ page }) => {
+test('Reduced motion: still, manually scrollable row of the original logos, no pause button, still frame', async ({ page }) => {
   await page.emulateMedia({ reducedMotion: 'reduce' });
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto('/');
   expect(await track(page).evaluate(element => getComputedStyle(element).animationName)).toBe('none');
   await expect(page.locator('.marquee-clone')).toBeHidden();
-  await expect(page.getByRole('button', { name: /défilement des marques/ })).toBeHidden();
+  await expect(page.getByRole('button', { name: /pause|reprendre|défilement/i })).toHaveCount(0);
   const viewport = page.locator('.marquee-viewport');
   expect(await viewport.evaluate(element => [getComputedStyle(element).overflowX, element.scrollWidth > element.clientWidth])).toEqual(['auto', true]);
   await viewport.evaluate(element => { element.scrollLeft = 300; });
@@ -212,13 +221,18 @@ test('Showcase: a missing photo keeps a bounded fallback, the right text and lin
   watch.tolerate.push(new RegExp(encodeURIComponent(missing)));
   await page.route('**/_next/image?**', route => (new URL(route.request().url()).searchParams.get('url') ?? '') === missing ? route.abort() : route.continue());
   await page.goto('/');
-  await page.getByRole('button', { name: 'Baby Beach', exact: true }).click();
   const stage = page.locator('.showcase-stage');
+  // The box reserved for the photo (the keyed wrapper inside the plateau) while a photo is shown.
+  await expect(stage.locator('.showcase-image img')).toBeVisible();
+  const reserved = await stage.locator('.showcase-image').evaluate(element => ({ height: (element as HTMLElement).offsetHeight, plateau: Math.round(element.closest('.showcase-plateau')!.getBoundingClientRect().height) }));
+  expect(reserved.height).toBeGreaterThan(0);
+  await page.getByRole('button', { name: 'Baby Beach', exact: true }).click();
   await expect(stage.locator('.image-fallback')).toBeVisible();
   await expect(stage.locator('h2')).toHaveText('Baby Beach');
   await expect(stage.getByRole('link', { name: 'Découvrir ce modèle' })).toHaveAttribute('href', '/produits/baby-beach');
-  // Layout height, independent of the arrival transform: the fallback keeps the photo's reserved box.
-  expect(await stage.locator('.image-fallback').evaluate(element => (element as HTMLElement).offsetHeight)).toBe(265);
+  // Layout height, independent of the arrival transform: the fallback keeps the photo's reserved box inside the same plateau
+  // (the former fixed 265 px of the tall white card is obsolete: the ribbon is compact).
+  expect(await stage.locator('.image-fallback').evaluate(element => ({ height: (element as HTMLElement).offsetHeight, plateau: Math.round(element.closest('.showcase-plateau')!.getBoundingClientRect().height) }))).toEqual(reserved);
   await page.getByRole('button', { name: 'The Bird', exact: true }).click();
   await expectModel(page, 'the-bird');
 });
@@ -282,7 +296,7 @@ test('Appointment entries: home, header, mobile menu, footer, the three stores w
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto('/');
   await page.getByRole('button', { name: 'Menu', exact: true }).click();
-  await page.getByRole('dialog').getByRole('link', { name: 'Préparer un rendez-vous' }).click();
+  await page.getByRole('dialog').getByRole('link', { name: 'Préparer un RDV', exact: true }).click();
   await expect(h1(page)).toHaveText('Préparer un RDV.');
 });
 
@@ -325,7 +339,7 @@ test('Appointment from the home: linked errors and focus, empty day, slot, conta
   await expect(title(page)).toBeFocused();
   await page.setViewportSize({ width: 390, height: 844 });
   await page.getByRole('button', { name: 'Menu', exact: true }).click();
-  await page.getByRole('dialog').getByRole('link', { name: 'Préparer un rendez-vous' }).click();
+  await page.getByRole('dialog').getByRole('link', { name: 'Préparer un RDV', exact: true }).click();
   await expect(page.getByRole('dialog')).not.toBeVisible();
   await expect(page).toHaveURL(/#coordonnees$/);
   await expect(title(page)).toBeFocused();

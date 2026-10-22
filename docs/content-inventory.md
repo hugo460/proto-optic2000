@@ -146,8 +146,20 @@ Statuts : **repris** (contenu présenté), **réorganisé** (regroupé/corrigé 
 - Autres campagnes sociales (POST01/13/14/24…), visuels « équipe offre », photos magasin supplémentaires : non nécessaires, non repris. Essai virtuel Fittingbox et vidéos : non repris, aucun faux bouton.
 - Médias S2 ajoutés (WebP q88, dimensions/proportions d’origine, provenance embarquée + sidecar Impeccable) : campagnes `4fc6abc0d6` (POST27) et `62e14c3acf` (POST21), photo d’équipe `6b3c1455b1` (sans identification des personnes), `b413c0bdf9` (Perl) et `16bd866170` (Celestron).
 
-## Fond d’ambiance S5 — média externe localisé
+## Fond d’ambiance S5/r2 — médias externes localisés
 
-Le hero utilise un plan décoratif de lunettes et de branches, sans visage, par Kaboompics (compte Pexels `karola-g`), [clip 5241167](https://www.pexels.com/video/close-up-video-of-sunglasses-5241167/). [Licence Pexels](https://www.pexels.com/license/) et fiche de cet asset vérifiées le 21/10/2026 (Tahiti) : usage web et modification permis, sans suggérer d’approbation par les marques représentées. L’inscription GUESS est visible sur une branche de la source ; ce film n’est pas présenté comme une photo du catalogue ni d’un magasin local.
+Le hero utilise un film décoratif de trois plans de lunettes et de matières, sans visage, tirés de la banque d’images Pexels ([licence Pexels](https://www.pexels.com/license/) vérifiée le 21/10/2026, Tahiti : usage web et montage permis, sans suggérer d’approbation par les marques représentées). Il remplace le plan unique de S5 (clip 5241167, 8 s en aller-retour), qui n’est plus livré.
 
-Seuls les dérivés finaux sont livrés sous `public/media/ambience/` : `eyewear-loop.mp4` (H.264, 1280×720, 25 fps, 8 s, sans audio, 772 612 octets) et `eyewear-poster.webp` (1280×720, 35 432 octets). L’extrait 0,50–4,50 s est suivi de son retour inversé pour un raccord sans coupe de plan ; encodage CRF 27, faststart. Le poster provient de sa première image, WebP qualité 78. Provenance, transformations et SHA-256 dans [hero-media.json](hero-media.json). Sources lourdes et essais hors dépôt. Aucune requête Pexels ou WordPress au visionnage du prototype.
+| Plan | Source | Extrait natif utilisé | Auteur |
+| --- | --- | --- | --- |
+| 1 | [5241102](https://www.pexels.com/download/video/5241102/) | 0–8,40 s | non confirmé séparément (aucune attribution supposée) |
+| 2 | [5241104](https://www.pexels.com/video/variety-of-eyeglasses-on-display-5241104/) | 2–10,24 s (amorce floue retirée) | Kaboompics (compte Pexels `karola-g`) |
+| 3 | [5241100](https://www.pexels.com/download/video/5241100/) | 0–9,12 s | non confirmé séparément (aucune attribution supposée) |
+
+Montage : vitesse native, sans inversion, répétition ajoutée, ralentissement ni filtre ; fondus de 0,48 s et raccord circulaire avec la tête du premier plan ; durée livrée 24,32 s. Ni visage ni couleur modifiée. Les lunettes et les lieux ne sont ni ceux des magasins tahitiens ni ceux du catalogue ; l’inscription visible sur certaines montures ne vaut pas approbation de marque.
+
+Seuls les dérivés finaux sont livrés sous `public/media/ambience/` : `eyewear-loop.mp4` (1920 × 1080, 25 i/s, H.264 High, yuv420p, faststart, sans audio, 4 895 212 octets) et `eyewear-poster.webp` (42 206 octets, première image). Plages utilisées, empreintes SHA-256 des sources et des livrables : [hero-media.json](hero-media.json). `pnpm check:media` en vérifie les limites techniques et la cohérence avec ce manifeste ; il n’établit ni les droits, ni l’absence de visage, ni la qualité artistique de la boucle. Sources lourdes et essais hors dépôt. Aucune requête Pexels ou WordPress au visionnage du prototype.
+
+## Logos du bandeau de marques (S5/r2)
+
+Treize rendus dérivés de logos déjà repris (`public/media/brand-strip/*.webp`, WebP qualité 90, au plus 640 × 320 px sans agrandissement), produits par `node scripts/prepare-marquee.mjs` : seul le canevas extérieur vide (blanc ou transparent) est retiré ; logo et signature restent entiers et proportionnels. Les 760 images d’origine sont inchangées et les 38 identités du catalogue aussi. Référence de chaque logo, origine, empreintes et poids : [marquee-media.json](marquee-media.json) et `src/data/marquee-media.json`. `pnpm check:media` contrôle les 13 rendus.

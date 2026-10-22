@@ -1,13 +1,12 @@
 'use client';
 import { useEffect, useRef, useState, useSyncExternalStore, type RefObject } from 'react';
-import { Icon } from '@/components/ui/icon';
 
-// Decorative close-ups of frames behind the home hero (provenance in docs/content-inventory.md). Local files only.
+// Decorative close-ups of frames beside the home hero copy (provenance in docs/content-inventory.md). Local files only.
 export const heroVideo = '/media/ambience/eyewear-loop.mp4';
 export const heroPoster = '/media/ambience/eyewear-poster.webp';
 
-// stopped: never started here (autoplay refused or the visitor's pause kept), a manual start is possible.
-type Playback = 'waiting' | 'stopped' | 'playing' | 'paused' | 'failed';
+// No playback control is offered: the film runs by itself when the browser allows it, otherwise the poster stays.
+type Playback = 'waiting' | 'playing' | 'paused' | 'failed';
 export type HeroVideoStatus = Playback | 'off';
 interface Connection extends EventTarget { saveData?: boolean }
 const reducedMotion = '(prefers-reduced-motion: reduce)';
@@ -24,20 +23,17 @@ function subscribe(onChange: () => void) {
 const filmAllowed = () => !matchMedia(reducedMotion).matches && connection()?.saveData !== true;
 const notYetKnown = () => false;
 
-// Playback follows the media events, never an intention: « playing » only after the element reports it. A rejected
-// play() is not playback; a pause chosen by the visitor survives scrolling away, hidden tabs and preference changes.
+// Playback follows the media events, never an intention: « playing » only after the element reports it. A refused
+// play() leaves the poster in place; the film plays in view on a visible tab and rests otherwise.
 export function useHeroVideo() {
   const allowed = useSyncExternalStore(subscribe, filmAllowed, notYetKnown);
   const video = useRef<HTMLVideoElement>(null);
-  const scope = useRef<HTMLElement>(null);
-  const held = useRef(false);
-  const control = useRef<(() => void) | null>(null);
   const [playback, setPlayback] = useState<Playback>('waiting');
   const [session, setSession] = useState(allowed);
   if (session !== allowed) { setSession(allowed); setPlayback('waiting'); }
   useEffect(() => {
-    const element = video.current, hero = scope.current;
-    if (!allowed || !element || !hero) return;
+    const element = video.current;
+    if (!allowed || !element) return;
     let live = true, started = false, inView = false, shown = document.visibilityState === 'visible', attempt = 0;
     const detach = () => { element.pause(); element.removeAttribute('src'); element.load(); };
     const fail = () => { if (!live) return; live = false; attempt++; detach(); setPlayback('failed'); };
@@ -45,19 +41,17 @@ export function useHeroVideo() {
       if (!live || token !== attempt) return;
       const name = error instanceof DOMException ? error.name : '';
       if (name === 'AbortError') return; // superseded by a pause or a new source
-      if (name === 'NotAllowedError') setPlayback(started ? 'paused' : 'stopped');
-      else fail();
+      if (name !== 'NotAllowedError') fail(); // autoplay refused: the poster simply stays
     };
     const run = () => {
       if (!live || !inView || !shown || !element.paused) return;
-      if (held.current) { setPlayback(current => current === 'waiting' ? 'stopped' : current); return; }
       const token = ++attempt;
       try { element.play()?.catch(error => refuse(error, token)); } catch (error) { refuse(error, token); }
     };
     const rest = () => { if (!live) return; attempt++; if (!element.paused) element.pause(); };
     const events: [string, () => void][] = [
       ['playing', () => { if (!live) return; started = true; setPlayback('playing'); }],
-      ['pause', () => { if (live) setPlayback(current => started ? 'paused' : current === 'stopped' ? 'stopped' : 'waiting'); }],
+      ['pause', () => { if (live) setPlayback(started ? 'paused' : 'waiting'); }],
       ['ended', () => { if (live) setPlayback(started ? 'paused' : 'waiting'); }],
       ['error', fail],
     ];
@@ -65,15 +59,12 @@ export function useHeroVideo() {
     const observer = new IntersectionObserver(([entry]) => { inView = entry.isIntersecting; if (inView) run(); else rest(); });
     const onVisibility = () => { shown = document.visibilityState === 'visible'; if (shown) run(); else rest(); };
     document.addEventListener('visibilitychange', onVisibility);
-    control.current = () => {
-      if (!live) return;
-      if (element.paused) { held.current = false; run(); } else { held.current = true; rest(); }
-    };
     element.muted = true;
     element.src = heroVideo; // preload="none": nothing is fetched before the first play() in view
-    observer.observe(hero);
+    // On a phone the film is a separate band above the copy: stop when that band leaves the screen.
+    observer.observe(element);
     return () => {
-      live = false; attempt++; control.current = null;
+      live = false; attempt++;
       observer.disconnect();
       document.removeEventListener('visibilitychange', onVisibility);
       for (const [name, listener] of events) element.removeEventListener(name, listener);
@@ -81,10 +72,11 @@ export function useHeroVideo() {
     };
   }, [allowed]);
   const status: HeroVideoStatus = allowed ? playback : 'off';
-  return { video, scope, status, toggle: () => control.current?.() };
+  return { video, status };
 }
 
-// Poster and film under a lavender veil, outside the reading order. The poster stays underneath at all times.
+// Poster and film in their own part of the hero, outside the reading order. The poster stays underneath at all times;
+// the film only covers it once frames are really playing (or rest on a played frame).
 export function HeroAmbience({ video, status }: { video: RefObject<HTMLVideoElement | null>; status: HeroVideoStatus }) {
   const film = status === 'playing' || status === 'paused';
   return <div className="hero-ambience" aria-hidden="true">
@@ -92,13 +84,4 @@ export function HeroAmbience({ video, status }: { video: RefObject<HTMLVideoElem
       <video ref={video} data-shown={film || undefined} muted loop playsInline preload="none" tabIndex={-1} />
     </div>
   </div>;
-}
-
-// Offered only when there is a real choice: pause a film that plays, or start one that is paused or not started.
-export function HeroVideoToggle({ status, onToggle }: { status: HeroVideoStatus; onToggle: () => void }) {
-  const playing = status === 'playing';
-  const available = playing || status === 'paused' || status === 'stopped';
-  return <button type="button" className="hero-video-toggle" hidden={!available} onClick={onToggle}>
-    <Icon name={playing ? 'pause' : 'play'} /><span className="hero-video-label">{playing ? 'Pause vidéo' : 'Lire la vidéo'}</span><span className="sr-only"> d’ambiance</span>
-  </button>;
 }

@@ -6,7 +6,9 @@ Lot S2 (accepté localement par le pilote le 21/10/2026 au commit `49458ec`, san
 
 Version de présentation S3 : [ouvrir le prototype](https://proto-optic2000.vercel.app). Mentions adaptées à Vercel, matrice de recette complétée et [guide de démonstration](docs/demo.md). S3 a été acceptée par le pilote.
 
-Complément S4 (demandé par Hugo après le retour d’Omar du 21/10/2026) : bandeau de marques défilant avec pause/reprise, présentation animée des montures du nuancier, **rendez-vous simulé** en quatre étapes sur `/rendez-vous` (créneaux fictifs en heure de Tahiti, rien n’est réservé ni envoyé) et passe de finition des parcours. L’acceptation de S4 reste au pilote ; les informations commerciales restent à confirmer par l’enseigne.
+Complément S4 (demandé par Hugo après le retour d’Omar du 21/10/2026) : bandeau de marques défilant, présentation animée des montures du nuancier, **rendez-vous simulé** en quatre étapes sur `/rendez-vous` (créneaux fictifs en heure de Tahiti, rien n’est réservé ni envoyé) et passe de finition des parcours. L’acceptation de S4 reste au pilote ; les informations commerciales restent à confirmer par l’enseigne.
+
+S5/r2 (livrée à la présentation ; acceptation du pilote à venir) recompose l’accueil, ses menus et le pied de page à la demande de Hugo, après le rejet du rendu S5/r1 : hero éditorial à deux parts avec un film local de 24,32 s sans commande Pause/Lire, nuancier secondaire compact, bandeau de 13 logos sans bouton, panneau des univers clair, menu mobile blanc nommé, pied de page compact. S6 est seulement prévue. Voir [les décisions](docs/decisions.md) et [DESIGN.md](DESIGN.md).
 
 ## Lancer
 
@@ -40,6 +42,8 @@ OPTIC_BASE_URL=http://127.0.0.1:3018 pnpm test:browser
 OPTIC_BASE_URL=http://127.0.0.1:3018 OPTIC_PROOF_DIR=/chemin/hors-du-depot pnpm capture:ui
 OPTIC_BASE_URL=http://127.0.0.1:3018 OPTIC_PROOF_DIR=/chemin/hors-du-depot pnpm check:browser-quality
 ```
+
+`check:media` contrôle techniquement le film (durée, codec, faststart, poids, empreintes, manifeste `docs/hero-media.json`), les 760 images et les 13 logos du bandeau ; `check:contrast` mesure les paires de couleurs de la feuille de style. Ni l’un ni l’autre ne certifient les droits ni la qualité artistique. `node scripts/prepare-marquee.mjs` régénère les 13 logos du bandeau (`src/data/marquee-media.json`, `docs/marquee-media.json`) à partir des logos existants, sans toucher aux originaux.
 
 `check:routes` contrôle toutes les pages canoniques (dont `/rendez-vous` et ses liens publics), `robots.txt`, des états de requête, les liens internes, les redirections de l’ancien site et les vraies 404. `check:browser-quality` rejoue les routes à 360 px, 720×500 en 2×, au clavier (contact, rendez-vous, bandeau de marques), avec le mouvement par défaut et aux seuils 801/1101/1280 px. `capture:ui` ajoute les états du rendez-vous et des images horodatées de l’animation. `check:data` vérifie les décomptes, la couverture des 25 pages sources et les citations de garanties. Les tests navigateur couvrent aussi les href de téléphone, e-mail et plan sans les activer, et échouent sur tout trafic hors origine locale (dont l’ancien domaine). Les tests navigateur utilisent Chromium via Playwright. Sur une machine sans navigateur de test : `pnpm exec playwright install chromium`. Le serveur doit tourner avant les quatre dernières commandes. Les captures et logs volumineux restent hors Git ; `.impeccable/review/` est ignoré.
 

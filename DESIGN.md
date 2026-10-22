@@ -1,6 +1,6 @@
 ---
 name: "Optic 2000 Tahiti"
-description: "Le nuancier solaire — système visuel livré du prototype catalogue et magasins."
+description: "Le nuancier solaire — système visuel livré du prototype catalogue et magasins, accueil recomposé en S5/r2."
 colors:
   yellow: "#ffda00"
   yellow-hover: "#f1c900"
@@ -154,7 +154,7 @@ components:
 
 Le système est direct et calme dans les parcours de recherche, de comparaison et de contact. Les surfaces sont planes, les contours simples et la densité s’adapte à la tâche. Sora donne de la présence aux titres ; Manrope maintient la lisibilité des informations, des prix et des commandes. La lavande contextualise, le jaune invite à agir et le focus reste distinct.
 
-Cette documentation décrit le prototype effectivement livré en S1 : Next.js 16.4.2, React 19.3.1 et CSS natif, sans bibliothèque UI. La palette et les polices constituent une direction de prototype confirmée, pas une charte officielle du client. La composition du seul accueil et ses trois modèles appartiennent à son contrat de surface ; elles ne deviennent pas un gabarit pour les écrans suivants.
+Cette documentation décrit le prototype effectivement livré (S1, complété par S4, accueil et navigation recomposés en S5/r2) : Next.js 16.4.2, React 19.3.1 et CSS natif, sans bibliothèque UI. La palette et les polices constituent une direction de prototype confirmée, pas une charte officielle du client. S5/r2 affine l’identité existante (logo réel, noir, lavande, jaune, Sora, Manrope) par une recomposition éditoriale de l’accueil, de la navigation et du pied de page ; ce n’est ni une nouvelle identité ni une décomposition en maquettes. La composition de l’accueil et de ses trois modèles appartient à son contrat de surface ; elle ne devient pas un gabarit pour les écrans suivants, dont la reprise (S6) est seulement prévue et non figée ici.
 
 **Key Characteristics:**
 
@@ -163,6 +163,7 @@ Cette documentation décrit le prototype effectivement livré en S1 : Next.js 16
 - Titres Sora et lecture Manrope, avec polices locales variables.
 - Surfaces planes, coins simples et séparateurs fins.
 - Choix explicites, focus visible et parcours réversibles.
+- Accueil éditorial : texte sur un champ lavande calme, matière filmée dans sa propre part, jamais sous le texte.
 
 ## Colors
 
@@ -174,15 +175,15 @@ La palette met en relation un jaune franc, une famille lavande et des neutres de
 
 ### Secondary
 
-- **Lavande franche** (`lavender`) : environnement de sélection et menu mobile.
+- **Lavande franche** (`lavender`) : champ calme du hero d’accueil, derrière le titre, les actions et le nuancier secondaire. Ce n’est plus le fond du menu.
 - **Lavande douce** (`lavender-soft`) : contexte produit conservé, filtres actifs, présentations de marques et accompagnement.
-- **Encre lavande** (`lavender-ink`) : texte sur lavande et survol d’une action sombre.
+- **Encre lavande** (`lavender-ink`) : texte sur lavande, survol d’une action sombre et fond de repli de la part du film avant son poster.
 - **Violet de focus** (`focus`) : contour clavier sur fond clair et repère du curseur dans les champs. Ce rôle est fonctionnel ; il ne remplace pas un état sélectionné.
 
 ### Neutral
 
 - **Encre** (`ink`) : texte principal, sélection encadrée, bouton sombre et pied de page.
-- **Papier** (`paper`) : fond principal, intérieur des photographies produit, champs et texte inversé.
+- **Papier** (`paper`) : fond principal, intérieur des photographies produit, champs, texte inversé, petit plateau de la monture d’accueil, panneau des univers et menu mobile.
 - **Plateau gris** (`surface`) : entourage des photographies produit, zone de filtres, états vides et fallback média.
 - **Texte secondaire** (`muted`) : marques, explications, légendes et réserves.
 - **Filet** (`line`) : bordures de champs, séparateurs, miniatures et options non sélectionnées.
@@ -192,6 +193,8 @@ La palette met en relation un jaune franc, une famille lavande et des neutres de
 **The Plateau fidèle Rule.** Présenter les montures et les logos entiers, y compris dans le bandeau et au focus, avec object-fit: contain ; réserver object-fit: cover aux photographies de magasin et au film décoratif d’ambiance de l’accueil.
 
 **The Action jaune Rule.** Associer le jaune aux actions principales et aux repères interactifs ; conserver les libellés et les états sémantiques pour que la couleur ne porte jamais seule le sens.
+
+**The Texte sur champ calme Rule.** Poser le texte sur la lavande unie, jamais sur l’image en mouvement : le film occupe sa propre part du hero, sans voile ni filtre à simuler. Le contraste se mesure donc sur la lavande pure ; `check:contrast` compare 17 paires dérivées de la feuille de style (hero, panneau, menu mobile, pied de page) aux paires historiques, et ne contient aucun composite de texte sur film.
 
 Le code n’emploie pas de rampe tonale complète. Les huit étapes OKLCH par couleur dans le sidecar sont synthétiques, documentaires et sans effet sur le rendu livré ; elles ne constituent ni des variantes approuvées ni des tokens supplémentaires.
 
@@ -215,7 +218,7 @@ Le code n’emploie pas de rampe tonale complète. Les huit étapes OKLCH par co
 | `navigation` | Navigation de bureau. |
 | `option` | Libellés de coloris et puces de filtre, avec retour à la ligne possible. |
 
-Les titres principaux de catalogue utilisent une taille locale (`clamp(2rem, 3.2vw, 3rem)`, puis 30px jusqu’à 600px). Les fiches produit utilisent `clamp(2.5rem, 4vw, 3.5rem)`, puis 38px jusqu’à 800px. L’accueil possède son titre propre ; sa grande taille et ses retours à la ligne restent dans le contrat d’accueil.
+Les titres principaux de catalogue utilisent une taille locale (`clamp(2rem, 3.2vw, 3rem)`, puis 30px jusqu’à 600px). Les fiches produit utilisent `clamp(2.5rem, 4vw, 3.5rem)`, puis 38px jusqu’à 800px. L’accueil possède son titre propre (`clamp(2.5rem, 4.2vw, 4rem)`, interligne 1.04, espacement -.04em ; `clamp(2.25rem, 4.6vw, 3.25rem)` jusqu’à 1100px, 52px jusqu’à 800px, `clamp(2.25rem, 10.5vw, 3rem)` jusqu’à 600px) et une proposition de (18px), (16px) jusqu’à 1100px, (15px) jusqu’à 600px. Ses retours à la ligne restent dans le contrat d’accueil. Les libellés de navigation sont à (14px) dans la barre, à (17px) dans le panneau des univers et le menu mobile ; les titres de groupe de ces deux menus et du pied de page sont discrets (13px, poids 750, texte secondaire).
 
 Le texte suit un interligne aéré. Les introductions de sections sont contenues autour de (65–66ch), les notes de catalogue à (74ch) et les textes de marque à (58ch). Les prix et horaires utilisent des chiffres tabulaires ; les montants sont en XPF sans décimales. Les légendes, prix, cartes et réserves touchés par S4 ne descendent plus sous (12px), y compris sur téléphone. Dans la colonne principale du rendez-vous, les aides de champ, l’indication des champs obligatoires et les notes de soumission sont à (14px) ; les erreurs de champ restent à (13px) et les réserves conservent leurs tailles locales. Le CSS livré ne contient plus de texte à (10–11px) : ne pas rouvrir cette limite.
 
@@ -235,6 +238,16 @@ Les pas du frontmatter correspondent à l’échelle déclarée en CSS et à des
 | Jusqu’à 600px | Catalogue et marques sur 2 colonnes ; produit (16px d’écart horizontal, 32px vertical). Image de carte et fallback à (122px) de haut, avec (6px) d’espacement intérieur du plateau. Fiches produit empilées : galerie puis informations. Cartes magasin empilées ; présentation de marque avec logo avant le texte. |
 | Jusqu’à 370px | Gouttières encore resserrées et ajustements de la seule composition d’accueil. |
 
+L’accueil suit un tableau propre, sans l’étendre aux parcours de tâche :
+
+| Seuil | Hero d’accueil | Bandeau de marques |
+| --- | --- | --- |
+| Plus de 1100px | Texte 45 % / film 55 % ; actions en colonne jusqu’à 1280px, puis en ligne avec retour à la ligne ; texte aligné sur la colonne du conteneur | Cellules entières : 5 de 1101 à 1280px, 6 au-delà |
+| De 801 à 1100px | 50 % / 50 % | 4 cellules |
+| Jusqu’à 800px | Bande de film (`clamp(172px, 33vw, 256px)`, 172px sur téléphone) puis texte ; nuancier compact sous les actions | 3 cellules ; sur téléphone, lien « Toutes les marques » sous la piste |
+
+La hauteur minimale du hero est `clamp(540px, calc(100svh - 196px), 660px)`, `clamp(500px, calc(100svh - 196px), 600px)` jusqu’à 1100px. Le texte garde la marge `max(48px, (100vw - 1344px) / 2 + 48px)`, donc le bord gauche du logo, du titre, des marques et des sections reste sur un même axe aux très grandes largeurs ; le film s’étend jusqu’au bord droit de la page. Les gouttières du pied de page se resserrent à 1100px, puis ses actions s’alignent à gauche jusqu’à 600px.
+
 Les introductions du catalogue sont compactes : espacement haut/bas (32px / 20px), ramené à (24px / 16px) sur téléphone. Les pages de marque et de magasins gardent une introduction plus ample. Une section générale utilise un espacement vertical de (88px), puis (64px) jusqu’à 800px et (52px) jusqu’à 600px.
 
 La fiche produit juxtapose galerie et informations dans un rapport (1.3fr / 1fr), avec un écart de (64px), réduit à (36px), puis (28px). La galerie reste collante à (24px) du haut au-dessus de 800px ; elle devient statique ensuite. La photo principale conserve un plateau clair et un ratio (1.35), puis (1.7) sur téléphone. La fiche magasin réemploie le rapport (1.3fr / 1fr) ; elle s’empile dès 800px, où les informations pratiques passent temporairement sur deux colonnes avant de revenir à une seule sur téléphone.
@@ -243,21 +256,21 @@ Les détails de composition et de priorité de chaque première vue sont dans le
 
 ## Elevation & Depth
 
-Le système est plat : aucun `box-shadow` n’est livré. La profondeur est donnée par les plateaux gris, la lavande douce, les blancs, les filets et les bordures de sélection. Le menu mobile ajoute seulement un fond d’occultation (`rgb(0 0 0 / 55%)`) derrière son dialogue natif. L’en-tête est dans le flux, avec un niveau de superposition (20) ; il n’est pas un bandeau flottant.
+Le système est plat, avec une seule exception livrée : le panneau des univers du bureau, ancré sous la barre, porte une ombre diffuse à étalement négatif (`0 24px 48px -28px rgb(23 23 23 / 45%)`) qui le détache de la page. Partout ailleurs aucun `box-shadow` : la profondeur vient des plateaux gris, de la lavande, des blancs, des filets et des bordures de sélection. Le menu mobile ajoute seulement un fond d’occultation (`rgb(0 0 0 / 45%)`) derrière son dialogue natif. L’en-tête est dans le flux, avec un niveau de superposition (20) ; il n’est pas un bandeau flottant.
 
-**The Plan de travail Rule.** Séparer les contenus par le ton du fond, les blancs et les filets ; ne pas ajouter une ombre pour transformer une carte plane en objet flottant.
+**The Plan de travail Rule.** Séparer les contenus par le ton du fond, les blancs et les filets ; ne pas ajouter une ombre pour transformer une carte plane en objet flottant. L’ombre du panneau ancré est une exception bornée à ce panneau, pas un vocabulaire.
 
-La réponse au survol des actions est une transition de fond et de couleur (`160ms ease`). Dans le nuancier d’accueil, seule la photographie de la monture arrive sur son plateau à chaque sélection et au chargement : durée `--duration-arrival` (650ms), courbe `--ease-arrival` (`cubic-bezier(.33, 1, .68, 1)`), photographie déjà visible (opacité .75 → 1) et translation (-20px, 8px), (-12px, 6px) sur téléphone, avec rotation (-2.5deg) jusqu’à la pose stable, sans coupe visible des montures sélectionnées ; seul le blanc périphérique de la boîte peut dépasser et être masqué. Nom, prix, coloris et lien changent aussitôt ; aucun autoplay de modèle. C’est une signature de composition bornée à l’accueil, pas un préréglage d’entrée pour les cartes ou les formulaires. `--ease-out` (`cubic-bezier(.16, 1, .3, 1)`) reste déclarée mais n’est plus consommée par les styles livrés ; elle n’est pas une nouvelle prescription. `prefers-reduced-motion: reduce` remplace le défilement doux par un défilement automatique, ramène animations/transitions à (`.01ms`, une itération), laisse la photographie d’accueil à sa pose finale, ne charge pas le film d’ambiance (poster seul) et transforme le bandeau de marques en rangée manuelle.
+La réponse au survol des actions est une transition de fond et de couleur (`160ms ease`). Le panneau des univers apparaît par une transition d’opacité (160ms) et de translation (-6px vers 0, 220ms, `--ease-out`, `cubic-bezier(.16, 1, .3, 1)`) ; le menu mobile s’ouvre sans mouvement ajouté. Dans le nuancier d’accueil, seule la photographie de la monture arrive sur son petit plateau, au chargement et à chaque sélection : `frame-arrive`, 520ms, `--ease-arrival` (`cubic-bezier(.33, 1, .68, 1)`), opacité .75 → 1, translation (-10px, 4px) ((-8px, 3px) sur téléphone) et rotation (-1.5deg) jusqu’à la pose stable, puis repos ; le plateau masque seulement le blanc périphérique. Nom, prix, coloris et lien changent aussitôt ; aucun autoplay de modèle. C’est une signature de composition bornée à l’accueil, pas un préréglage d’entrée pour les cartes ou les formulaires. `--duration-arrival` (650ms) reste déclarée sans être consommée : la durée livrée est 520ms. `prefers-reduced-motion: reduce` remplace le défilement doux par un défilement automatique, ramène animations et transitions à (`.01ms`, une itération), retire l’arrivée de la photographie, ne charge pas le film (poster seul) et transforme le bandeau de marques en rangée manuelle.
 
 ## Shapes
 
 Les grandes surfaces, photographies, cartes et plateaux sont rectangulaires et sans arrondi visible. Le rayon de contrôle du frontmatter est réservé aux actions, champs, puces et choix de variante. Les sélecteurs textuels et le déclencheur de filtres restent droits. Le rayon `--radius-card` déclaré dans le CSS n’est appliqué à aucun composant livré : il n’est pas canonisé.
 
-Les bordures ordinaires sont fines (1px). Les miniatures et variantes choisies passent à (2px d’encre) ; leur padding diminue d’un pixel pour garder leur taille. Les formes ne portent pas seules le choix : coche, nom et `aria-pressed` le confirment. Les icônes sont des SVG en ligne, habituellement (22px, trait 1.7, extrémités et jointures arrondies) ; les tailles locales de carte sont plus petites. La famille compte aussi calendrier, horloge, pause et lecture, pour le rendez-vous, le bandeau de marques et le film d’accueil. Aucun caractère typographique ne sert de pictogramme.
+Les bordures ordinaires sont fines (1px). Les miniatures et variantes choisies passent à (2px d’encre) ; leur padding diminue d’un pixel pour garder leur taille. Les formes ne portent pas seules le choix : coche, nom et `aria-pressed` le confirment. Les icônes sont des SVG en ligne, habituellement (22px, trait 1.7, extrémités et jointures arrondies) ; les tailles locales de carte sont plus petites. La famille compte aussi calendrier, horloge, menu et fermeture ; les pictogrammes pause et lecture ont été retirés avec les commandes de média (S5/r2). Le panneau des univers n’arrondit que ses coins bas (rayon de contrôle). Aucun caractère typographique ne sert de pictogramme.
 
 ## Components
 
-Les exemples autonomes de `.impeccable/design.json` montrent onze composants réels. Ils développent le CSS natif, préfixent les classes par `ds-`, intègrent les icônes SVG et n’exigent aucun runtime React. Les couleurs restent liées aux variables de l’application, avec repli littéral ; les polices locales sont déclarées pour le rendu isolé. Les exemples utilisent les chemins publics du projet (`/fonts/` et `/media/`) : leur hôte doit servir ces assets pour afficher les mêmes polices et photographies. Ils documentent l’apparence et les états CSS ; le remplacement de variante et la recherche restent des comportements de l’application.
+Les exemples autonomes de `.impeccable/design.json` montrent treize composants réels. Ils développent le CSS natif, préfixent les classes par `ds-`, intègrent les icônes SVG et n’exigent aucun runtime React. Les couleurs restent liées aux variables de l’application, avec repli littéral ; les polices locales sont déclarées pour le rendu isolé. Les exemples utilisent les chemins publics du projet (`/fonts/` et `/media/`) : leur hôte doit servir ces assets pour afficher les mêmes polices et photographies. Ils documentent l’apparence et les états CSS ; le remplacement de variante et la recherche restent des comportements de l’application.
 
 ### Buttons
 
@@ -269,7 +282,7 @@ Les actions sont franches, avec libellé lisible et icône cohérente avec leur 
 - **Texte** : sans fond ni bordure ; soulignement au survol.
 - **Icône en tête** : une primitive réutilisable place une icône (calendrier pour le rendez-vous) avant le libellé, groupé à gauche. La flèche finale indique une sortie ou la progression dans une tâche.
 
-Le focus clavier utilise un contour (3px, décalage 4px) : violet sur les zones claires, jaune dans l’en-tête et le pied de page. Le menu lavande rétablit le violet. Les boutons désactivés ont une opacité (0.55) et un curseur d’attente ; aucun nouveau style de statut métier ne doit en être déduit. Les adaptations mobiles restent locales : recherche soumise par icône jusqu’à 600px avec nom accessible conservé, action de contact produit pleine largeur (54px minimum).
+Le focus clavier utilise un contour (3px, décalage 4px) : violet sur les zones claires, jaune dans l’en-tête et le pied de page. Le panneau des univers et le menu mobile, en papier, rétablissent le violet. Les boutons désactivés ont une opacité (0.55) et un curseur d’attente ; aucun nouveau style de statut métier ne doit en être déduit. Les adaptations mobiles restent locales : recherche soumise par icône jusqu’à 600px avec nom accessible conservé, action de contact produit pleine largeur (54px minimum).
 
 ### Inputs / Fields
 
@@ -291,25 +304,43 @@ La carte marque protège le logo dans un plateau adapté : gris pour la majorit�
 
 ### Navigation
 
-La navigation principale est blanche sur noir ; la page courante et le survol deviennent jaunes, avec `aria-current="page"`. Le logo Optic 2000 conserve ses proportions et sa signature Tahiti reste séparée par un filet. La hauteur du bandeau est (96px), puis (80px) jusqu’à 800px et (74px) jusqu’à 600px. Jusqu’à 800px, un bouton « Menu » ouvre un `dialog` natif lavande ; sa largeur est `min(92vw, 460px)` et sa hauteur `100dvh`. Fermeture par commande dédiée, Échap natif ou fond prévu ; le focus revient au déclencheur à la fermeture.
+La navigation principale est blanche sur noir (`header-black`) ; la page courante et le survol deviennent jaunes, avec `aria-current="page"`. Le logo Optic 2000 conserve ses proportions (184px de large, 165px jusqu’à 1100px, 150px de 801 à 960px, 145px jusqu’à 600px, 135px jusqu’à 370px) et sa signature Tahiti reste séparée par un filet. La hauteur du bandeau est (84px), puis (76px) jusqu’à 800px et (74px) jusqu’à 600px. Les liens font (14px, poids 650), cible de (44px), avec un écart de (28px), (20px) jusqu’à 1100px et (16px) de 801 à 960px. L’action jaune « Préparer un RDV » (calendrier en tête, 13px) ouvre le rendez-vous.
+
+**Panneau des univers (bureau).** « Nos univers » est un bouton de divulgation (`aria-expanded`, `aria-controls`) qui ouvre un panneau de papier compact, ancré sous la barre, à droite, large de (820px) au plus ((780px) jusqu’à 1100px). Les six univers sont sur deux colonnes, les deux pages de l’enseigne dans une colonne plus étroite ; l’espace sépare les groupes, sans descriptif ni filet par ligne. Libellés de (17px, poids 650), cible de (44px), rayon de contrôle. Survol : plateau gris ; page courante : lavande douce, poids 800 et soulignement de (2px). Fermeture : Échap (le focus revient au bouton), clic extérieur, sortie au clavier, lien suivi ou navigation. Les `summary` de chaque destination restent dans `navigation.ts` pour les pages qui les utilisent ; le panneau ne les affiche pas.
+
+**Barre étroite.** Entre 801 et 1100px, le libellé de l’action jaune se réduit à « RDV ». De 801 à 960px seulement, le doublon « Les solaires » quitte la barre et reste dans les univers ; au-dessus, « Les solaires », « Nos marques », « Nos magasins » et « Contact » restent dans la barre. Aucune destination n’est perdue.
+
+**Menu mobile.** Jusqu’à 800px, un bouton « Menu » (texte et icône) ouvre un `dialog` natif blanc, nommé par son titre « Menu » (`aria-labelledby`), de largeur `min(92vw, 420px)` et de hauteur `100dvh`, qui défile par lui-même sans entraîner la page. Il contient l’accueil, l’action jaune « Préparer un RDV » (nom accessible identique au texte visible, visible sans défiler), puis trois groupes de liens (univers, enseigne, marques-magasins-contact) à (17px, poids 650) et cible de (46px), sous des titres de groupe discrets (13px). Fermeture par la commande dédiée, Échap ou le fond ; le focus revient au déclencheur. Sur le rendez-vous sans paramètre public, activer le RDV (barre ou menu) conserve l’étape et le hash : depuis le menu, le focus va ensuite au titre de l’étape courante ; depuis un contexte prérempli, l’action générique ouvre une nouvelle entrée sans présélection.
 
 Les onglets de collection utilisent un filet inférieur de sélection (2px encre), `aria-current` et le compte. Sur téléphone, le lien annexe des autres marques s’efface de cette rangée ; les destinations restent disponibles dans la navigation générale. Un lien d’évitement devient visible au premier focus et rejoint le contenu principal.
 
-L’action jaune « Préparer un RDV » (calendrier en tête) ouvre le rendez-vous. Entre 801 et 1100px son libellé se réduit à « RDV » et « Les solaires », répété dans le panneau des univers, est masqué dans la barre ; la destination reste accessible par les univers. Sur le rendez-vous sans paramètre public, activer cette action conserve l’étape et le hash et redonne le focus ; depuis un contexte prérempli, l’action générique ouvre une nouvelle entrée sans présélection. Dans le menu mobile, si l’activation du RDV laisse l’utilisateur sur la page, le focus va au titre courant, sinon au déclencheur. Le pied de page reste rendu côté serveur avec un petit îlot client pour son action ; sur le rendez-vous, cette action devient un texte de contact plutôt qu’un second jaune.
-
 ### Bandeau de marques
 
-Signature de composant, hors tokens globaux : les vrais logos défilent en boucle (52s pour 13 logos, soit 4s par logo) dans une piste masquée aux bords. Une commande pause/lecture et le lien d’annuaire restent fixes à côté. La piste se met en pause au vrai survol, au focus, hors champ et onglet masqué ; au focus clavier elle revient à la liste originale, immobile et défilable. Les clones sont cachés aux technologies d’assistance, hors tabulation, mais leurs liens restent utilisables au pointeur. Au mouvement réduit : rangée manuelle sans bouton de pause. La durée de 52s n’est pas un token.
+Signature de composant, hors tokens globaux. Treize logos réels dérivés (`src/data/marquee-media.json`, manifeste `docs/marquee-media.json`) défilent en boucle (52s, soit 4s par logo) dans une piste masquée aux bords (24px). Chaque dérivé ne retire que le canevas extérieur vide (blanc ou transparent) ; logo et signature restent entiers, à leurs proportions, en WebP qualité 90, et les originaux de 760 images sont intacts. Les cellules sont entières : trois logos jusqu’à 800px, quatre de 801 à 1100px, cinq de 1101 à 1280px, six au-delà ; le lien « Toutes les marques » a sa propre colonne. Le logo tient dans (120 × 56px) ((92 × 48px) jusqu’à 600px).
+
+Le bandeau n’a aucune commande : la piste s’arrête d’elle-même au vrai survol, au focus clavier, hors champ et quand l’onglet est masqué. Au focus clavier elle revient à la liste originale, immobile et défilable avec accroche ; le logo focalisé est ramené dans le champ. Les clones sont `aria-hidden`, hors tabulation, mais leurs liens restent utilisables au pointeur. Au mouvement réduit : rangée manuelle de la liste originale, sans copie. La durée de 52s n’est pas un token.
+
+### Hero d’accueil et nuancier secondaire
+
+Recomposition éditoriale de S5/r2, bornée à l’accueil. Elle remplace le grand cadre à filet noir, la fiche verticale à onglets cloisonnés et les commandes de film de S5/r1, demandés puis rejetés par Hugo. Le hero est une grille à deux parts : le texte sur lavande unie, le film dans sa part, qui déborde jusqu’au bord droit de la page ; le partage (45/55, 50/50, bande puis texte) est dans le tableau de Layout.
+
+Contenu : le titre, une courte proposition, une seule action jaune « Toutes les solaires » et le lien texte « Préparer un rendez-vous ». Sous les actions, le nuancier n’est plus une carte : trois boutons nommés (Glory Glory, Baby Beach, The Bird ; `aria-pressed`, cible de 44px, soulignement d’encre de 2px sur le choix, 14px poids 750), puis la vraie monture seule sur un petit plateau blanc, sans cadre ni panneau d’informations, avec nom, « Maui Jim · n coloris », prix source et « Découvrir ce modèle » à côté. Plateau : (208 × 104px), (184 × 96px) jusqu’à 1100px, (136 × 82px) de 801 à 960px, (136 × 76px) jusqu’à 600px, (116 × 68px) jusqu’à 370px ; la photo reste entière (`object-fit: contain`). Le modèle initial est le premier ; la sélection reste manuelle. Seuls la photo et la fiche forment la région d’annonce polie. Sous le hero viennent le bandeau, une sélection produits distincte (Mamane, Alulu, Pehu, Liquid Sunshine), l’index des univers autour de la photo d’équipe existante (six liens courts en deux colonnes dans Sora fluide, sans descriptif ni filet, plus les deux pages de la maison en liens soulignés) et les trois magasins. Aucun membre d’équipe ni lieu n’est inventé.
 
 ### Film d’ambiance de l’accueil
 
-Signature de composant, hors tokens globaux, limitée au hero d’accueil (S5). Un film muet de gros plans de lunettes, sans visage, désaturé (`grayscale`) sous un voile lavande `rgb(171 165 210 / 88% → 72%)` horizontal, `88% → 84%` vertical jusqu’à 800px ; le contenu reste à opacité pleine au-dessus. Le poster est toujours dessous. La commande reprend la forme du bouton du bandeau (filet d’encre, 44px, icône pause/lecture) avec un fond lavande opaque ; elle devient une icône seule de 44px jusqu’à 600px, avec le même nom accessible. Mouvement réduit, économie de données ou échec du média : poster seul, sans commande. Contraste mesuré sur des images réelles du film derrière le texte (encre ≥ 5,6:1, focus ≥ 3,1:1) ; à revérifier si le film ou le voile change.
+Signature de composant, hors tokens globaux, limitée au hero d’accueil. Film muet décoratif (`aria-hidden`, hors tabulation) de gros plans de lunettes et de matières, sans visage : trois plans Pexels distincts, à vitesse native, enchaînés par des fondus de .48s avec un raccord circulaire (24,32s, 1920 × 1080, 25 images/s, H.264 High, yuv420p, faststart, 4 895 212 octets ; poster WebP de 42 206 octets). Couleurs natives : aucune désaturation, aucun voile, aucun filtre, aucune inversion ni répétition ajoutée. Il apparaît par un fondu de (.6s) sur le poster, qui reste dessous. Ses lunettes et ses lieux ne sont ni ceux des magasins tahitiens ni ceux du catalogue ; aucune légende ni attribution de magasin. Provenance, plages et empreintes : `docs/hero-media.json`.
+
+Le film n’a aucune commande de lecture ou de pause, visible, masquée au survol ou sous une autre forme. Il suit des conditions : le rendu serveur et l’hydratation donnent le poster sans source ; la source n’est posée qu’après lecture de `prefers-reduced-motion` et de `navigator.connection.saveData`, et retirée (avec `load()`) si l’une change en cours de visite ; lecture seulement dans le champ et sur un onglet visible (sur téléphone, la bande seule) ; un refus d’autoplay ou une erreur laissent le poster, sans démarrage manuel.
+
+### Pied de page
+
+Compact, sur l’encre, sans bloc de slogan. Une rangée porte l’identité (logo 150px) et les actions : l’action jaune « Préparer un rendez-vous » et le lien texte « Nos trois adresses ». Dessous, les trois magasins (nom, adresse, téléphone) sont à côté du plan du site en trois colonnes (univers, enseigne, informations légales), puis une mention du prototype avec la réserve sur les prix. Titres de groupe de (13px) discrets ; focus jaune. Sur le rendez-vous, l’action jaune devient le lien texte « Préparer une demande » vers le contact (petit îlot client lié au chemin) : l’état React du rendez-vous est conservé. Pied de page rendu côté serveur.
 
 ### Gallery / Variants / Details
 
 La galerie présente une image principale et des miniatures tactiles, chacune nommée « Voir la vue… » et marquée par `aria-pressed`. Les miniatures mesurent (86 × 62px), puis (68 × 50px) sur téléphone. La variante se choisit dans un groupe nommé : vraie miniature, libellé complet et coche SVG. L’option choisie change sa bordure et son poids sans saut de dimensions ; le survol utilise le plateau gris. Le changement réinitialise la vue et actualise le prix, la photo, le contexte magasin et le paramètre `variante` de l’URL.
 
-Les caractéristiques et la préparation de visite sont des `details` natifs, séparés par un filet. Le `summary` a une hauteur minimale de (60px) et une flèche tournée de (180deg) lorsque le panneau est ouvert. Entrée/Espace suivent le comportement natif. Le nuancier de l’accueil emploie aussi `aria-pressed`, une sélection soulignée et une annonce polie ; son assemblage complet reste local à l’accueil.
+Les caractéristiques et la préparation de visite sont des `details` natifs, séparés par un filet. Le `summary` a une hauteur minimale de (60px) et une flèche tournée de (180deg) lorsque le panneau est ouvert. Entrée/Espace suivent le comportement natif. Le nuancier de l’accueil emploie aussi `aria-pressed`, une sélection soulignée et une annonce polie ; son assemblage est décrit dans le hero d’accueil et reste local à l’accueil.
 
 ### Feedback / Resilience
 
@@ -329,6 +360,8 @@ Une image indisponible est remplacée dans son plateau par un libellé explicite
 - Do — Conserver les états vide, invalide, chargement, erreur et photo indisponible, avec une sortie utile.
 - Do — Garder légendes, prix, cartes et réserves à (12px) au minimum ; dans le rendez-vous, distinguer les aides de champ, indications de champs obligatoires et notes de soumission de la colonne principale à (14px), les erreurs de champ à (13px) et les tailles locales des réserves.
 - Do — Réserver l’entrée de la photographie d’accueil à ce composant ; garder les formulaires sans entrée spatiale.
+- Do — Aligner le texte du hero sur la colonne du conteneur à toutes les largeurs et laisser la matière dans sa propre part.
+- Do — Arrêter un média décoratif par ses conditions (champ, onglet, préférences, focus), non par une commande.
 
 ### Don't:
 
@@ -336,8 +369,13 @@ Une image indisponible est remplacée dans son plateau par un libellé explicite
 - Don't — Ajouter de verre dépoli, de relief décoratif ou de recadrage qui altère une monture ou un logo.
 - Don't — Utiliser la couleur seule pour un coloris, une sélection, une disponibilité ou une erreur.
 - Don't — Donner aux rampes synthétiques documentaires du sidecar le statut de couleurs livrées ; seuls les tokens du frontmatter font autorité.
+- Don't — Poser du texte sur le film, y ajouter un voile ou un filtre pour « corriger » un contraste, ou offrir une commande Pause/Lire (ni pour le film ni pour les marques).
+- Don't — Rétablir le cadre à filet noir, les onglets cloisonnés du nuancier ou le panneau lavande plein écran, remplacés à la demande de Hugo ; l’historique reste dans `docs/decisions.md`.
+- Don't — Étendre l’ombre du panneau des univers à des cartes ou à d’autres surfaces.
 - Don't — Hériter du rayon de carte inutilisé, créer une variante visuelle de bouton non livrée ou annoncer un état métier absent du prototype.
 
-Périmètre non canonisé : rayon de carte inutilisé et variables d’espacement non consommées comme variables ; aucun de ces écarts n’est corrigé par cette extraction. Le document décrit les valeurs observées sans transformer ces limites en règles de futures surfaces. Aucune comp approuvée ni calibration humaine n’a été enregistrée pour S4 ni pour S5.
+Périmètre non canonisé : le rayon de carte (`--radius-card`), les variables d’espacement `--space-*` et la durée `--duration-arrival` sont déclarés sans être consommés ; l’ombre du panneau des univers est une exception isolée ; l’écart de date préexistant entre ce document et son sidecar pour S1–S4 n’est pas réparé. Aucun de ces écarts n’est corrigé par cette extraction ni érigé en règle pour de futures surfaces.
 
-Sources d’extraction : `src/app/globals.css`, `src/app/layout.tsx`, les composants de `src/components/`, `PRODUCT.md`, `.impeccable/config.json` et les contrats de `.impeccable/surfaces/`. État S1 mis à jour par une fusion étroite des éléments réutilisables livrés en S4 (marques, navigation, rendez-vous) et du film d’accueil de S5 ; pas de nouvelle identité.
+Aucune comp approuvée ni calibration humaine n’a été enregistrée pour S4, S5/r1 ni S5/r2. La revue visuelle indépendante de S5/r2 (Claude Opus, contexte neuf) a d’abord soulevé six constats, puis jugé les six résolus tout en signalant deux régressions (R1, texte du hero hors de la colonne de la page ; R2, bande de marques tassée de 1101 à 1280px) ; son dernier verdict, limité à R1 et R2 sur les captures citées, les juge résolues. Ce n’est ni une acceptation globale, ni l’acceptation du pilote, ni une validation du client. Le relecteur n’a pas eu de vision continue du mouvement (captures toutes les 2s) ; le visionnage outillé réel a porté sur 55s dont deux raccords à vitesse normale. Un passage du détecteur (109 avis, aucun primaire) est informatif, pas une validation artistique.
+
+Sources d’extraction : `src/app/globals.css`, `src/app/layout.tsx`, `src/app/page.tsx`, les composants de `src/components/` (dont `catalog/home-showcase.tsx`, `hero-video.tsx`, `brand-marquee.tsx`, `layout/header.tsx`, `footer.tsx`, `footer-visit-action.tsx`), `src/data/navigation.ts`, `PRODUCT.md`, `.impeccable/config.json` et les contrats de `.impeccable/surfaces/`. État S1 mis à jour par une fusion étroite des éléments réutilisables livrés en S4 (marques, navigation, rendez-vous) puis par la recomposition S5/r2 de l’accueil, de la navigation, des marques et du pied de page ; pas de nouvelle identité.

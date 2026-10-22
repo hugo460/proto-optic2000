@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-10-21T19:55:07Z",
+  "generatedAt": "2026-10-22T08:15:00Z",
   "title": "Design System: Optic 2000 Tahiti",
   "extensions": {
     "colorMeta": {
@@ -225,7 +225,13 @@
         "purpose": "Coloris et filtres actifs."
       }
     },
-    "shadows": [],
+    "shadows": [
+      {
+        "name": "anchored-panel",
+        "value": "0 24px 48px -28px rgb(23 23 23 / 45%)",
+        "purpose": "Ombre diffuse à étalement négatif du seul panneau des univers du bureau, ancré sous la barre ; exception bornée, pas un vocabulaire d’élévation pour les cartes."
+      }
+    ],
     "motion": [
       {
         "name": "duration-fast",
@@ -240,17 +246,17 @@
       {
         "name": "duration-arrival",
         "value": "650ms",
-        "purpose": "Arrivée de la photographie de monture dans le nuancier d’accueil, à chaque sélection ; composition bornée à ce composant, pas un préréglage d’entrée pour les cartes."
+        "purpose": "Déclarée dans la feuille de style sans être consommée ; la durée livrée de l’arrivée de la monture est 520ms (`frame-arrive`)."
       },
       {
         "name": "ease-arrival",
         "value": "cubic-bezier(.33, 1, .68, 1)",
-        "purpose": "Courbe d’arrivée de la photographie d’accueil : opacité .75 → 1, translate(-20px, 8px) (-12px, 6px sur téléphone) et rotate(-2.5deg) vers la pose stable, dans la marge du cadre ; aucun autoplay de modèle."
+        "purpose": "Courbe de `frame-arrive`, bornée à la photographie d’accueil."
       },
       {
         "name": "ease-out",
         "value": "cubic-bezier(.16, 1, .3, 1)",
-        "purpose": "Courbe encore déclarée, non consommée par les styles livrés ; conservée sans nouvelle prescription."
+        "purpose": "Courbe de la translation d’ouverture du panneau des univers (220ms, -6px vers 0, avec une opacité de 160ms)."
       },
       {
         "name": "marquee-loop",
@@ -259,13 +265,18 @@
       },
       {
         "name": "hero-film",
-        "value": "8s loop",
-        "purpose": "Film d’ambiance muet de l’accueil, désaturé sous un voile lavande ; pause hors champ, onglet masqué ou par sa commande ; propre au hero, pas un token global."
+        "value": "24,32s linear loop",
+        "purpose": "Film d’ambiance muet de l’accueil : trois plans Pexels distincts à vitesse native, fondus de .48s et raccord circulaire ; couleurs natives, sans voile ni filtre ; aucune commande ; condition de lecture seule (champ, onglet visible, préférences) ; fondu d’apparition de .6s sur le poster. Propre au hero, pas un token global."
       },
       {
         "name": "reduced-motion",
         "value": ".01ms",
-        "purpose": "Animations et transitions réduites, une itération ; défilement automatique, photographie d’accueil stable, film d’accueil non chargé (poster seul), bandeau de marques en rangée manuelle."
+        "purpose": "Animations et transitions réduites, une itération ; défilement automatique, photographie d’accueil sans arrivée, film non chargé (poster seul), bandeau de marques en rangée manuelle."
+      },
+      {
+        "name": "frame-arrive",
+        "value": "520ms var(--ease-arrival)",
+        "purpose": "Arrivée de la photographie de monture sur son petit plateau d’accueil, au chargement et à chaque sélection : opacité .75 → 1, translation (-10px, 4px) ((-8px, 3px) sur téléphone), rotation (-1.5deg) vers la pose stable, puis repos ; aucun autoplay de modèle."
       }
     ],
     "breakpoints": [
@@ -282,8 +293,16 @@
         "value": "800px"
       },
       {
+        "name": "narrow-bar",
+        "value": "960px"
+      },
+      {
         "name": "compact",
         "value": "1100px"
+      },
+      {
+        "name": "wide-actions",
+        "value": "1280px"
       }
     ]
   },
@@ -340,7 +359,7 @@
       "name": "Navigation principale",
       "kind": "nav",
       "refersTo": "navigation",
-      "description": "Extrait de la navigation ordinateur sur son fond noir ; la page courante et le survol sont jaunes.",
+      "description": "Extrait de la barre ordinateur (84px) sur son fond noir ; la page courante et le survol sont jaunes. Le panneau des univers est un composant distinct.",
       "html": "<nav class=\"ds-nav\" aria-label=\"Navigation principale\"><a class=\"ds-nav-link\" href=\"/solaires\" aria-current=\"page\">Les solaires</a><a class=\"ds-nav-link\" href=\"/marques\">Nos marques</a><a class=\"ds-nav-link\" href=\"/magasins\">Nos magasins</a></nav>",
       "css": "@font-face{font-family:\"ds-Manrope\";src:url(\"/fonts/Manrope.ttf\") format(\"truetype\");font-style:normal;font-weight:200 800;font-display:swap;}.ds-nav{display:flex;align-items:center;justify-content:center;gap:28px;background:#000000;color:var(--color-paper,#ffffff);font-family:var(--font-body,\"ds-Manrope\"),sans-serif;font-size:14px;font-weight:650;line-height:1.6;}.ds-nav-link{display:flex;align-items:center;min-height:44px;white-space:nowrap;color:inherit;text-decoration:none;}.ds-nav-link[aria-current],.ds-nav-link:hover{color:var(--color-yellow,#ffda00);}.ds-nav-link:focus-visible{outline:3px solid var(--color-yellow,#ffda00);outline-offset:4px;}"
     },
@@ -375,27 +394,49 @@
       "description": "Accordéon natif de la fiche produit ; ouvert/fermé au clavier ou au pointeur, chevron orienté selon l’état.",
       "html": "<div class=\"ds-product-details\"><details><summary>Préparer votre visite<svg width=\"22\" height=\"22\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.7\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"m6 9 6 6 6-6\"/></svg></summary><div><p>Contactez le magasin de votre choix pour confirmer le prix et la disponibilité de cette référence avant de vous déplacer.</p><p>Aucune réservation n’est effectuée sur ce site.</p></div></details></div>",
       "css": "@font-face{font-family:\"ds-Manrope\";src:url(\"/fonts/Manrope.ttf\") format(\"truetype\");font-style:normal;font-weight:200 800;font-display:swap;}.ds-product-details{color:var(--color-ink,#171717);font-family:var(--font-body,\"ds-Manrope\"),sans-serif;line-height:1.6;}.ds-product-details details{border-top:1px solid var(--color-line,#c7c7ce);}.ds-product-details summary{list-style:none;cursor:pointer;min-height:60px;display:flex;justify-content:space-between;align-items:center;gap:12px;font-weight:700;font-size:13px;}.ds-product-details summary::-webkit-details-marker{display:none;}.ds-product-details summary:hover{cursor:pointer;}.ds-product-details details[open] summary svg{transform:rotate(180deg);}.ds-product-details details>div{padding:2px 0 22px;font-size:13px;color:var(--color-muted,#56565e);}.ds-product-details p{margin:0;}.ds-product-details p+p{margin-top:14px;}.ds-product-details svg{flex-shrink:0;}.ds-product-details summary:focus-visible{outline:3px solid var(--color-focus,#43328b);outline-offset:4px;}"
+    },
+    {
+      "name": "Panneau des univers",
+      "kind": "nav",
+      "refersTo": "navigation",
+      "description": "Panneau de papier compact ancré sous la barre noire : six univers sur deux colonnes, enseigne dans une colonne plus étroite, groupes séparés par l’espace, sans descriptif ni filet par ligne.",
+      "html": "<div class=\"ds-panel\"><div class=\"ds-panel-group\"><h2>Nos univers</h2><ul><li><a class=\"ds-panel-link\" href=\"/lunettes-de-vue\">Lunettes de vue</a></li><li><a class=\"ds-panel-link\" href=\"/solaires\" aria-current=\"page\">Les solaires</a></li><li><a class=\"ds-panel-link\" href=\"/lentilles\">Lentilles</a></li><li><a class=\"ds-panel-link\" href=\"/jumelles-et-telescopes\">Jumelles et télescopes</a></li><li><a class=\"ds-panel-link\" href=\"/basse-vision\">Basse vision</a></li><li><a class=\"ds-panel-link\" href=\"/protheses-oculaires\">Prothèses oculaires</a></li></ul></div><div class=\"ds-panel-group\"><h2>L’enseigne</h2><ul><li><a class=\"ds-panel-link\" href=\"/services-et-garanties\">Services et garanties</a></li><li><a class=\"ds-panel-link\" href=\"/qui-sommes-nous\">Qui sommes-nous</a></li></ul></div></div>",
+      "css": "@font-face{font-family:\"ds-Manrope\";src:url(\"/fonts/Manrope.ttf\") format(\"truetype\");font-style:normal;font-weight:200 800;font-display:swap;}.ds-panel{display:grid;grid-template-columns:minmax(0,2fr) minmax(0,1fr);gap:32px;width:min(820px,100%);padding:24px 28px 28px;background:var(--color-paper,#ffffff);color:var(--color-ink,#171717);border-radius:0 0 4px 4px;box-shadow:0 24px 48px -28px rgb(23 23 23 / 45%);font-family:var(--font-body,\"ds-Manrope\"),sans-serif;}.ds-panel h2{margin:0 0 6px;font-family:var(--font-body,\"ds-Manrope\"),sans-serif;font-size:13px;font-weight:750;line-height:1.6;letter-spacing:0;color:var(--color-muted,#56565e);}.ds-panel ul{list-style:none;margin:0 -12px;padding:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:2px 16px;}.ds-panel-group:last-child ul{grid-template-columns:minmax(0,1fr);}.ds-panel-link{display:flex;align-items:center;min-height:44px;padding:8px 12px;border-radius:4px;font-size:17px;font-weight:650;line-height:1.3;color:inherit;text-decoration:none;transition:background 160ms ease;}.ds-panel-link:hover{background:var(--color-surface,#f3f3f5);}.ds-panel-link[aria-current]{background:var(--color-lavender-soft,#eeecf6);font-weight:800;text-decoration:underline;text-decoration-thickness:2px;}.ds-panel-link:focus-visible{outline:3px solid var(--color-focus,#43328b);outline-offset:0;}"
+    },
+    {
+      "name": "Choix de modèle du nuancier",
+      "kind": "custom",
+      "refersTo": "navigation",
+      "description": "Trois boutons nommés du nuancier d’accueil, sur le champ lavande : choix `aria-pressed` souligné d’encre, sans cadre ni onglet cloisonné.",
+      "html": "<div class=\"ds-model\" role=\"group\" aria-label=\"Choisir un modèle à découvrir\"><button type=\"button\" class=\"ds-model-choice\" aria-pressed=\"true\">Glory Glory</button><button type=\"button\" class=\"ds-model-choice\" aria-pressed=\"false\">Baby Beach</button><button type=\"button\" class=\"ds-model-choice\" aria-pressed=\"false\">The Bird</button></div>",
+      "css": "@font-face{font-family:\"ds-Manrope\";src:url(\"/fonts/Manrope.ttf\") format(\"truetype\");font-style:normal;font-weight:200 800;font-display:swap;}.ds-model{display:flex;flex-wrap:wrap;gap:0 24px;padding:8px 16px;background:var(--color-lavender,#aba5d2);font-family:var(--font-body,\"ds-Manrope\"),sans-serif;}.ds-model-choice{position:relative;min-height:44px;padding:0;border:0;border-radius:0;background:transparent;color:var(--color-lavender-ink,#38314f);font:inherit;font-size:14px;font-weight:750;cursor:pointer;}.ds-model-choice::after{content:\"\";position:absolute;left:0;right:0;bottom:7px;height:2px;background:var(--color-ink,#171717);transform:scaleX(0);transform-origin:left;transition:transform 160ms ease;}.ds-model-choice[aria-pressed=true]{color:var(--color-ink,#171717);}.ds-model-choice[aria-pressed=true]::after{transform:none;}.ds-model-choice:hover{color:var(--color-ink,#171717);}.ds-model-choice:focus-visible{outline:3px solid var(--color-focus,#43328b);outline-offset:2px;}"
     }
   ],
   "narrative": {
     "northStar": "Le nuancier solaire",
-    "overview": "« Le nuancier solaire » associe une lavande franche, des lettres géométriques, des informations noires et des actions jaunes. Le sujet reste la vraie monture : elle apparaît sur un plateau clair, à son échelle et sans déformation. Les magasins sont représentés par leurs photographies authentiques et les marques par leurs logos intacts.\n\nLe système est direct et calme dans les parcours de recherche, de comparaison et de contact. Les surfaces sont planes, les contours simples et la densité s’adapte à la tâche. Sora donne de la présence aux titres ; Manrope maintient la lisibilité des informations, des prix et des commandes. La lavande contextualise, le jaune invite à agir et le focus reste distinct.\n\nCette documentation décrit le prototype effectivement livré en S1 : Next.js 16.4.2, React 19.3.1 et CSS natif, sans bibliothèque UI. La palette et les polices constituent une direction de prototype confirmée, pas une charte officielle du client. La composition du seul accueil et ses trois modèles appartiennent à son contrat de surface ; elles ne deviennent pas un gabarit pour les écrans suivants.",
+    "overview": "**Creative North Star: \"Le nuancier solaire\"**\n\n« Le nuancier solaire » associe une lavande franche, des lettres géométriques, des informations noires et des actions jaunes. Le sujet reste la vraie monture : elle apparaît sur un plateau clair, à son échelle et sans déformation. Les magasins sont représentés par leurs photographies authentiques et les marques par leurs logos intacts.\n\nLe système est direct et calme dans les parcours de recherche, de comparaison et de contact. Les surfaces sont planes, les contours simples et la densité s’adapte à la tâche. Sora donne de la présence aux titres ; Manrope maintient la lisibilité des informations, des prix et des commandes. La lavande contextualise, le jaune invite à agir et le focus reste distinct.\n\nCette documentation décrit le prototype effectivement livré (S1, complété par S4, accueil et navigation recomposés en S5/r2) : Next.js 16.4.2, React 19.3.1 et CSS natif, sans bibliothèque UI. La palette et les polices constituent une direction de prototype confirmée, pas une charte officielle du client. S5/r2 affine l’identité existante (logo réel, noir, lavande, jaune, Sora, Manrope) par une recomposition éditoriale de l’accueil, de la navigation et du pied de page ; ce n’est ni une nouvelle identité ni une décomposition en maquettes. La composition de l’accueil et de ses trois modèles appartient à son contrat de surface ; elle ne devient pas un gabarit pour les écrans suivants, dont la reprise (S6) est seulement prévue et non figée ici.\n\n- Montures fidèles sur plateaux clairs ; photos et logos authentiques.\n- Lavande de contexte, jaune d’action, encre de lecture.\n- Titres Sora et lecture Manrope, avec polices locales variables.\n- Surfaces planes, coins simples et séparateurs fins.\n- Choix explicites, focus visible et parcours réversibles.\n- Accueil éditorial : texte sur un champ lavande calme, matière filmée dans sa propre part, jamais sous le texte.",
     "keyCharacteristics": [
       "Montures fidèles sur plateaux clairs ; photos et logos authentiques.",
       "Lavande de contexte, jaune d’action, encre de lecture.",
       "Titres Sora et lecture Manrope, avec polices locales variables.",
       "Surfaces planes, coins simples et séparateurs fins.",
-      "Choix explicites, focus visible et parcours réversibles."
+      "Choix explicites, focus visible et parcours réversibles.",
+      "Accueil éditorial : texte sur un champ lavande calme, matière filmée dans sa propre part, jamais sous le texte."
     ],
     "rules": [
       {
         "name": "The Plateau fidèle Rule",
-        "body": "Présenter les montures et les logos entiers avec object-fit: contain ; réserver object-fit: cover aux photographies de magasin et au film décoratif d’ambiance de l’accueil.",
+        "body": "Présenter les montures et les logos entiers, y compris dans le bandeau et au focus, avec object-fit: contain ; réserver object-fit: cover aux photographies de magasin et au film décoratif d’ambiance de l’accueil.",
         "section": "colors"
       },
       {
         "name": "The Action jaune Rule",
         "body": "Associer le jaune aux actions principales et aux repères interactifs ; conserver les libellés et les états sémantiques pour que la couleur ne porte jamais seule le sens.",
+        "section": "colors"
+      },
+      {
+        "name": "The Texte sur champ calme Rule",
+        "body": "Poser le texte sur la lavande unie, jamais sur l’image en mouvement : le film occupe sa propre part du hero, sans voile ni filtre à simuler. Le contraste se mesure donc sur la lavande pure ; `check:contrast` compare 17 paires dérivées de la feuille de style (hero, panneau, menu mobile, pied de page) aux paires historiques, et ne contient aucun composite de texte sur film.",
         "section": "colors"
       },
       {
@@ -405,7 +446,7 @@
       },
       {
         "name": "The Plan de travail Rule",
-        "body": "Séparer les contenus par le ton du fond, les blancs et les filets ; ne pas ajouter une ombre pour transformer une carte plane en objet flottant.",
+        "body": "Séparer les contenus par le ton du fond, les blancs et les filets ; ne pas ajouter une ombre pour transformer une carte plane en objet flottant. L’ombre du panneau ancré est une exception bornée à ce panneau, pas un vocabulaire.",
         "section": "elevation"
       }
     ],
@@ -417,13 +458,18 @@
       "Do — Laisser la grille, les noms longs, les prix XPF et les contrôles se réorganiser aux seuils documentés.",
       "Do — Conserver les états vide, invalide, chargement, erreur et photo indisponible, avec une sortie utile.",
       "Do — Garder légendes, prix, cartes et réserves à (12px) au minimum ; dans le rendez-vous, distinguer les aides de champ, indications de champs obligatoires et notes de soumission de la colonne principale à (14px), les erreurs de champ à (13px) et les tailles locales des réserves.",
-      "Do — Réserver l’entrée de la photographie d’accueil à ce composant ; garder les formulaires sans entrée spatiale."
+      "Do — Réserver l’entrée de la photographie d’accueil à ce composant ; garder les formulaires sans entrée spatiale.",
+      "Do — Aligner le texte du hero sur la colonne du conteneur à toutes les largeurs et laisser la matière dans sa propre part.",
+      "Do — Arrêter un média décoratif par ses conditions (champ, onglet, préférences, focus), non par une commande."
     ],
     "donts": [
       "Don't — Présenter cette palette, Sora ou Manrope comme une charte officielle Optic 2000.",
       "Don't — Ajouter de verre dépoli, de relief décoratif ou de recadrage qui altère une monture ou un logo.",
       "Don't — Utiliser la couleur seule pour un coloris, une sélection, une disponibilité ou une erreur.",
       "Don't — Donner aux rampes synthétiques documentaires du sidecar le statut de couleurs livrées ; seuls les tokens du frontmatter font autorité.",
+      "Don't — Poser du texte sur le film, y ajouter un voile ou un filtre pour « corriger » un contraste, ou offrir une commande Pause/Lire (ni pour le film ni pour les marques).",
+      "Don't — Rétablir le cadre à filet noir, les onglets cloisonnés du nuancier ou le panneau lavande plein écran, remplacés à la demande de Hugo ; l’historique reste dans `docs/decisions.md`.",
+      "Don't — Étendre l’ombre du panneau des univers à des cartes ou à d’autres surfaces.",
       "Don't — Hériter du rayon de carte inutilisé, créer une variante visuelle de bouton non livrée ou annoncer un état métier absent du prototype."
     ]
   }

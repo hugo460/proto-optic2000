@@ -1,0 +1,135 @@
+{
+  "transformations": "Empty outer white/transparent canvas removed only; whole mark including tagline retained; proportional resize inside640x320 without enlargement, WebP90. Source originals stay unchanged.",
+  "files": [
+    {
+      "id": "maui-jim",
+      "src": "/media/brand-strip/maui-jim.webp",
+      "width": 620,
+      "height": 320,
+      "origin": "https://optic2000tahiti.com/wp-content/uploads/2022/09/maui_jim-01.png",
+      "sourceSha256": "9308626ac2dee13bc12912bdf371c19bd526cf479e4933159da2bc9c37ba97c5",
+      "bytes": 24536,
+      "sha256": "b3682f569668ee46780e4ee0bb0fa5bf1ee5b75f4e34a15304e54cf7df41fcc8"
+    },
+    {
+      "id": "ray-ban",
+      "src": "/media/brand-strip/ray-ban.webp",
+      "width": 594,
+      "height": 320,
+      "origin": "https://optic2000tahiti.com/wp-content/uploads/2022/09/1280px-Ray-Ban_logo.svg_.png",
+      "sourceSha256": "9b6d32465914de419b4d117fac4ea21e74bfed6410081f1f6aa974b94b12d847",
+      "bytes": 12262,
+      "sha256": "73e4f2cbaa403e1f92a955831bb2888e60c3a5890c67f70d9d2cd616145b5edf"
+    },
+    {
+      "id": "oakley",
+      "src": "/media/brand-strip/oakley.webp",
+      "width": 640,
+      "height": 241,
+      "origin": "https://optic2000tahiti.com/wp-content/uploads/2022/09/5854642b28fc2508128fec56.png",
+      "sourceSha256": "57971976eccd5424691eaa149290331e7145594dabf4b7fb2ed0cd5e81aae4f6",
+      "bytes": 6390,
+      "sha256": "7ed63e16743c28bbacec041e0d624b691394ef6d3b3e2aaaff0fd01e2a2a4927"
+    },
+    {
+      "id": "gucci",
+      "src": "/media/brand-strip/gucci.webp",
+      "width": 495,
+      "height": 204,
+      "origin": "https://optic2000tahiti.com/wp-content/uploads/2022/09/Gucci-Logo-No-Background.png",
+      "sourceSha256": "5a3a58fb67b33d121db3371a6f4ea5b278623fdbbe035f541dc1fafd7dcd292e",
+      "bytes": 6598,
+      "sha256": "44fff5c22e6c2b774f184c8d61bf1e929efb4d9978f1921cd60e8e5be9ded5dc"
+    },
+    {
+      "id": "persol",
+      "src": "/media/brand-strip/persol.webp",
+      "width": 516,
+      "height": 320,
+      "origin": "https://optic2000tahiti.com/wp-content/uploads/2022/09/Persol-logo.png",
+      "sourceSha256": "8d5cb81e5befb748456e7dbdcb332180e761cf194ad527aa2fff5b17a8835a18",
+      "bytes": 11322,
+      "sha256": "d858e897d4e4f6d6460e90b065f996514b82d1e724a67407117fe6b70a015cf1"
+    },
+    {
+      "id": "versace",
+      "src": "/media/brand-strip/versace.webp",
+      "width": 570,
+      "height": 320,
+      "origin": "https://optic2000tahiti.com/wp-content/uploads/2022/09/Versace-logo-650x366-1.png",
+      "sourceSha256": "dac023627133f9fcb87b5fcdbc0fb8cfcaa9f71e581c3adb3d7c4d7916099810",
+      "bytes": 20174,
+      "sha256": "a2708b0b05d730dea25492856ead256a5b70f02bb47f430de7778198b1e87058"
+    },
+    {
+      "id": "demetz",
+      "src": "/media/brand-strip/demetz.webp",
+      "width": 640,
+      "height": 157,
+      "origin": "https://optic2000tahiti.com/wp-content/uploads/2022/09/New-LOGO-DEMETZ-BASELINE-300px-1024x251-1.png",
+      "sourceSha256": "6a7ccdfcf6f0f712af39c7b3ab7e22c158e4ea8ecf9ed05364a60849e59b47ac",
+      "bytes": 8106,
+      "sha256": "83b6e17e1c8a948320e725274fc1f903bc4f1f4cb25bf74d658ee8d004a84211"
+    },
+    {
+      "id": "vuarnet",
+      "src": "/media/brand-strip/vuarnet.webp",
+      "width": 376,
+      "height": 320,
+      "origin": "https://optic2000tahiti.com/wp-content/uploads/2022/09/Logo_Vuarnet.png",
+      "sourceSha256": "5b775fab5d58193e156158d286e7b8d9ba5a639ebc006d4b8b778728801bf97d",
+      "bytes": 10980,
+      "sha256": "70488ab10edb3b534d286edd2e9a2df81d0111842ac63fd1187668298b66c2f2"
+    },
+    {
+      "id": "michael-kors",
+      "src": "/media/brand-strip/michael-kors.webp",
+      "width": 319,
+      "height": 320,
+      "origin": "https://optic2000tahiti.com/wp-content/uploads/2022/09/Michael-Kors-Symbol.png",
+      "sourceSha256": "312fdc0935b0c2bee8e6d5fff138c335a987d656318e25fa4761feaec949d136",
+      "bytes": 6606,
+      "sha256": "0068669d3e15948d26fe03bc48dba18316c6d642090c86379548015098aac8fe"
+    },
+    {
+      "id": "julbo",
+      "src": "/media/brand-strip/julbo.webp",
+      "width": 635,
+      "height": 166,
+      "origin": "https://optic2000tahiti.com/wp-content/uploads/2022/09/optique-JULBO.png",
+      "sourceSha256": "c55c1e797f44aad122af3e2742b1752c28be1e50a6881321afa13b9c9c077751",
+      "bytes": 10218,
+      "sha256": "47180714618f42ae20cab2040b2b7c81948a3dd3bf0f7b6722f2ec5b95aae51f"
+    },
+    {
+      "id": "vogue-eyewear",
+      "src": "/media/brand-strip/vogue-eyewear.webp",
+      "width": 640,
+      "height": 270,
+      "origin": "https://optic2000tahiti.com/wp-content/uploads/2022/09/VOGUE-logo-B-scaled.webp",
+      "sourceSha256": "7f2635f7d71a39621291ed2c2935f346860914a6f9cc10a9f50a04b492a4ba07",
+      "bytes": 9340,
+      "sha256": "a5ba46b78dceeb28bc1edd3f50c74412ed43f15c0b91f5af2a12378b9f395b10"
+    },
+    {
+      "id": "freshlook",
+      "src": "/media/brand-strip/freshlook.webp",
+      "width": 640,
+      "height": 228,
+      "origin": "https://optic2000tahiti.com/wp-content/uploads/2022/06/186535.png",
+      "sourceSha256": "e895767d2dc137d86784e87b70735337366359a263e47f5ccd8398dcd7d0a089",
+      "bytes": 14226,
+      "sha256": "bf31ea0df0d84cec3ee3959a70f4773dc648382aa3abea1dd048fac2cba0b64a"
+    },
+    {
+      "id": "celestron",
+      "src": "/media/brand-strip/celestron.webp",
+      "width": 569,
+      "height": 88,
+      "origin": "https://optic2000tahiti.com/wp-content/uploads/2022/09/images-1.png",
+      "sourceSha256": "be40521115a4948c4c00cb7375adc51b084672107141954cf0814cd195499df3",
+      "bytes": 6788,
+      "sha256": "57565e5f60cfcab0410d5cd1505fb95482ebc8144f86007038772a9f87b8f38e"
+    }
+  ]
+}

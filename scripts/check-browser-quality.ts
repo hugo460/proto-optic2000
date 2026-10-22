@@ -2,7 +2,10 @@ import assert from 'node:assert/strict';
 import { chromium } from '@playwright/test';
 import { mkdir, writeFile } from 'node:fs/promises';
 import { join, relative, resolve } from 'node:path';
-import { products } from '../src/data';
+import { brands, products } from '../src/data';
+import { houseLinks, universes } from '../src/data/navigation';
+import { stores } from '../src/data/stores';
+let activeBrowser: Awaited<ReturnType<typeof chromium.launch>> | undefined;
 async function main() {
   const root = process.env.OPTIC_PROOF_DIR;
   if (!root) throw new Error('OPTIC_PROOF_DIR must be outside Git.');
@@ -10,9 +13,13 @@ async function main() {
   const base = process.env.OPTIC_BASE_URL ?? 'http://127.0.0.1:3012';
   const out = join(root, 'captures'); await mkdir(out, { recursive: true });
   const browser = await chromium.launch();
+  activeBrowser = browser;
   const context = await browser.newContext({ reducedMotion: 'reduce', viewport: { width: 390, height: 844 } });
   const page = await context.newPage();
   const remote: string[] = [], errors: string[] = [], records: Record<string, unknown>[] = [];
+  // S5/r2: the main context reduces motion, so the film must never be requested during this whole run (checked at the end).
+  const filmRequests: string[] = [];
+  context.on('request', request => { if (request.url().includes('/media/ambience/eyewear-loop.mp4')) filmRequests.push(request.url()); });
   // S2 checks collect every finding instead of stopping at the first one; S1 assertions below stay fail-fast.
   const findings: string[] = [];
   const check = (condition: unknown, message: string) => { if (!condition) findings.push(message); };
@@ -256,8 +263,103 @@ async function main() {
       records.push({ name: 'boundary', boundary: width, route, ...state });
     }
   }
+
+  // ---- S5/r2: home at the six review sizes and the large screen, menus at the boundaries, long names --------------------------
+  // Whole photos, texts not clipped, no media control (hidden or not), every destination reachable, nothing wider than the screen.
+  const longestBy = <T,>(items: readonly T[], size: (item: T) => number, count: number) => [...items].sort((a, b) => size(b) - size(a)).slice(0, count);
+  for (const [width, height] of [[360, 800], [390, 844], [768, 1024], [1024, 768], [1280, 800], [1440, 900], [3024, 1964]] as const) {
+    await page.setViewportSize({ width, height });
+    await page.goto(base + '/');
+    await page.locator('.showcase-image img').waitFor();
+    for (const slug of ['glory-glory', 'baby-beach', 'the-bird']) {
+      const product = products.find(item => item.slug === slug)!;
+      await page.getByRole('button', { name: product.name, exact: true }).click();
+      await page.locator(`.showcase-info h2:text-is("${product.name}")`).waitFor();
+      await loaded();
+      const photo = await page.evaluate(() => {
+        const image = document.querySelector<HTMLImageElement>('.showcase-image img'), plateau = document.querySelector('.showcase-plateau')?.getBoundingClientRect();
+        if (!image || !plateau) return null;
+        const box = image.getBoundingClientRect();
+        return { loaded: image.complete && image.naturalWidth > 0, naturalWidth: image.naturalWidth, naturalHeight: image.naturalHeight, fit: getComputedStyle(image).objectFit, width: box.width, inside: box.left >= plateau.left - .5 && box.right <= plateau.right + .5 && box.top >= plateau.top - .5 && box.bottom <= plateau.bottom + .5,
+          clipped: [...document.querySelectorAll('.showcase-info :is(h2, p, a), .model-selector button')].filter(node => node.scrollWidth > node.clientWidth + 1).map(node => node.textContent?.trim() ?? '') };
+      });
+      const media = product.images[0];
+      check(photo, `${width}px ${slug}: showcase photo or plateau missing`);
+      if (photo) {
+        check(photo.loaded, `${width}px ${slug}: photo not loaded`);
+        // Natural size scaled by the srcset density and rounded by the browser: at most one natural pixel from the source ratio.
+        check(Math.abs(photo.naturalHeight - photo.naturalWidth * media.height / media.width) <= 1, `${width}px ${slug}: altered proportions (${photo.naturalWidth}×${photo.naturalHeight} for a ${media.width}×${media.height} source)`);
+        check(['contain', 'scale-down'].includes(photo.fit), `${width}px ${slug}: object-fit ${photo.fit} may crop the frame`);
+        check(photo.inside, `${width}px ${slug}: photo leaves its plateau`);
+        check(photo.width >= 80, `${width}px ${slug}: photo only ${Math.round(photo.width)} px wide`);
+        check(photo.clipped.length === 0, `${width}px ${slug}: clipped text ${photo.clipped.join(', ')}`);
+      }
+    }
+    const state = await health();
+    check(state.width <= state.viewport, `${width}px home: horizontal overflow ${state.width}/${state.viewport}`);
+    check(state.broken.length === 0 && state.fallbacks === 0, `${width}px home: broken images or fallbacks`);
+    const controls = await page.evaluate(() => [...document.querySelectorAll('.home-hero, .brand-marquee')].flatMap(scope => [...scope.querySelectorAll('button, [role="button"], [role="switch"], input, summary, video, [class*="toggle"], [class*="pause"], [class*="play"], [class*="control"]')])
+      .filter(element => (element as HTMLVideoElement).controls || /pause|play|lire|lecture|reprendre|d[ée]filement|toggle|vid[ée]o d’ambiance/i.test([element.getAttribute('aria-label'), element.getAttribute('title'), element.textContent, String(element.className), element.id].join(' '))).map(element => `${element.tagName.toLowerCase()}.${String(element.className)}`));
+    check(controls.length === 0, `${width}px home: media control found (${controls.join(', ')})`);
+    records.push({ name: 'home-s5', ...state, controls });
+  }
+  // Desktop menu: no destination lost at the boundaries (the bar gives way to the panel, never to nothing); links readable and inside the screen.
+  const destinations = [...universes, ...houseLinks].map(link => link.href);
+  for (const [width, height] of [[801, 900], [960, 900], [961, 900], [1100, 900], [1101, 900], [1280, 800], [3024, 1964]] as const) {
+    await page.setViewportSize({ width, height });
+    await page.goto(base + '/');
+    const bar = await page.evaluate(() => [...document.querySelectorAll('.desktop-nav > a')].filter(link => link.getClientRects().length).map(link => link.getAttribute('href')));
+    await page.getByRole('button', { name: 'Nos univers' }).click();
+    const panel = await page.evaluate(() => {
+      const root = document.querySelector('#universe-panel')!;
+      const links = [...root.querySelectorAll('a')];
+      return { hrefs: links.map(link => link.getAttribute('href')), clipped: links.filter(link => link.scrollWidth > link.clientWidth + 1).map(link => link.textContent?.trim()), outside: links.filter(link => { const box = link.getBoundingClientRect(); return box.left < 0 || box.right > innerWidth; }).map(link => link.textContent?.trim()), cta: !!document.querySelector('.header-cta')?.getClientRects().length };
+    });
+    const reachable = new Set([...bar, ...panel.hrefs, ...(panel.cta ? ['/rendez-vous'] : [])]);
+    for (const href of [...destinations, '/marques', '/magasins', '/contact', '/rendez-vous']) check(reachable.has(href as string), `${width}px menu: ${href} unreachable`);
+    check(panel.clipped.length === 0 && panel.outside.length === 0, `${width}px menu: links clipped (${panel.clipped.join(', ')}) or outside the screen (${panel.outside.join(', ')})`);
+    const state = await health();
+    check(state.width <= state.viewport, `${width}px menu: horizontal overflow ${state.width}/${state.viewport}`);
+    records.push({ name: 'menu-s5', bar, panel: panel.hrefs, ...state });
+    await page.keyboard.press('Escape');
+  }
+  for (const [width, height] of [[360, 740], [390, 844], [768, 1024], [800, 900]] as const) {
+    await page.setViewportSize({ width, height });
+    await page.goto(base + '/');
+    await page.getByRole('button', { name: 'Menu', exact: true }).click();
+    const dialog = page.getByRole('dialog', { name: /menu/i });
+    check(await dialog.isVisible(), `${width}px mobile menu: no dialog named « Menu »`);
+    const named = await page.evaluate(() => { const element = document.querySelector('dialog')!; const reference = element.getAttribute('aria-labelledby'); return (element.getAttribute('aria-label') || (reference ? document.getElementById(reference)?.textContent?.trim() : '') || '').length > 0; });
+    check(named, `${width}px mobile menu: the dialog itself carries no name`);
+    const fit = await page.evaluate(() => { const root = document.querySelector('dialog')!; return { hrefs: [...root.querySelectorAll('nav a')].map(link => link.getAttribute('href')), clipped: [...root.querySelectorAll('nav a')].filter(link => link.scrollWidth > link.clientWidth + 1).map(link => link.textContent?.trim()), sideways: root.scrollWidth > root.clientWidth }; });
+    for (const href of ['/', '/rendez-vous', ...destinations, '/marques', '/magasins', '/contact']) check(fit.hrefs.includes(href), `${width}px mobile menu: ${href} missing`);
+    check(fit.clipped.length === 0 && !fit.sideways, `${width}px mobile menu: clipped links (${fit.clipped.join(', ')}) or sideways scroll`);
+    records.push({ name: 'mobile-menu-s5', width, named, ...fit });
+    await page.keyboard.press('Escape');
+  }
+  // Long names at 360 and 390 px: the three longest product names and colour labels, brand and store names, the footer on each page.
+  const longColours = longestBy(products.flatMap(product => product.variants.map(variant => ({ product, variant, size: Math.max(0, ...Object.values(variant.labels).map(label => label.length)) }))), item => item.size, 4);
+  const longRoutes = [
+    ...longestBy(products, product => product.name.length, 3).map(product => `/produits/${product.slug}`),
+    ...longColours.map(item => `/produits/${item.product.slug}?variante=${item.variant.id}`),
+    ...longestBy(brands.filter(brand => brand.productIds.length || brand.logo), brand => brand.name.length, 3).map(brand => `/marques/${brand.id}`),
+    ...longestBy(stores, store => store.name.length, 2).map(store => `/magasins/${store.slug}`),
+  ];
+  for (const width of [360, 390]) {
+    await page.setViewportSize({ width, height: 844 });
+    for (const route of new Set(longRoutes)) {
+      await page.goto(base + route);
+      const state = await health();
+      const clipped = await page.evaluate(() => [...document.querySelectorAll('main :is(h1, h2, h3, button, a)')].filter(node => node.scrollWidth > node.clientWidth + 1 && getComputedStyle(node).overflow !== 'visible').map(node => node.textContent?.trim().slice(0, 40)));
+      check(state.width <= state.viewport, `${width}px long names ${route}: horizontal overflow ${state.width}/${state.viewport}`);
+      check(state.broken.length === 0 && state.fallbacks === 0 && state.h1 === 1, `${width}px long names ${route}: broken image, fallback or ${state.h1} h1`);
+      check(clipped.length === 0, `${width}px long names ${route}: clipped text ${clipped.join(', ')}`);
+      records.push({ name: 'long-names-s5', route, ...state });
+    }
+  }
+  check(filmRequests.length === 0, `the film was requested ${filmRequests.length} time(s) although motion is reduced for this whole run`);
   await writeFile(join(root, 'browser-quality.json'), JSON.stringify({ timestamp: new Date().toISOString(), zoomMethod: 'Equivalent reflow: CSS viewport 720x500, DPR 2, output 1440x1000; not a manual browser zoom gesture, not a physical device and not an assistive-technology test.', findings, records, remote, errors }, null, 2));
   await browser.close(); assert.equal(remote.length, 0); assert.equal(errors.length, 0); assert.deepEqual(findings, []);
-  console.log(`${records.length} checks; 360 px and 720x500@2x reflow on S1, S2 and S4 routes, keyboard and focus rings (contact, appointment, marquee), Escape, motion frames, long names, missing images, 801/1101/1280 boundaries; zero overflow/errors/WordPress requests.`);
+  console.log(`${records.length} checks; 360 px and 720x500@2x reflow on S1, S2 and S4 routes, keyboard and focus rings (contact, appointment, marquee), Escape, motion frames, long names, missing images, 801/1101/1280 boundaries; home photos whole at 360–1440 and 3024 px, no media control, menu destinations at 801–3024 px, named mobile dialog, long names, no film request under reduced motion; zero overflow/errors/WordPress requests.`);
 }
-main().catch(error => { console.error(error); process.exitCode = 1; });
+main().catch(async error => { console.error(error); process.exitCode = 1; await activeBrowser?.close(); });

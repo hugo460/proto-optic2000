@@ -21,15 +21,19 @@ Accueil et nuancier de trois modèles ; marques/gammes complètes ; recherche, f
 
 ## S4 — complément de présentation
 
-- Bandeau de marques défilant (pause/reprise, survol, focus, hors champ, mouvement réduit), arrivée animée des montures dans le nuancier conservé.
+- Bandeau de marques défilant (survol, focus, hors champ, mouvement réduit ; son bouton de pause/reprise a été retiré en S5/r2), arrivée animée des montures dans le nuancier conservé.
 - Rendez-vous simulé `/rendez-vous` en quatre étapes, créneaux fictifs en heure de Tahiti, entrées depuis l’accueil, la navigation, le pied de page, les trois magasins, la vue, les services et les prothèses.
 - Passe de finition : hiérarchie de l’en-tête entre 801 et 1100 px, légendes et réserves lisibles, pictogrammes calendrier/horloge/pause/lecture dans la famille existante.
 - Reste hors prototype : agenda connecté, confirmation de prestations, horaires de Taravao, envoi de rendez-vous. L’acceptation de S4 revient au pilote.
 
-## S5 — accueil recomposé
+## S5 — accueil recomposé (S5/r1 rejeté, remplacé par S5/r2)
 
-- Hero plus léger : titre et actions à gauche, nuancier compact encadré à droite (empilé sur téléphone), une seule action jaune vers les solaires.
-- Film d’ambiance local de gros plans de lunettes, sans visage, sous la lavande ; poster en mouvement réduit, économie de données ou échec ; commande pause/lecture distincte de celle des marques.
-- Reste ouvert : avis du client sur le rendu. L’acceptation de S5 revient au pilote.
+- S5/r1 : plateau encadré, film de 8 s en aller-retour sous voile, commandes Pause/Lire. **Rejeté par Hugo le 21/10/2026**, remplacé (voir [les décisions](decisions.md)).
+- **S5/r2 — livrée à la présentation, acceptation du pilote à venir** : hero éditorial à deux parts (texte sur lavande unie, film de matière dans sa part, 45/55, 50/50, puis bande et texte), nuancier secondaire compact sans carte, film de 24,32 s de trois plans distincts, aucune commande Pause/Lire (film ou marques), bandeau de 13 logos dérivés sans bouton, panneau des univers clair et ancré, menu mobile blanc nommé, pied de page compact, index des univers allégé.
+- Reste ouvert : avis du client sur le rendu et acceptation du pilote. Pas de Safari, d’iPhone physique ni de lecteur d’écran testés ; aucun commerce ni agenda réel.
+
+## S6 — prévue seulement
+
+- S6/r1 reprendrait la direction pour les listes et fiches produit, marques et magasins, formulaires et rendez-vous, contenus des univers. Elle n’est pas lancée : le pilote fournira son brief après contrôle de S5/r2, et ses détails ne sont pas figés ici.
 
 La migration CMS/Kauehi, le domaine client, les comptes historiques, les ordonnances, le paiement et les stocks synchronisés ne sont pas construits dans ce prototype.

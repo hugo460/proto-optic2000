@@ -4,15 +4,13 @@ import { useEffect, useRef, useState, type CSSProperties } from 'react';
 import type { Media } from '@/data/types';
 import { MediaImage } from '@/components/ui/media-image';
 import { ActionLink } from '@/components/ui/action-link';
-import { Icon } from '@/components/ui/icon';
 export interface MarqueeBrand { id: string; name: string; logo: Media }
 // A slow loop of real logos. The links are the original list; the second copy only closes the loop: hidden from
-// assistive technologies and outside the tab order, without IDs. Its visible logos still work with a pointer. Hover,
-// keyboard focus, the pause button, an off-screen strip or
-// a hidden tab stop the motion; focus also brings the original list back to a still, scrollable row (CSS).
+// assistive technologies and outside the tab order, without IDs. Its visible logos still work with a pointer. No pause
+// control: hover, keyboard focus, an off-screen strip or a hidden tab stop the motion by themselves; focus also brings
+// the original list back to a still, scrollable row, and reduced motion shows that row from the start (CSS).
 export function BrandMarquee({ brands }: { brands: MarqueeBrand[] }) {
   const root = useRef<HTMLElement>(null);
-  const [paused, setPaused] = useState(false);
   const [away, setAway] = useState(false);
   useEffect(() => {
     const element = root.current;
@@ -27,7 +25,7 @@ export function BrandMarquee({ brands }: { brands: MarqueeBrand[] }) {
     return () => { observer.disconnect(); document.removeEventListener('visibilitychange', onVisibility); };
   }, []);
   const logo = (brand: MarqueeBrand, alt: string) => <MediaImage media={brand.logo} alt={alt} sizes="132px" loading="eager" />;
-  return <section ref={root} className="brand-marquee container" aria-labelledby="brand-marquee-title" data-paused={paused || undefined} data-away={away || undefined} style={{ '--marquee-count': brands.length } as CSSProperties}>
+  return <section ref={root} className="brand-marquee container" aria-labelledby="brand-marquee-title" data-away={away || undefined} style={{ '--marquee-count': brands.length } as CSSProperties}>
     <h2 id="brand-marquee-title" className="sr-only">Quelques-unes de nos marques</h2>
     {/* Focus stops the loop (CSS); once the row is still, the focused logo is scrolled fully into view. */}
     <div className="marquee-viewport" onFocus={event => { if (event.target.matches(':focus-visible')) event.target.scrollIntoView({ block: 'nearest', inline: 'nearest', behavior: 'instant' }); }}>
@@ -36,9 +34,6 @@ export function BrandMarquee({ brands }: { brands: MarqueeBrand[] }) {
         <div className="marquee-group marquee-clone" aria-hidden="true">{brands.map(brand => <Link key={brand.id} href={`/marques/${brand.id}`} tabIndex={-1} aria-label={`Découvrir ${brand.name}`}>{logo(brand, '')}</Link>)}</div>
       </div>
     </div>
-    <div className="marquee-controls">
-      <button type="button" className="marquee-toggle" onClick={() => setPaused(!paused)}><Icon name={paused ? 'play' : 'pause'} />{paused ? 'Reprendre' : 'Pause'}<span className="sr-only">{paused ? ' le défilement des marques' : ' du défilement des marques'}</span></button>
-      <ActionLink href="/marques" variant="text">Toutes les marques</ActionLink>
-    </div>
+    <ActionLink href="/marques" variant="text" className="marquee-directory">Toutes les marques</ActionLink>
   </section>;
 }

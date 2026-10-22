@@ -58,28 +58,27 @@ export function Header() {
       <nav className="desktop-nav" aria-label="Navigation principale">
         <div className="universe-menu" ref={universeMenu} onBlur={onUniverseBlur}>
           <button ref={universeTrigger} type="button" className={`universe-trigger${universeActive ? ' is-current' : ''}`} aria-expanded={universesOpen} aria-controls="universe-panel" onClick={() => setUniversesOpen(!universesOpen)}>Nos univers<Icon name="chevron" /></button>
+          {/* Compact paper panel under the bar: the six universes on two columns, the house pages in a narrower one. */}
           <div id="universe-panel" className="universe-panel" hidden={!universesOpen}>
-            <div className="universe-panel-inner">
-              <div><h2>Nos univers</h2><ul>{universes.map(link => <li key={link.href}><Link href={link.href} aria-current={current(link.href)} onClick={() => setUniversesOpen(false)}><strong>{link.label}</strong><span>{link.summary}</span></Link></li>)}</ul></div>
-              <div><h2>L’enseigne</h2><ul>{houseLinks.map(link => <li key={link.href}><Link href={link.href} aria-current={current(link.href)} onClick={() => setUniversesOpen(false)}><strong>{link.label}</strong><span>{link.summary}</span></Link></li>)}</ul></div>
-            </div>
+            <div className="universe-panel-group"><h2 id="universe-panel-universes">Nos univers</h2><ul aria-labelledby="universe-panel-universes">{universes.map(link => <li key={link.href}><Link href={link.href} aria-current={current(link.href)} onClick={() => setUniversesOpen(false)}>{link.label}</Link></li>)}</ul></div>
+            <div className="universe-panel-group"><h2 id="universe-panel-house">L’enseigne</h2><ul aria-labelledby="universe-panel-house">{houseLinks.map(link => <li key={link.href}><Link href={link.href} aria-current={current(link.href)} onClick={() => setUniversesOpen(false)}>{link.label}</Link></li>)}</ul></div>
           </div>
         </div>
-        {/* « Les solaires » repeats an entry of the universes panel: it gives way to the appointment action between 801 and 1100 px. */}
+        {/* « Les solaires » repeats an entry of the universes panel: it gives way only on the narrowest bar (801–960 px). */}
         {links.map(link => <Link key={link.href} href={link.href} aria-current={current(link.href)} className={link.href === '/solaires' ? 'nav-repeat' : undefined}>{link.label}</Link>)}
       </nav>
       <Link href="/rendez-vous" className="header-cta" aria-current={current('/rendez-vous')} onClick={revisitAppointment}><Icon name="calendar" /><span><span className="header-cta-long">Préparer un </span>RDV</span></Link>
       <button ref={trigger} className="menu-trigger" type="button" aria-expanded={opened} aria-controls="mobile-navigation" onClick={() => { dialog.current?.showModal(); setOpened(true); }}>Menu<Icon name="menu" /></button>
     </div>
-    <dialog ref={dialog} id="mobile-navigation" className="mobile-navigation" onClose={() => { setOpened(false); if (appointmentOnClose.current) { appointmentOnClose.current = false; focusAppointment(); } else trigger.current?.focus(); }} onClick={event => { if (event.target === event.currentTarget) close(); }}>
+    <dialog ref={dialog} id="mobile-navigation" className="mobile-navigation" aria-labelledby="mobile-navigation-title" onClose={() => { setOpened(false); if (appointmentOnClose.current) { appointmentOnClose.current = false; focusAppointment(); } else trigger.current?.focus(); }} onClick={event => { if (event.target === event.currentTarget) close(); }}>
       <div className="mobile-navigation-inner">
-        <div className="mobile-menu-heading"><span>Optic 2000 Tahiti</span><button type="button" className="icon-button" onClick={close} aria-label="Fermer le menu"><Icon name="close" /></button></div>
+        <div className="mobile-menu-heading"><h2 id="mobile-navigation-title">Menu</h2><button type="button" className="icon-button" onClick={close} aria-label="Fermer le menu"><Icon name="close" /></button></div>
         <nav aria-label="Navigation mobile">
-          <Link className="mobile-home" href="/" onClick={close} aria-current={pathname === '/' ? 'page' : undefined}>Accueil<Icon name="arrow" /></Link>
-          <Link className="mobile-cta" href="/rendez-vous" onClick={event => { revisitAppointment(event, true); close(); }} aria-current={current('/rendez-vous')}><Icon name="calendar" />Préparer un rendez-vous<Icon name="arrow" /></Link>
-          {mobileGroups.map(group => <div className="mobile-group" key={group.title}><h2>{group.title}</h2>{group.links.map(link => <Link key={link.href} href={link.href} onClick={close} aria-current={current(link.href)}>{link.label}<Icon name="arrow" /></Link>)}</div>)}
+          <Link className="mobile-home" href="/" onClick={close} aria-current={pathname === '/' ? 'page' : undefined}>Accueil</Link>
+          <Link className="mobile-cta" href="/rendez-vous" onClick={event => { revisitAppointment(event, true); close(); }} aria-current={current('/rendez-vous')}><Icon name="calendar" />Préparer un RDV<Icon name="arrow" /></Link>
+          {mobileGroups.map(group => <div className="mobile-group" key={group.title}><h3>{group.title}</h3>{group.links.map(link => <Link key={link.href} href={link.href} onClick={close} aria-current={current(link.href)}>{link.label}</Link>)}</div>)}
         </nav>
-        <p>Centre-ville, Mamao et Taravao.<br />Nos opticiens vous accueillent à Tahiti.</p>
+        <p>Centre-ville, Mamao et Taravao : nos opticiens vous accueillent à Tahiti.</p>
       </div>
     </dialog>
   </header>;
