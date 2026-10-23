@@ -188,7 +188,11 @@ test('Catalogue form: plain GET, same fields and names, values read back from th
   await page.getByRole('combobox', { name: 'Trier par', exact: true }).selectOption('prix-asc');
   await page.getByRole('button', { name: 'Appliquer', exact: true }).click();
   await expect.poll(() => params(page)).toMatchObject({ q: 'Glory', genre: 'femme', tri: 'prix-asc' });
-  const amounts = (await page.locator('.product-price').allTextContents()).map(text => Number(text.replace(/\D/g, '')));
+  // The URL can commit before the result is ready. Await the one visible price of this Glory fixture before reading it.
+  const prices = page.locator('.product-grid .product-price');
+  await expect(prices).toHaveCount(1);
+  await expect(prices).toBeVisible();
+  const amounts = (await prices.allTextContents()).map(text => Number(text.replace(/\D/g, '')));
   expect(amounts.length).toBeGreaterThan(0);
   expect(amounts).toEqual([...amounts].sort((a, b) => a - b));
   // A chip removes only its own filter.
